@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"unicode"
 
 	"github.com/imanflow/baraka-ai/backend_go/internal/config"
 	"github.com/imanflow/baraka-ai/backend_go/internal/model"
@@ -85,21 +86,21 @@ func (s AIService) Chat(ctx context.Context, request model.ChatRequest) (model.C
 		return model.ChatResponse{}, err
 	}
 
-	reply = strings.TrimSpace(reply)
+	reply = normalizeAIReply(reply)
 
-	// Qwen кейде қазақша режимде орысша/ағылшынша сөз араластырып жібереді.
-	// Алдымен модельдің өзінен жауапты таңдаған тілге түзетуді сұраймыз.
-	if needsLanguageRepair(request.Language, reply) {
+	// Language repair: егер модель бұрыс тілде жауап берсе,
+	// бір рет қайта сұраймыз. Repair сәтсіз болса — оригиналды қалдырамыз.
+	if shouldAttemptLanguageRepair(s.provider.Name(), request.Language, reply) {
 		repaired, repairErr := s.repairLanguage(ctx, request, reply)
-		if repairErr == nil && strings.TrimSpace(repaired) != "" {
-			reply = strings.TrimSpace(repaired)
+		if repairErr == nil && isUsableRepairedReply(request.Language, repaired) {
+			reply = normalizeAIReply(repaired)
 		}
 	}
 
-	// Егер қазақша жауап әлі де нашар немесе аралас болса,
-	// backend өзі сауатты, қысқа қазақша жауап құрастырады.
-	if normalizePromptLanguage(request.Language) == "Kazakh" && needsKazakhFallback(reply) {
-		reply = buildKazakhFallbackReply(request)
+	reply = postProcessReply(request.Language, reply)
+
+	if strings.TrimSpace(reply) == "" {
+		reply = localizedTemporaryAIReply(request.Language)
 	}
 
 	return model.ChatResponse{
@@ -129,18 +130,22 @@ func (s AIService) repairLanguage(ctx context.Context, request model.ChatRequest
 func buildLanguageRepairPrompt(language string) string {
 	switch normalizePromptLanguage(language) {
 	case "Kazakh":
-		return `You are a strict Kazakh language editor.
+		return `SYSTEM OVERRIDE — LANGUAGE LOCK: KAZAKH ONLY.
+You MUST rewrite the text below in Kazakh Cyrillic. No Russian. No English. No exceptions.
 
+You are a strict Kazakh language editor.
+
+Your task:
 Rewrite the user's answer into clean, natural, grammatically correct Kazakh.
 
 Rules:
-- Reply ONLY in Kazakh.
-- Use Cyrillic Kazakh.
+- Reply ONLY in Kazakh Cyrillic.
 - Do not add new facts.
 - Do not remove important meaning.
+- Do not change task names (e.g. "10 отжимание", "Go", "React" — keep as written).
+- The sentence around task names must be Kazakh.
 - Do not ask new questions.
 - Do not use Russian, English, Turkish, Uzbek, Kyrgyz, or random words.
-- If the original answer has a task title like "10 отжимание", keep the task title as written, but the sentence around it must be Kazakh.
 - Replace mixed phrases:
   "Начни сейчас" -> "Қазір баста"
   "начни" -> "баста"
@@ -149,92 +154,98 @@ Rules:
   "задача" -> "тапсырма"
   "план" -> "жоспар"
   "потом" -> "кейін"
+  "хорошо" -> "жақсы"
 - Output only the corrected final answer.
-- Keep it short: 2 to 4 sentences.`
+- Keep it short: 2 to 4 sentences.
+- Preserve the original meaning.`
 
 	case "English":
-		return `You are a strict English language editor.
+		return `SYSTEM OVERRIDE — LANGUAGE LOCK: ENGLISH ONLY.
+You MUST rewrite the text below in English. No Russian. No Kazakh. No exceptions.
 
+You are a strict English language editor.
+
+Your task:
 Rewrite the user's answer into clear, natural, grammatically correct English.
 
 Rules:
 - Reply ONLY in English.
 - Do not add new facts.
 - Do not remove important meaning.
+- Do not change task names.
 - Do not ask new questions.
-- Do not use Russian or Kazakh.
 - Output only the corrected final answer.
-- Keep it short: 2 to 4 sentences.`
+- Keep it short: 2 to 4 sentences.
+- Preserve the original meaning.`
 
 	default:
-		return `You are a strict Russian language editor.
+		return `SYSTEM OVERRIDE — LANGUAGE LOCK: RUSSIAN ONLY.
+You MUST rewrite the text below in Russian. No Kazakh. No English. No exceptions.
 
+You are a strict Russian language editor.
+
+Your task:
 Rewrite the user's answer into грамотный, естественный, живой русский язык.
 
 Rules:
 - Reply ONLY in Russian.
 - Do not add new facts.
 - Do not remove important meaning.
+- Do not change task names.
 - Do not ask new questions.
 - Do not use Kazakh or English.
 - Output only the corrected final answer.
-- Keep it short: 2 to 4 sentences.`
+- Keep it short: 2 to 4 sentences.
+- Preserve the original meaning.`
 	}
 }
 
-func needsLanguageRepair(language string, reply string) bool {
-	text := strings.ToLower(strings.TrimSpace(reply))
-	if text == "" {
+// shouldAttemptLanguageRepair — жауап бұрыс тілде екенін анықтайды.
+// Qwen кейде тіл аралас немесе мүлдем басқа тілде жазады,
+// сондықтан тек forbidden fragments емес, тіл ratio-сын да тексереміз.
+func shouldAttemptLanguageRepair(provider string, language string, reply string) bool {
+	reply = strings.TrimSpace(reply)
+	if reply == "" {
 		return false
 	}
 
-	switch normalizePromptLanguage(language) {
+	if strings.EqualFold(strings.TrimSpace(provider), "mock") {
+		return false
+	}
+
+	language = normalizePromptLanguage(language)
+	lower := strings.ToLower(reply)
+
+	switch language {
 	case "Kazakh":
-		return containsAny(text, []string{
-			"начни",
-			"сейчас",
-			"сделай",
-			"задача",
-			"задачи",
-			"план",
-			"легко",
-			"потом",
-			"хорошо",
-			"отлично",
-			"нормально",
-			"сегодня у тебя",
-			"начни сейчас",
-			"start",
-			"now",
-			"task",
-			"plan",
-			"good",
-			"next step",
-		})
+		// 1. Жауапта қазақ арнайы әріптері мүлдем жоқ және кирилл ratio төмен — бұрыс тіл
+		if !hasKazakhSpecificLetters(reply) && cyrillicRatio(reply) < 0.3 {
+			return true
+		}
+		// 2. Орыс/ағылшын forbidden fragments бар
+		return hasKazakhLanguageProblems(lower)
 
 	case "Russian":
-		return containsKazakhSpecificLetters(text) || containsAny(text, []string{
-			"start small",
-			"next step",
-			"push-ups",
-			"your plan",
-		})
+		// 1. Кирилл ratio тым төмен — орыс емес тілде жазылған
+		if cyrillicRatio(reply) < 0.5 {
+			return true
+		}
+		// 2. Қазақ арнайы әріптері немесе ағылшын fragments бар
+		return hasRussianLanguageProblems(reply)
 
 	case "English":
-		return containsCyrillic(text)
+		// Кирилл ratio тым жоғары — ағылшын емес
+		return hasEnglishLanguageProblems(reply)
 
 	default:
 		return false
 	}
 }
 
-func needsKazakhFallback(reply string) bool {
-	text := strings.ToLower(strings.TrimSpace(reply))
-	if text == "" {
-		return true
-	}
-
-	return containsAny(text, []string{
+func hasKazakhLanguageProblems(lower string) bool {
+	// Тапсырма атауларын тіркелмейміз ("отжимание", "Go", "React") —
+	// олар орыс/ағылшын болса да task title ретінде сақталады.
+	forbiddenFragments := []string{
 		"начни",
 		"сейчас",
 		"сделай",
@@ -246,215 +257,271 @@ func needsKazakhFallback(reply string) bool {
 		"хорошо",
 		"отлично",
 		"нормально",
-		"start",
-		"now",
-		"task",
-		"plan",
+		"сегодня у тебя",
+		"начни сейчас",
+		"start now",
+		"start small",
 		"next step",
-		"тақырыбыңызда",
-		"жасаң",
-		"жасаныз",
-		"дұрыс етіп келеді",
-		"келісі",
-		"мақалдау",
+		"your plan",
+	}
+
+	brokenKazakhFragments := []string{
 		"сүрөң",
+		"мақалдау",
 		"бірін-ikki",
 		"кітептеріңізді",
 		"атқарадыңыз",
 		"қатысқаныз",
+		"жасаң",
+		"жасаныз",
+		"дұрыс етіп келеді",
+		"тақырыбыңызда",
 		"көмектесу үшін білім керек",
-	})
+		"келісі",
+	}
+
+	return aiContainsAnyFragment(lower, forbiddenFragments) ||
+		aiContainsAnyFragment(lower, brokenKazakhFragments)
 }
 
-func buildKazakhFallbackReply(request model.ChatRequest) string {
-	name := stringFromAny(request.UserContext["name"], "Сұлтан")
-	name = strings.TrimSpace(name)
-	if name == "" {
-		name = "Сұлтан"
+func hasRussianLanguageProblems(reply string) bool {
+	lower := strings.ToLower(reply)
+
+	englishFragments := []string{
+		"start small",
+		"next step",
+		"push-ups",
+		"your plan",
+		"keep the rhythm",
 	}
 
-	todayTasks := kazakhTaskTitles(request.UserContext["todayTasks"])
-	completedTasks := kazakhTaskTitles(request.UserContext["completedTasks"])
-	missedTasks := kazakhTaskTitles(request.UserContext["missedTasks"])
-
-	nextPrayerName := ""
-	nextPrayerTime := ""
-	if prayer, ok := request.UserContext["nextPrayer"].(map[string]any); ok {
-		nextPrayerName = stringFromAny(prayer["name"], "")
-		nextPrayerTime = stringFromAny(prayer["time"], "")
-	}
-
-	taskStreak := ""
-	if streaks, ok := request.UserContext["streaks"].(map[string]any); ok {
-		taskStreak = anyToString(streaks["task"])
-	}
-
-	var sentences []string
-
-	if len(todayTasks) > 0 {
-		sentences = append(
-			sentences,
-			fmt.Sprintf("%s, бүгін жоспарың анық: %s бар.", name, joinKazakhList(todayTasks)),
-		)
-	} else {
-		sentences = append(
-			sentences,
-			fmt.Sprintf("%s, бүгінге нақты тапсырма көріп тұрған жоқпын.", name),
-		)
-	}
-
-	if len(completedTasks) > 0 {
-		sentences = append(
-			sentences,
-			fmt.Sprintf("Жақсы бастама бар: %s орындалған.", joinKazakhList(completedTasks)),
-		)
-	}
-
-	if len(missedTasks) > 0 {
-		sentences = append(
-			sentences,
-			fmt.Sprintf("Өтіп кеткен тапсырмалар бар: %s.", joinKazakhList(missedTasks)),
-		)
-	}
-
-	if nextPrayerName != "" || nextPrayerTime != "" {
-		prayerText := strings.TrimSpace(nextPrayerName + " " + nextPrayerTime)
-		if prayerText != "" {
-			sentences = append(
-				sentences,
-				fmt.Sprintf("%s уақыты жақындаса, бір кішкентай істі қазір аяқтап алғаның дұрыс.", prayerText),
-			)
-		}
-	}
-
-	nextStep := buildKazakhNextStep(todayTasks)
-	if taskStreak != "" && taskStreak != "0" && taskStreak != "<nil>" {
-		sentences = append(
-			sentences,
-			fmt.Sprintf("Streak-ті сақтау үшін %s.", nextStep),
-		)
-	} else {
-		sentences = append(sentences, capitalizeKazakh(nextStep)+".")
-	}
-
-	if len(sentences) > 4 {
-		sentences = sentences[:4]
-	}
-
-	return strings.Join(sentences, " ")
+	return aiContainsAnyFragment(lower, englishFragments) || hasKazakhSpecificLetters(reply)
 }
 
-func buildKazakhNextStep(tasks []string) string {
-	if len(tasks) == 0 {
-		return "қазір 2 минутқа ғана бір пайдалы іске кіріс"
+func hasEnglishLanguageProblems(reply string) bool {
+	// Кирилл ratio 25%-дан жоғары болса — модель сбился
+	return cyrillicRatio(reply) > 0.25
+}
+
+func isUsableRepairedReply(language string, reply string) bool {
+	reply = normalizeAIReply(reply)
+	if reply == "" {
+		return false
 	}
 
-	first := strings.TrimSpace(tasks[0])
-	lower := strings.ToLower(first)
+	runeCount := len([]rune(reply))
+	if runeCount < 8 || runeCount > 1200 {
+		return false
+	}
 
-	switch {
-	case strings.Contains(lower, "отжим"):
-		return "қазір 2 рет отжимание жасаудан баста"
-	case strings.Contains(lower, "кітап") || strings.Contains(lower, "книга") || strings.Contains(lower, "оқу"):
-		return "қазір кітаптан 1 бет оқудан баста"
-	case strings.Contains(lower, "су") || strings.Contains(lower, "вода"):
-		return "қазір бір стақан су ішуден баста"
-	case strings.Contains(lower, "go") || strings.Contains(lower, "код") || strings.Contains(lower, "программ"):
-		return "қазір 10 минут оқудан немесе код жазудан баста"
+	language = normalizePromptLanguage(language)
+	lower := strings.ToLower(reply)
+
+	switch language {
+	case "Kazakh":
+		return !hasKazakhLanguageProblems(lower)
+
+	case "Russian":
+		return !hasRussianLanguageProblems(reply)
+
+	case "English":
+		return !hasEnglishLanguageProblems(reply)
+
 	default:
-		return fmt.Sprintf("алдымен ең жеңіл тапсырмадан баста: %s", first)
+		return true
 	}
 }
 
-func kazakhTaskTitles(value any) []string {
-	items, ok := value.([]any)
-	if !ok {
-		return nil
+func postProcessReply(language string, reply string) string {
+	reply = normalizeAIReply(reply)
+
+	switch normalizePromptLanguage(language) {
+	case "Kazakh":
+		return polishKazakhReply(reply)
+	case "Russian":
+		return polishRussianReply(reply)
+	case "English":
+		return polishEnglishReply(reply)
+	default:
+		return reply
 	}
-
-	titles := make([]string, 0, len(items))
-	for _, item := range items {
-		task, ok := item.(map[string]any)
-		if !ok {
-			continue
-		}
-
-		title := stringFromAny(task["title"], "")
-		if title == "" {
-			title = stringFromAny(task["name"], "")
-		}
-
-		title = strings.TrimSpace(title)
-		if title != "" {
-			titles = append(titles, title)
-		}
-	}
-
-	return titles
 }
 
-func joinKazakhList(items []string) string {
-	if len(items) == 0 {
+func polishKazakhReply(reply string) string {
+	reply = strings.TrimSpace(reply)
+	if reply == "" {
 		return ""
 	}
 
-	if len(items) == 1 {
-		return items[0]
+	replacements := []struct {
+		old string
+		new string
+	}{
+		{"Баста 2 отжимание жаса", "Қазір 2 рет отжимание жасаудан баста"},
+		{"баста 2 отжимание жаса", "қазір 2 рет отжимание жасаудан баста"},
+		{"Баста 2 рет отжимание жаса", "Қазір 2 рет отжимание жасаудан баста"},
+		{"баста 2 рет отжимание жаса", "қазір 2 рет отжимание жасаудан баста"},
+		{"Начни сейчас", "Қазір баста"},
+		{"начни сейчас", "қазір баста"},
+		{"начни", "баста"},
+		{"сейчас", "қазір"},
+		{"сделай", "жаса"},
+		{"задача", "тапсырма"},
+		{"задачи", "тапсырмалар"},
+		{"план", "жоспар"},
+		{"потом", "кейін"},
+		{"хорошо", "жақсы"},
+		{"Сізге", "Саған"},
+		{"сізге", "саған"},
+		{"жоспарыңыз", "жоспарың"},
+		{"тапсырмаларыңыз", "тапсырмаларың"},
+		{"алғаныңыз дұрыс", "алғаның дұрыс"},
+		{"жасаңыз", "жаса"},
+		{"бастаңыз", "баста"},
+		{"тақырыбыңызда", "жоспарыңда"},
+		{"дұрыс етіп келеді", "дұрыс болады"},
 	}
 
-	if len(items) == 2 {
-		return items[0] + " және " + items[1]
+	for _, replacement := range replacements {
+		reply = strings.ReplaceAll(reply, replacement.old, replacement.new)
 	}
 
-	return strings.Join(items[:len(items)-1], ", ") + " және " + items[len(items)-1]
+	reply = cleanCommonPunctuation(reply)
+
+	return reply
 }
 
-func capitalizeKazakh(text string) string {
+func polishRussianReply(reply string) string {
+	reply = strings.TrimSpace(reply)
+	if reply == "" {
+		return ""
+	}
+
+	reply = cleanCommonPunctuation(reply)
+	return reply
+}
+
+func polishEnglishReply(reply string) string {
+	reply = strings.TrimSpace(reply)
+	if reply == "" {
+		return ""
+	}
+
+	reply = cleanCommonPunctuation(reply)
+	return reply
+}
+
+func normalizeAIReply(reply string) string {
+	reply = strings.TrimSpace(reply)
+	if reply == "" {
+		return ""
+	}
+
+	lines := strings.Split(reply, "\n")
+	cleanLines := make([]string, 0, len(lines))
+
+	for _, line := range lines {
+		line = strings.TrimSpace(line)
+		if line == "" {
+			continue
+		}
+		cleanLines = append(cleanLines, line)
+	}
+
+	if len(cleanLines) == 0 {
+		return ""
+	}
+
+	return strings.Join(cleanLines, "\n")
+}
+
+func cleanCommonPunctuation(text string) string {
 	text = strings.TrimSpace(text)
-	if text == "" {
-		return text
+
+	for strings.Contains(text, "  ") {
+		text = strings.ReplaceAll(text, "  ", " ")
 	}
 
-	runes := []rune(text)
-	first := strings.ToUpper(string(runes[0]))
-	runes[0] = []rune(first)[0]
+	replacements := []struct {
+		old string
+		new string
+	}{
+		{" .", "."},
+		{" ,", ","},
+		{" !", "!"},
+		{" ?", "?"},
+		{" :", ":"},
+		{" ;", ";"},
+		{"..", "."},
+		{" ,", ","},
+	}
 
-	return string(runes)
+	for _, replacement := range replacements {
+		text = strings.ReplaceAll(text, replacement.old, replacement.new)
+	}
+
+	return strings.TrimSpace(text)
 }
 
-func containsAny(text string, fragments []string) bool {
+func localizedTemporaryAIReply(language string) string {
+	switch normalizePromptLanguage(language) {
+	case "Kazakh":
+		return "Қазір толық жауап құра алмадым. Бір кішкентай тапсырмадан бастап көр."
+	case "English":
+		return "I could not build a full answer right now. Start with one small task."
+	default:
+		return "Сейчас не получилось составить полный ответ. Начни с одной маленькой задачи."
+	}
+}
+
+func aiContainsAnyFragment(text string, fragments []string) bool {
+	text = strings.ToLower(text)
+
 	for _, fragment := range fragments {
-		if strings.Contains(text, strings.ToLower(fragment)) {
+		fragment = strings.ToLower(strings.TrimSpace(fragment))
+		if fragment == "" {
+			continue
+		}
+
+		if strings.Contains(text, fragment) {
 			return true
 		}
 	}
+
 	return false
 }
 
-func containsCyrillic(text string) bool {
+func hasKazakhSpecificLetters(text string) bool {
+	for _, r := range strings.ToLower(text) {
+		switch r {
+		case 'ә', 'ғ', 'қ', 'ң', 'ө', 'ұ', 'ү', 'һ', 'і':
+			return true
+		}
+	}
+
+	return false
+}
+
+func cyrillicRatio(text string) float64 {
+	var letters int
+	var cyrillic int
+
 	for _, r := range text {
-		if r >= 'А' && r <= 'я' {
-			return true
+		if !unicode.IsLetter(r) {
+			continue
 		}
-		if r == 'Ё' || r == 'ё' {
-			return true
-		}
-	}
-	return false
-}
 
-func containsKazakhSpecificLetters(text string) bool {
-	kazakhLetters := []rune{'ә', 'ғ', 'қ', 'ң', 'ө', 'ұ', 'ү', 'һ', 'і'}
-
-	for _, r := range text {
-		for _, kazakh := range kazakhLetters {
-			if r == kazakh {
-				return true
-			}
+		letters++
+		if unicode.Is(unicode.Cyrillic, r) {
+			cyrillic++
 		}
 	}
 
-	return false
+	if letters == 0 {
+		return 0
+	}
+
+	return float64(cyrillic) / float64(letters)
 }
 
 func (s AIService) DailySummary(userID string) model.ChatResponse {
