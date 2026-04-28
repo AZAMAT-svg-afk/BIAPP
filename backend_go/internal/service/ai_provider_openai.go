@@ -53,8 +53,8 @@ func (p compatibleChatProvider) Chat(ctx context.Context, request AIProviderRequ
 	body := chatCompletionRequest{
 		Model:       modelName,
 		Messages:    buildChatMessages(request),
-		MaxTokens:   300,
-		Temperature: 0.6,
+		MaxTokens:   180,
+		Temperature: 0.15,
 	}
 
 	payload, err := json.Marshal(body)
