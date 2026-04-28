@@ -415,7 +415,6 @@ func (h APIHandler) updateSettings(w http.ResponseWriter, r *http.Request) {
 func decodeJSON[T any](w http.ResponseWriter, r *http.Request) (T, bool) {
 	var input T
 	decoder := json.NewDecoder(r.Body)
-	decoder.DisallowUnknownFields()
 	if err := decoder.Decode(&input); err != nil {
 		response.Error(w, http.StatusBadRequest, "invalid json")
 		return input, false
