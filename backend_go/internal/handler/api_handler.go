@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"errors"
+	"log"
 	"net/http"
 
 	"github.com/imanflow/baraka-ai/backend_go/internal/middleware"
@@ -432,6 +433,8 @@ func requireUserID(w http.ResponseWriter, r *http.Request) (string, bool) {
 }
 
 func writeServiceError(w http.ResponseWriter, err error) {
+	log.Printf("service error: %v", err)
+
 	switch {
 	case errors.Is(err, service.ErrInvalidCredentials):
 		response.Error(w, http.StatusUnauthorized, "invalid credentials")
@@ -442,10 +445,19 @@ func writeServiceError(w http.ResponseWriter, err error) {
 	case errors.Is(err, service.ErrNotFound):
 		response.Error(w, http.StatusNotFound, "not found")
 	case errors.Is(err, service.ErrProviderConfig):
-		response.Error(w, http.StatusServiceUnavailable, "ai provider is not configured")
+		response.JSON(w, http.StatusServiceUnavailable, map[string]any{
+			"error":   "ai_provider_not_configured",
+			"message": err.Error(),
+		})
 	case errors.Is(err, service.ErrProviderFailure):
-		response.Error(w, http.StatusBadGateway, "ai provider request failed")
+		response.JSON(w, http.StatusBadGateway, map[string]any{
+			"error":   "ai_provider_request_failed",
+			"message": err.Error(),
+		})
 	default:
-		response.Error(w, http.StatusInternalServerError, "internal server error")
+		response.JSON(w, http.StatusInternalServerError, map[string]any{
+			"error":   "internal_server_error",
+			"message": err.Error(),
+		})
 	}
 }
