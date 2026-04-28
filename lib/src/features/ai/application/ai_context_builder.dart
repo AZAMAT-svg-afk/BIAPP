@@ -6,6 +6,7 @@ import '../../habits/presentation/habit_labels.dart';
 import '../../prayer/application/prayer_controller.dart';
 import '../../prayer/presentation/prayer_labels.dart';
 import '../../settings/application/settings_controller.dart';
+import '../../settings/domain/user_settings.dart';
 import '../../stats/presentation/stats_screen.dart';
 import '../../tasks/application/tasks_controller.dart';
 import '../../tasks/presentation/task_labels.dart';
@@ -34,7 +35,9 @@ class AiContextBuilder {
     return AiUserContext(
       userName: settings.userName,
       language: settings.language,
-      mode: settings.aiMode,
+      mode: settings.aiMode == AiMentorMode.off
+          ? AiMentorMode.normal
+          : settings.aiMode,
       todayTasks: todayTasks.map((task) {
         return AiTaskContext(
           id: task.id,

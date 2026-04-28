@@ -5,6 +5,7 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../core/widgets/app_empty_state.dart';
 import '../../../core/widgets/app_motion.dart';
 import '../../../core/widgets/app_scaffold.dart';
+import '../../../core/widgets/gradient_action_button.dart';
 import '../application/habits_controller.dart';
 import '../domain/habit.dart';
 import 'widgets/habit_card.dart';
@@ -20,13 +21,13 @@ class HabitsScreen extends ConsumerWidget {
 
     return AppScaffold(
       title: l10n.habitsTitle,
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: GradientActionButton(
         onPressed: () => _showHabitSheet(context, ref),
-        icon: const Icon(Icons.add),
-        label: Text(l10n.addHabit),
+        icon: Icons.add,
+        label: l10n.addHabit,
       ),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 100),
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 150),
         children: [
           if (habits.isEmpty)
             AppEmptyState(message: l10n.emptyHabits, icon: Icons.track_changes)

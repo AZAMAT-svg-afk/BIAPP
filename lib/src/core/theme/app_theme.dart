@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'app_palette.dart';
 
@@ -6,12 +7,12 @@ class AppTheme {
   static ThemeData light() {
     const palette = AppPalette(
       emerald: Color(0xFF0C8F6C),
-      gold: Color(0xFFD7A642),
-      card: Color(0xFFFFFFFF),
-      softCard: Color(0xFFF1F7F3),
-      glass: Color(0xCCFFFFFF),
-      background: Color(0xFFF7FAF8),
-      backgroundAlt: Color(0xFFEAF5EF),
+      gold: Color(0xFFE3B85C),
+      card: Color(0x2BFFFFFF),
+      softCard: Color(0x38FFFFFF),
+      glass: Color(0x26FFFFFF),
+      background: Color(0xFFF2FAF6),
+      backgroundAlt: Color(0xFFDDF4EA),
       textMuted: Color(0xFF60736B),
       shadow: Color(0x1A0F3D34),
       success: Color(0xFF20A36B),
@@ -40,11 +41,11 @@ class AppTheme {
     const palette = AppPalette(
       emerald: Color(0xFF35D99F),
       gold: Color(0xFFE7BD62),
-      card: Color(0xFF101B23),
-      softCard: Color(0xFF172833),
-      glass: Color(0xCC101B23),
+      card: Color(0x33101B23),
+      softCard: Color(0x3D172833),
+      glass: Color(0x30101B23),
       background: Color(0xFF071017),
-      backgroundAlt: Color(0xFF0C1B22),
+      backgroundAlt: Color(0xFF0B2625),
       textMuted: Color(0xFFA8B8B1),
       shadow: Color(0x66000000),
       success: Color(0xFF45D58E),
@@ -73,11 +74,9 @@ class AppTheme {
     final baseTextTheme = scheme.brightness == Brightness.dark
         ? Typography.material2021().white
         : Typography.material2021().black;
-    final textTheme = baseTextTheme.apply(
-      fontFamily: 'Roboto',
-      bodyColor: scheme.onSurface,
-      displayColor: scheme.onSurface,
-    );
+    final textTheme = GoogleFonts.nunitoTextTheme(
+      baseTextTheme,
+    ).apply(bodyColor: scheme.onSurface, displayColor: scheme.onSurface);
 
     return ThemeData(
       useMaterial3: true,

@@ -271,13 +271,13 @@ abstract class AppLocalizations {
   /// No description provided for @aiModeNormal.
   ///
   /// In en, this message translates to:
-  /// **'Normal'**
+  /// **'Medium'**
   String get aiModeNormal;
 
   /// No description provided for @aiModeStrict.
   ///
   /// In en, this message translates to:
-  /// **'Strict'**
+  /// **'Hard'**
   String get aiModeStrict;
 
   /// No description provided for @activeMentor.
@@ -1141,6 +1141,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'AI uses only the data needed for advice: tasks, habits, streak, prayer, and statistics.'**
   String get aiPrivacyNote;
+
+  /// No description provided for @aiAlwaysOn.
+  ///
+  /// In en, this message translates to:
+  /// **'AI is always enabled'**
+  String get aiAlwaysOn;
+
+  /// No description provided for @backgroundStyle.
+  ///
+  /// In en, this message translates to:
+  /// **'App background'**
+  String get backgroundStyle;
+
+  /// No description provided for @backgroundAurora.
+  ///
+  /// In en, this message translates to:
+  /// **'Aurora'**
+  String get backgroundAurora;
+
+  /// No description provided for @backgroundSteppe.
+  ///
+  /// In en, this message translates to:
+  /// **'Steppe'**
+  String get backgroundSteppe;
+
+  /// No description provided for @backgroundParticles.
+  ///
+  /// In en, this message translates to:
+  /// **'Stars'**
+  String get backgroundParticles;
 
   /// No description provided for @privacy.
   ///

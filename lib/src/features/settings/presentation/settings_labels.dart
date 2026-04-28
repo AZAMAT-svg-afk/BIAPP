@@ -20,7 +20,7 @@ class SettingsLabels {
 
   static String aiMode(AppLocalizations l10n, AiMentorMode mode) {
     return switch (mode) {
-      AiMentorMode.off => l10n.aiModeOff,
+      AiMentorMode.off => l10n.aiModeNormal,
       AiMentorMode.soft => l10n.aiModeSoft,
       AiMentorMode.normal => l10n.aiModeNormal,
       AiMentorMode.strict => l10n.aiModeStrict,

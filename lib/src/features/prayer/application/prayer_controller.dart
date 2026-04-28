@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../settings/application/settings_controller.dart';
+import '../../settings/domain/user_settings.dart';
 import '../data/prayer_repository.dart';
 import '../domain/prayer_time.dart';
-import '../../settings/application/settings_controller.dart';
 
 final prayerRepositoryProvider = Provider<PrayerRepository>(
   (ref) => PrayerRepository(),
@@ -31,9 +34,22 @@ class PrayerController extends Notifier<List<PrayerTimeItem>> {
   @override
   List<PrayerTimeItem> build() {
     final settings = ref.watch(settingsControllerProvider);
-    return ref
+    final fallback = ref
         .read(prayerRepositoryProvider)
         .loadTodaySchedule(settings.prayer);
+    unawaited(_refreshFromApi(settings.prayer));
+    return fallback;
+  }
+
+  Future<void> _refreshFromApi(PrayerSettings settings) async {
+    try {
+      final schedule = await ref
+          .read(prayerRepositoryProvider)
+          .fetchTodaySchedule(settings);
+      state = schedule;
+    } on Object {
+      // Keep the local adhan_dart fallback schedule when the network is absent.
+    }
   }
 
   void markCompleted(PrayerType type) {

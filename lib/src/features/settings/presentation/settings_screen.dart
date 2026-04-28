@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../l10n/app_localizations.dart';
+import '../../../core/preferences/app_preferences.dart';
 import '../../../core/services/notification_service.dart';
+import '../../../core/theme/app_palette.dart';
 import '../../../core/widgets/app_card.dart';
+import '../../../core/widgets/app_chip.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/widgets/section_header.dart';
 import '../../ai/application/ai_controller.dart';
+import '../../prayer/data/prayer_repository.dart';
 import '../../prayer/presentation/prayer_labels.dart';
 import '../application/settings_controller.dart';
 import '../domain/user_settings.dart';
@@ -24,7 +28,7 @@ class SettingsScreen extends ConsumerWidget {
     return AppScaffold(
       title: l10n.settingsTitle,
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 100),
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 150),
         children: [
           SectionHeader(title: l10n.profile),
           const SizedBox(height: 12),
@@ -68,6 +72,13 @@ class SettingsScreen extends ConsumerWidget {
                     }
                   },
                 ),
+                const SizedBox(height: 12),
+                _BackgroundStyleSelector(
+                  value: ref.watch(backgroundStyleControllerProvider),
+                  onChanged: ref
+                      .read(backgroundStyleControllerProvider.notifier)
+                      .update,
+                ),
               ],
             ),
           ),
@@ -80,7 +91,10 @@ class SettingsScreen extends ConsumerWidget {
                 _ValueTile(
                   icon: Icons.location_city,
                   title: l10n.city,
-                  value: settings.prayer.city,
+                  value: KazakhstanPrayerCity.resolve(
+                    settings.prayer.city,
+                  ).displayName,
+                  onTap: () => _showCitySelector(context, ref),
                 ),
                 _ValueTile(
                   icon: Icons.calculate,
@@ -138,36 +152,17 @@ class SettingsScreen extends ConsumerWidget {
           AppCard(
             child: Column(
               children: [
-                SwitchListTile(
+                ListTile(
                   contentPadding: EdgeInsets.zero,
-                  value: settings.aiMode != AiMentorMode.off,
-                  title: Text(l10n.aiAssistantToggle),
-                  onChanged: (value) {
-                    controller.updateAiMode(
-                      value ? AiMentorMode.normal : AiMentorMode.off,
-                    );
-                  },
+                  leading: const Icon(Icons.power_settings_new_outlined),
+                  title: Text(l10n.aiAlwaysOn),
+                  subtitle: Text(l10n.aiBackendConnected),
                 ),
-                const SizedBox(height: 8),
-                DropdownButtonFormField<AiMentorMode>(
-                  initialValue: settings.aiMode == AiMentorMode.off
+                _AiModeSegmentedControl(
+                  value: settings.aiMode == AiMentorMode.off
                       ? AiMentorMode.normal
                       : settings.aiMode,
-                  decoration: InputDecoration(labelText: l10n.aiMentorMode),
-                  items: AiMentorMode.values
-                      .where((mode) => mode != AiMentorMode.off)
-                      .map((mode) {
-                        return DropdownMenuItem(
-                          value: mode,
-                          child: Text(SettingsLabels.aiMode(l10n, mode)),
-                        );
-                      })
-                      .toList(),
-                  onChanged: (value) {
-                    if (value != null) {
-                      controller.updateAiMode(value);
-                    }
-                  },
+                  onChanged: controller.updateAiMode,
                 ),
                 SwitchListTile(
                   contentPadding: EdgeInsets.zero,
@@ -237,6 +232,67 @@ class SettingsScreen extends ConsumerWidget {
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
   }
+
+  Future<void> _showCitySelector(BuildContext context, WidgetRef ref) async {
+    final settings = ref.read(settingsControllerProvider);
+    final selected = KazakhstanPrayerCity.resolve(settings.prayer.city);
+    final l10n = AppLocalizations.of(context)!;
+    final value = await showModalBottomSheet<KazakhstanPrayerCity>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Padding(
+        padding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
+        child: AppCard(
+          borderRadius: 28,
+          padding: const EdgeInsets.fromLTRB(18, 16, 18, 18),
+          child: SafeArea(
+            top: false,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(l10n.city, style: Theme.of(context).textTheme.titleLarge),
+                const SizedBox(height: 12),
+                Flexible(
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    itemCount: KazakhstanPrayerCity.cities.length,
+                    separatorBuilder: (context, index) =>
+                        const Divider(height: 1),
+                    itemBuilder: (context, index) {
+                      final city = KazakhstanPrayerCity.cities[index];
+                      final isSelected =
+                          city.displayName == selected.displayName;
+                      return ListTile(
+                        leading: Icon(
+                          isSelected
+                              ? Icons.location_on
+                              : Icons.location_city_outlined,
+                        ),
+                        title: Text(city.displayName),
+                        subtitle: Text(city.timezone),
+                        trailing: isSelected
+                            ? const Icon(Icons.check_circle)
+                            : null,
+                        onTap: () => Navigator.of(context).pop(city),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    if (value != null) {
+      ref
+          .read(settingsControllerProvider.notifier)
+          .updatePrayer(settings.prayer.copyWith(city: value.displayName));
+    }
+  }
 }
 
 class _ValueTile extends StatelessWidget {
@@ -244,11 +300,13 @@ class _ValueTile extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.value,
+    this.onTap,
   });
 
   final IconData icon;
   final String title;
   final String value;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -257,6 +315,107 @@ class _ValueTile extends StatelessWidget {
       leading: Icon(icon),
       title: Text(title),
       subtitle: Text(value),
+      trailing: onTap == null ? null : const Icon(Icons.chevron_right),
+      onTap: onTap,
     );
+  }
+}
+
+class _AiModeSegmentedControl extends StatelessWidget {
+  const _AiModeSegmentedControl({required this.value, required this.onChanged});
+
+  final AiMentorMode value;
+  final ValueChanged<AiMentorMode> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final modes = [AiMentorMode.soft, AiMentorMode.normal, AiMentorMode.strict];
+
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: [
+        for (final mode in modes)
+          ChoiceChip(
+            selected: value == mode,
+            onSelected: (_) => onChanged(mode),
+            avatar: Icon(
+              Icons.circle,
+              size: 11,
+              color: _modeColor(context, mode),
+            ),
+            label: Text(SettingsLabels.aiMode(l10n, mode)),
+          ),
+      ],
+    );
+  }
+
+  Color _modeColor(BuildContext context, AiMentorMode mode) {
+    return switch (mode) {
+      AiMentorMode.soft => context.palette.success,
+      AiMentorMode.normal => context.palette.warning,
+      AiMentorMode.strict => context.palette.danger,
+      AiMentorMode.off => context.palette.success,
+    };
+  }
+}
+
+class _BackgroundStyleSelector extends StatelessWidget {
+  const _BackgroundStyleSelector({
+    required this.value,
+    required this.onChanged,
+  });
+
+  final BackgroundAnimationStyle value;
+  final ValueChanged<BackgroundAnimationStyle> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            l10n.backgroundStyle,
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            for (final style in BackgroundAnimationStyle.values)
+              AppChip(
+                label: _label(l10n, style),
+                color: value == style
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.outline,
+                icon: _icon(style),
+                onTap: () => onChanged(style),
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  String _label(AppLocalizations l10n, BackgroundAnimationStyle style) {
+    return switch (style) {
+      BackgroundAnimationStyle.aurora => l10n.backgroundAurora,
+      BackgroundAnimationStyle.steppe => l10n.backgroundSteppe,
+      BackgroundAnimationStyle.particles => l10n.backgroundParticles,
+    };
+  }
+
+  IconData _icon(BackgroundAnimationStyle style) {
+    return switch (style) {
+      BackgroundAnimationStyle.aurora => Icons.waves_outlined,
+      BackgroundAnimationStyle.steppe => Icons.landscape_outlined,
+      BackgroundAnimationStyle.particles => Icons.auto_awesome_outlined,
+    };
   }
 }

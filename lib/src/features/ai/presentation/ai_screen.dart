@@ -5,9 +5,10 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../core/theme/app_palette.dart';
 import '../../../core/widgets/app_background.dart';
 import '../../../core/widgets/app_card.dart';
+import '../../../core/widgets/app_chip.dart';
 import '../../../core/widgets/app_motion.dart';
 import '../../../core/widgets/app_scaffold.dart';
-import '../../settings/application/settings_controller.dart';
+import '../../../core/widgets/app_skeleton.dart';
 import '../../settings/domain/user_settings.dart';
 import '../../settings/presentation/settings_labels.dart';
 import '../application/ai_context_builder.dart';
@@ -37,7 +38,6 @@ class _AiScreenState extends ConsumerState<AiScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final chat = ref.watch(aiControllerProvider);
-    final settings = ref.watch(settingsControllerProvider);
     final aiContext = ref.watch(aiContextBuilderProvider).build(l10n);
 
     ref.listen(aiControllerProvider, (previous, next) {
@@ -107,9 +107,7 @@ class _AiScreenState extends ConsumerState<AiScreen> {
                       minLines: 1,
                       maxLines: 4,
                       decoration: InputDecoration(
-                        hintText: settings.aiMode == AiMentorMode.off
-                            ? l10n.aiModeOffNotice
-                            : l10n.aiInputHint,
+                        hintText: l10n.aiInputHint,
                         prefixIcon: const Icon(Icons.auto_awesome),
                       ),
                       onSubmitted: (_) => _send(),
@@ -191,9 +189,10 @@ class _AiContextCard extends StatelessWidget {
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
-              Chip(
-                label: Text(SettingsLabels.aiMode(l10n, contextData.mode)),
-                visualDensity: VisualDensity.compact,
+              AppChip(
+                label: SettingsLabels.aiMode(l10n, contextData.mode),
+                color: _modeColor(context, contextData.mode),
+                icon: Icons.circle,
               ),
             ],
           ),
@@ -232,6 +231,15 @@ class _AiContextCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Color _modeColor(BuildContext context, AiMentorMode mode) {
+    return switch (mode) {
+      AiMentorMode.soft => context.palette.success,
+      AiMentorMode.normal => context.palette.warning,
+      AiMentorMode.strict => context.palette.danger,
+      AiMentorMode.off => context.palette.success,
+    };
   }
 }
 
@@ -338,13 +346,9 @@ class _TypingBubble extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              AppPulse(
-                child: const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                ),
-              ),
+              const AppSkeletonLine(width: 34, height: 10),
+              const SizedBox(width: 7),
+              const AppSkeletonLine(width: 22, height: 10),
               const SizedBox(width: 10),
               Text(l10n.aiTyping),
             ],

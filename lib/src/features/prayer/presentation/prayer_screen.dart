@@ -7,10 +7,12 @@ import '../../../core/widgets/app_background.dart';
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/app_motion.dart';
 import '../../../core/widgets/app_scaffold.dart';
+import '../../../core/widgets/gradient_action_button.dart';
 import '../../../core/widgets/section_header.dart';
 import '../../settings/application/settings_controller.dart';
 import '../../settings/domain/user_settings.dart';
 import '../application/prayer_controller.dart';
+import '../data/prayer_repository.dart';
 import '../domain/prayer_time.dart';
 import 'prayer_labels.dart';
 import 'widgets/prayer_card.dart';
@@ -30,7 +32,7 @@ class PrayerScreen extends ConsumerWidget {
       title: l10n.prayerTitle,
       backgroundMood: AppBackgroundMood.prayer,
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 100),
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 150),
         children: [
           AppMotion(
             child: AppCard(
@@ -48,6 +50,18 @@ class PrayerScreen extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(
+                    height: 74,
+                    width: double.infinity,
+                    child: CustomPaint(
+                      painter: _MosqueSilhouettePainter(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.primary.withValues(alpha: 0.20),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
                   Row(
                     children: [
                       Icon(
@@ -106,9 +120,14 @@ class PrayerScreen extends ConsumerWidget {
                   contentPadding: EdgeInsets.zero,
                   leading: const Icon(Icons.location_city),
                   title: Text(l10n.city),
-                  subtitle: Text(prayerSettings.city),
+                  subtitle: Text(
+                    KazakhstanPrayerCity.resolve(
+                      prayerSettings.city,
+                    ).displayName,
+                  ),
                   trailing: TextButton(
-                    onPressed: () => _editCity(context, ref, prayerSettings),
+                    onPressed: () =>
+                        _showCitySelector(context, ref, prayerSettings),
                     child: Text(l10n.edit),
                   ),
                 ),
@@ -128,14 +147,9 @@ class PrayerScreen extends ConsumerWidget {
                   decoration: InputDecoration(
                     labelText: l10n.calculationMethod,
                   ),
-                  items: const ['Muslim World League', 'Umm al-Qura', 'Karachi']
-                      .map((method) {
-                        return DropdownMenuItem(
-                          value: method,
-                          child: Text(method),
-                        );
-                      })
-                      .toList(),
+                  items: const ['Muslim World League', 'Karachi'].map((method) {
+                    return DropdownMenuItem(value: method, child: Text(method));
+                  }).toList(),
                   onChanged: (value) {
                     if (value != null) {
                       _updatePrayer(
@@ -217,38 +231,84 @@ class PrayerScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _editCity(
+  Future<void> _showCitySelector(
     BuildContext context,
     WidgetRef ref,
     PrayerSettings settings,
   ) async {
-    final controller = TextEditingController(text: settings.city);
     final l10n = AppLocalizations.of(context)!;
-    final value = await showDialog<String>(
+    final selected = KazakhstanPrayerCity.resolve(settings.city);
+    final value = await showModalBottomSheet<KazakhstanPrayerCity>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.city),
-        content: TextField(
-          controller: controller,
-          decoration: InputDecoration(labelText: l10n.city),
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Padding(
+        padding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
+        child: AppCard(
+          borderRadius: 28,
+          padding: const EdgeInsets.fromLTRB(18, 16, 18, 18),
+          child: SafeArea(
+            top: false,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 42,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.outlineVariant,
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(l10n.city, style: Theme.of(context).textTheme.titleLarge),
+                const SizedBox(height: 12),
+                Flexible(
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    itemCount: KazakhstanPrayerCity.cities.length,
+                    separatorBuilder: (context, index) =>
+                        const Divider(height: 1),
+                    itemBuilder: (context, index) {
+                      final city = KazakhstanPrayerCity.cities[index];
+                      final isSelected =
+                          city.displayName == selected.displayName;
+                      return ListTile(
+                        leading: Icon(
+                          isSelected
+                              ? Icons.location_on
+                              : Icons.location_city_outlined,
+                          color: isSelected
+                              ? Theme.of(context).colorScheme.primary
+                              : null,
+                        ),
+                        title: Text(city.displayName),
+                        subtitle: Text(city.timezone),
+                        trailing: isSelected
+                            ? const Icon(Icons.check_circle)
+                            : null,
+                        onTap: () => Navigator.of(context).pop(city),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 12),
+                GradientActionButton(
+                  label: l10n.cancel,
+                  icon: Icons.close,
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            ),
+          ),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(l10n.cancel),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(controller.text),
-            child: Text(l10n.save),
-          ),
-        ],
       ),
     );
 
-    if (value != null && value.trim().isNotEmpty) {
-      _updatePrayer(ref, settings.copyWith(city: value.trim()));
+    if (value != null) {
+      _updatePrayer(ref, settings.copyWith(city: value.displayName));
     }
-    controller.dispose();
   }
 
   void _updatePrayer(WidgetRef ref, PrayerSettings prayer) {
@@ -286,5 +346,72 @@ class _Countdown extends StatelessWidget {
     final hours = safeDuration.inHours;
     final minutes = safeDuration.inMinutes.remainder(60);
     return '${hours}h ${minutes}m';
+  }
+}
+
+class _MosqueSilhouettePainter extends CustomPainter {
+  const _MosqueSilhouettePainter({required this.color});
+
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..color = color;
+    final baseY = size.height * 0.82;
+    final path = Path()
+      ..moveTo(size.width * 0.08, baseY)
+      ..lineTo(size.width * 0.18, baseY)
+      ..lineTo(size.width * 0.18, size.height * 0.42)
+      ..quadraticBezierTo(
+        size.width * 0.22,
+        size.height * 0.30,
+        size.width * 0.26,
+        size.height * 0.42,
+      )
+      ..lineTo(size.width * 0.26, baseY)
+      ..lineTo(size.width * 0.38, baseY)
+      ..lineTo(size.width * 0.38, size.height * 0.50)
+      ..quadraticBezierTo(
+        size.width * 0.50,
+        size.height * 0.18,
+        size.width * 0.62,
+        size.height * 0.50,
+      )
+      ..lineTo(size.width * 0.62, baseY)
+      ..lineTo(size.width * 0.74, baseY)
+      ..lineTo(size.width * 0.74, size.height * 0.42)
+      ..quadraticBezierTo(
+        size.width * 0.78,
+        size.height * 0.30,
+        size.width * 0.82,
+        size.height * 0.42,
+      )
+      ..lineTo(size.width * 0.82, baseY)
+      ..lineTo(size.width * 0.92, baseY)
+      ..lineTo(size.width * 0.92, size.height)
+      ..lineTo(size.width * 0.08, size.height)
+      ..close();
+    canvas.drawPath(path, paint);
+
+    final moonPaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3
+      ..strokeCap = StrokeCap.round
+      ..color = color.withValues(alpha: 0.78);
+    canvas.drawArc(
+      Rect.fromCircle(
+        center: Offset(size.width * 0.50, size.height * 0.20),
+        radius: 16,
+      ),
+      -1.2,
+      3.4,
+      false,
+      moonPaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _MosqueSilhouettePainter oldDelegate) {
+    return oldDelegate.color != color;
   }
 }

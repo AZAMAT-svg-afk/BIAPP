@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/database/app_database.dart';
+import '../../../core/preferences/app_preferences.dart';
 import '../data/settings_repository.dart';
 import '../domain/user_settings.dart';
 
@@ -44,10 +45,13 @@ class SettingsController extends Notifier<UserSettings> {
   }
 
   void updateAiMode(AiMentorMode mode) {
+    final normalizedMode = mode == AiMentorMode.off
+        ? AiMentorMode.normal
+        : mode;
     _save(
       state.copyWith(
-        aiMode: mode,
-        activeMentor: state.activeMentor.copyWith(mode: mode),
+        aiMode: normalizedMode,
+        activeMentor: state.activeMentor.copyWith(mode: normalizedMode),
       ),
     );
   }
@@ -69,7 +73,24 @@ class SettingsController extends Notifier<UserSettings> {
   }
 
   void _save(UserSettings next) {
+    if (next.aiMode == AiMentorMode.off) {
+      next = next.copyWith(aiMode: AiMentorMode.normal);
+    }
     state = next;
     unawaited(ref.read(settingsRepositoryProvider).saveSettings(next));
+    unawaited(_saveProfilePreferences(next));
+  }
+
+  Future<void> _saveProfilePreferences(UserSettings settings) async {
+    final preferences = ref.read(appPreferencesProvider);
+    await Future.wait([
+      preferences.setString(AppPreferences.userNameKey, settings.userName),
+      preferences.setString(
+        AppPreferences.appLanguageKey,
+        settings.language.code,
+      ),
+      preferences.setString(AppPreferences.aiModeKey, settings.aiMode.name),
+      preferences.setString(AppPreferences.prayerCityKey, settings.prayer.city),
+    ]);
   }
 }

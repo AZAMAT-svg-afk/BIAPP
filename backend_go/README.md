@@ -168,7 +168,7 @@ Use `Authorization: Bearer <access_token>`.
   "language": "ru",
   "aiMode": "normal",
   "userContext": {
-    "name": "Sultan",
+    "name": "Aza",
     "todayTasks": [],
     "completedTasks": [],
     "missedTasks": [],

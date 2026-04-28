@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 import '../theme/app_palette.dart';
@@ -29,9 +31,9 @@ class _AppCardState extends State<AppCard> {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
     final palette = context.palette;
     final radius = BorderRadius.circular(widget.borderRadius);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0.985, end: 1),
@@ -48,42 +50,56 @@ class _AppCardState extends State<AppCard> {
         duration: const Duration(milliseconds: 120),
         curve: Curves.easeOutCubic,
         child: RepaintBoundary(
-          child: Material(
-            color: Colors.transparent,
-            borderRadius: radius,
-            child: InkWell(
-              onTap: widget.onTap,
-              onTapDown: widget.onTap == null
-                  ? null
-                  : (_) => setState(() => _isPressed = true),
-              onTapCancel: widget.onTap == null
-                  ? null
-                  : () => setState(() => _isPressed = false),
-              onTapUp: widget.onTap == null
-                  ? null
-                  : (_) => setState(() => _isPressed = false),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
               borderRadius: radius,
-              child: Ink(
-                width: double.infinity,
-                padding: widget.padding,
-                decoration: BoxDecoration(
-                  color: widget.gradient == null
-                      ? widget.color ?? palette.card.withValues(alpha: 0.94)
-                      : null,
-                  gradient: widget.gradient,
-                  borderRadius: radius,
-                  border: Border.all(
-                    color: scheme.outlineVariant.withValues(alpha: 0.72),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: palette.shadow,
-                      blurRadius: 28,
-                      offset: const Offset(0, 16),
-                    ),
-                  ],
+              boxShadow: [
+                BoxShadow(
+                  color: palette.shadow.withValues(alpha: isDark ? 0.72 : 0.9),
+                  blurRadius: 30,
+                  offset: const Offset(0, 18),
                 ),
-                child: widget.child,
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: radius,
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                child: Material(
+                  color: Colors.transparent,
+                  borderRadius: radius,
+                  child: InkWell(
+                    onTap: widget.onTap,
+                    onTapDown: widget.onTap == null
+                        ? null
+                        : (_) => setState(() => _isPressed = true),
+                    onTapCancel: widget.onTap == null
+                        ? null
+                        : () => setState(() => _isPressed = false),
+                    onTapUp: widget.onTap == null
+                        ? null
+                        : (_) => setState(() => _isPressed = false),
+                    borderRadius: radius,
+                    child: Ink(
+                      width: double.infinity,
+                      padding: widget.padding,
+                      decoration: BoxDecoration(
+                        color: widget.gradient == null
+                            ? widget.color ??
+                                  palette.glass.withValues(
+                                    alpha: isDark ? 0.30 : 0.44,
+                                  )
+                            : null,
+                        gradient: widget.gradient,
+                        borderRadius: radius,
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.25),
+                        ),
+                      ),
+                      child: widget.child,
+                    ),
+                  ),
+                ),
               ),
             ),
           ),

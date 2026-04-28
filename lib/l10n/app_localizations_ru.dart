@@ -94,10 +94,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get aiModeSoft => 'Мягкий';
 
   @override
-  String get aiModeNormal => 'Обычный';
+  String get aiModeNormal => 'Средний';
 
   @override
-  String get aiModeStrict => 'Строгий';
+  String get aiModeStrict => 'Жесткий';
 
   @override
   String get activeMentor => 'Активный AI-наставник';
@@ -281,22 +281,22 @@ class AppLocalizationsRu extends AppLocalizations {
   String get prayerSettings => 'Настройки намаза';
 
   @override
-  String get prayerFajr => 'Фаджр';
+  String get prayerFajr => 'Бозданғыш (Фажр)';
 
   @override
-  String get prayerSunrise => 'Восход';
+  String get prayerSunrise => 'Күн шығу';
 
   @override
-  String get prayerDhuhr => 'Зухр';
+  String get prayerDhuhr => 'Бесін (Зухр)';
 
   @override
-  String get prayerAsr => 'Аср';
+  String get prayerAsr => 'Екінті (Аср)';
 
   @override
-  String get prayerMaghrib => 'Магриб';
+  String get prayerMaghrib => 'Ақшам (Мағриб)';
 
   @override
-  String get prayerIsha => 'Иша';
+  String get prayerIsha => 'Құптан (Иша)';
 
   @override
   String get statusUpcoming => 'Предстоит';
@@ -576,6 +576,21 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get aiPrivacyNote =>
       'AI использует только данные, которые нужны для советов: задачи, привычки, streak, намаз и статистику.';
+
+  @override
+  String get aiAlwaysOn => 'AI всегда включен';
+
+  @override
+  String get backgroundStyle => 'Фон приложения';
+
+  @override
+  String get backgroundAurora => 'Аврора';
+
+  @override
+  String get backgroundSteppe => 'Степь';
+
+  @override
+  String get backgroundParticles => 'Звезды';
 
   @override
   String get privacy => 'Приватность';

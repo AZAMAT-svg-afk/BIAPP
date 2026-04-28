@@ -22,7 +22,15 @@ class AppScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-      floatingActionButton: floatingActionButton,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: floatingActionButton == null
+          ? null
+          : Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.paddingOf(context).bottom + 80,
+              ),
+              child: floatingActionButton,
+            ),
       appBar: AppBar(title: Text(title), actions: actions),
       body: AppBackground(
         mood: backgroundMood,

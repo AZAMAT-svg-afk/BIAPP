@@ -49,7 +49,7 @@ class StatsScreen extends ConsumerWidget {
       title: l10n.statsTitle,
       backgroundMood: AppBackgroundMood.stats,
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 100),
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 150),
         children: [
           AppMotion(
             child: Row(

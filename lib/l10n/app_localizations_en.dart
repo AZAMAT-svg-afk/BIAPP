@@ -94,10 +94,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aiModeSoft => 'Soft';
 
   @override
-  String get aiModeNormal => 'Normal';
+  String get aiModeNormal => 'Medium';
 
   @override
-  String get aiModeStrict => 'Strict';
+  String get aiModeStrict => 'Hard';
 
   @override
   String get activeMentor => 'Active AI mentor';
@@ -576,6 +576,21 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get aiPrivacyNote =>
       'AI uses only the data needed for advice: tasks, habits, streak, prayer, and statistics.';
+
+  @override
+  String get aiAlwaysOn => 'AI is always enabled';
+
+  @override
+  String get backgroundStyle => 'App background';
+
+  @override
+  String get backgroundAurora => 'Aurora';
+
+  @override
+  String get backgroundSteppe => 'Steppe';
+
+  @override
+  String get backgroundParticles => 'Stars';
 
   @override
   String get privacy => 'Privacy';

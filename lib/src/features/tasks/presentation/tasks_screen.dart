@@ -122,11 +122,14 @@ class TasksScreen extends ConsumerWidget {
           Positioned(
             left: 20,
             right: 20,
-            bottom: 102 + MediaQuery.paddingOf(context).bottom,
-            child: GradientActionButton(
-              label: l10n.addTask,
-              icon: Icons.add,
-              onPressed: () => _showTaskSheet(context, ref),
+            bottom: 80 + MediaQuery.paddingOf(context).bottom,
+            child: AppMotion(
+              distance: -14,
+              child: GradientActionButton(
+                label: '+ ${l10n.addTask}',
+                icon: Icons.add,
+                onPressed: () => _showTaskSheet(context, ref),
+              ),
             ),
           ),
         ],

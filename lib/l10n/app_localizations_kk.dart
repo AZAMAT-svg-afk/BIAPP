@@ -94,10 +94,10 @@ class AppLocalizationsKk extends AppLocalizations {
   String get aiModeSoft => 'Жұмсақ';
 
   @override
-  String get aiModeNormal => 'Қалыпты';
+  String get aiModeNormal => 'Орта';
 
   @override
-  String get aiModeStrict => 'Қатаң';
+  String get aiModeStrict => 'Қатал';
 
   @override
   String get activeMentor => 'Белсенді AI-наставник';
@@ -280,22 +280,22 @@ class AppLocalizationsKk extends AppLocalizations {
   String get prayerSettings => 'Намаз баптаулары';
 
   @override
-  String get prayerFajr => 'Фаджр';
+  String get prayerFajr => 'Бозданғыш (Фажр)';
 
   @override
   String get prayerSunrise => 'Күн шығу';
 
   @override
-  String get prayerDhuhr => 'Зухр';
+  String get prayerDhuhr => 'Бесін (Зухр)';
 
   @override
-  String get prayerAsr => 'Аср';
+  String get prayerAsr => 'Екінті (Аср)';
 
   @override
-  String get prayerMaghrib => 'Магриб';
+  String get prayerMaghrib => 'Ақшам (Мағриб)';
 
   @override
-  String get prayerIsha => 'Иша';
+  String get prayerIsha => 'Құптан (Иша)';
 
   @override
   String get statusUpcoming => 'Алда';
@@ -575,6 +575,21 @@ class AppLocalizationsKk extends AppLocalizations {
   @override
   String get aiPrivacyNote =>
       'AI кеңес беру үшін қажет деректерді ғана қолданады: тапсырмалар, әдеттер, streak, намаз және статистика.';
+
+  @override
+  String get aiAlwaysOn => 'AI әрқашан қосулы';
+
+  @override
+  String get backgroundStyle => 'Қолданба фоны';
+
+  @override
+  String get backgroundAurora => 'Аврора';
+
+  @override
+  String get backgroundSteppe => 'Дала';
+
+  @override
+  String get backgroundParticles => 'Жұлдыздар';
 
   @override
   String get privacy => 'Құпиялық';

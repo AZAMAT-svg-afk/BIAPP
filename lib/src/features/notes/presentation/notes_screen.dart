@@ -6,6 +6,7 @@ import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/app_empty_state.dart';
 import '../../../core/widgets/app_motion.dart';
 import '../../../core/widgets/app_scaffold.dart';
+import '../../../core/widgets/gradient_action_button.dart';
 import '../../tasks/application/tasks_controller.dart';
 import '../application/notes_controller.dart';
 import '../domain/note.dart';
@@ -43,13 +44,13 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
 
     return AppScaffold(
       title: l10n.notesTitle,
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: GradientActionButton(
         onPressed: () => _showNoteSheet(context),
-        icon: const Icon(Icons.add),
-        label: Text(l10n.addNote),
+        icon: Icons.add,
+        label: l10n.addNote,
       ),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 100),
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 150),
         children: [
           TextField(
             controller: _searchController,

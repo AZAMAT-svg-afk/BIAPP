@@ -200,6 +200,7 @@ class MoreScreen extends ConsumerWidget {
               const SizedBox(height: 18),
               Expanded(
                 child: GridView.builder(
+                  padding: const EdgeInsets.only(bottom: 150),
                   itemCount: items.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,

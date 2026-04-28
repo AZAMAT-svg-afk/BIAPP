@@ -15,7 +15,7 @@ class SettingsRepository {
       language: AppLanguage.ru,
       themeMode: AppThemePreference.system,
       prayer: PrayerSettings(
-        city: 'Qyzylorda',
+        city: 'Қызылорда',
         calculationMethod: 'Muslim World League',
         madhhab: Madhhab.hanafi,
         useGeolocation: false,
@@ -92,7 +92,9 @@ class SettingsRepository {
   }
 
   UserSettings _fromRecord(SettingsRecord record) {
-    final aiMode = _enumByName(AiMentorMode.values, record.aiMode);
+    final aiMode = _normalizeAiMode(
+      _enumByName(AiMentorMode.values, record.aiMode),
+    );
     return UserSettings(
       userName: record.userName,
       language: _enumByName(AppLanguage.values, record.language),
@@ -110,7 +112,9 @@ class SettingsRepository {
       aiMode: aiMode,
       activeMentor: ActiveMentorSettings(
         enabled: record.activeMentorEnabled,
-        mode: _enumByName(AiMentorMode.values, record.activeMentorMode),
+        mode: _normalizeAiMode(
+          _enumByName(AiMentorMode.values, record.activeMentorMode),
+        ),
         maxFollowUpsPerItem: record.maxFollowUpsPerItem,
         quietHoursStart: _minutesToTimeOfDay(record.quietHoursStartMinutes),
         quietHoursEnd: _minutesToTimeOfDay(record.quietHoursEndMinutes),
@@ -133,5 +137,9 @@ class SettingsRepository {
       (value) => value.name == name,
       orElse: () => values.first,
     );
+  }
+
+  AiMentorMode _normalizeAiMode(AiMentorMode mode) {
+    return mode == AiMentorMode.off ? AiMentorMode.normal : mode;
   }
 }

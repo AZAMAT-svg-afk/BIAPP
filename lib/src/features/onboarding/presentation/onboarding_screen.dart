@@ -264,10 +264,16 @@ class _AiModeSelector extends StatelessWidget {
       spacing: 8,
       runSpacing: 8,
       children: [
-        for (final mode in AiMentorMode.values)
+        for (final mode in [
+          AiMentorMode.soft,
+          AiMentorMode.normal,
+          AiMentorMode.strict,
+        ])
           ChoiceChip(
             label: Text(SettingsLabels.aiMode(l10n, mode)),
-            selected: value == mode,
+            selected:
+                (value == AiMentorMode.off ? AiMentorMode.normal : value) ==
+                mode,
             onSelected: (_) => onChanged(mode),
           ),
       ],

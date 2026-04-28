@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'gradient_action_button.dart';
+
 class PrimaryButton extends StatelessWidget {
   const PrimaryButton({
     required this.label,
@@ -14,18 +16,13 @@ class PrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final child = icon == null
-        ? Text(label)
-        : Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(icon, size: 20),
-              const SizedBox(width: 10),
-              Flexible(child: Text(label)),
-            ],
-          );
-
-    return FilledButton(onPressed: onPressed, child: child);
+    return SizedBox(
+      width: double.infinity,
+      child: GradientActionButton(
+        label: label,
+        icon: icon,
+        onPressed: onPressed,
+      ),
+    );
   }
 }

@@ -5,16 +5,18 @@ class AppChip extends StatelessWidget {
     required this.label,
     required this.color,
     this.icon,
+    this.onTap,
     super.key,
   });
 
   final String label;
   final Color color;
   final IconData? icon;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
+    final chip = DecoratedBox(
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(999),
@@ -43,6 +45,16 @@ class AppChip extends StatelessWidget {
           ],
         ),
       ),
+    );
+
+    if (onTap == null) {
+      return chip;
+    }
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(999),
+      child: chip,
     );
   }
 }
