@@ -1,0 +1,287 @@
+{
+  "@@locale": "en",
+  "appTitle": "Baraka AI",
+  "homeTab": "Home",
+  "tasksTab": "Tasks",
+  "prayerTab": "Prayer",
+  "aiTab": "AI",
+  "moreTab": "More",
+  "notesTitle": "Notes",
+  "habitsTitle": "Habits",
+  "statsTitle": "Stats",
+  "settingsTitle": "Settings",
+  "onboardingTitle": "Set your niyyah",
+  "onboardingSubtitle": "A calm mobile space for prayer, tasks, habits, notes, streaks, and a respectful AI mentor.",
+  "yourName": "Your name",
+  "language": "Language",
+  "theme": "Theme",
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "prayerSetup": "Prayer setup",
+  "city": "City",
+  "geolocation": "Use geolocation",
+  "calculationMethod": "Calculation method",
+  "madhhab": "Madhhab",
+  "hanafi": "Hanafi",
+  "shafii": "Shafi'i",
+  "aiMentorMode": "AI mentor mode",
+  "aiModeOff": "Off",
+  "aiModeSoft": "Soft",
+  "aiModeNormal": "Normal",
+  "aiModeStrict": "Strict",
+  "activeMentor": "Active AI mentor",
+  "activeMentorHint": "Extra reminders if you ignore prayer or task alerts.",
+  "activeMentorAntiSpam": "Max 2 extra reminders per item and quiet hours are respected.",
+  "requestNotifications": "Allow notifications",
+  "startApp": "Start",
+  "greetingName": "Assalamu alaikum, {name}",
+  "@greetingName": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "days": "days",
+  "motivationOne": "Small sincere steps still count.",
+  "motivationTwo": "Protect the day before the day runs away.",
+  "motivationThree": "Start with the smallest useful action.",
+  "motivationFour": "Discipline feels lighter after the first two minutes.",
+  "nextPrayer": "Next prayer",
+  "tasksToday": "Today's tasks",
+  "taskProgress": "{completed}/{total} completed",
+  "@taskProgress": {
+    "placeholders": {
+      "completed": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "quickActions": "Quick actions",
+  "addTask": "Add task",
+  "addNote": "Add note",
+  "openAi": "Open AI",
+  "openPrayer": "Open prayer",
+  "openStats": "Open stats",
+  "today": "Today",
+  "emptyTasks": "No tasks yet.",
+  "tasksTitle": "Tasks",
+  "tasksSubtitle": "Organize your plans for today",
+  "completedTasks": "Completed",
+  "emptyCompleted": "Completed tasks will appear here.",
+  "missedTasks": "Missed",
+  "noMissedTasks": "No missed tasks.",
+  "editTask": "Edit task",
+  "taskTitleField": "Task title",
+  "description": "Description",
+  "category": "Category",
+  "priority": "Priority",
+  "priorityLow": "Low",
+  "priorityMedium": "Medium",
+  "priorityHigh": "High",
+  "repeat": "Repeat",
+  "repeatNone": "None",
+  "repeatDaily": "Daily",
+  "repeatWeekly": "Weekly",
+  "repeatMonthly": "Monthly",
+  "reminder": "Reminder",
+  "reminderEnabled": "Reminder enabled",
+  "noTime": "No time",
+  "choose": "Choose",
+  "save": "Save",
+  "cancel": "Cancel",
+  "edit": "Edit",
+  "delete": "Delete",
+  "taskReadQuranTitle": "Read Quran",
+  "taskReadQuranDesc": "Read at least one page with focus.",
+  "taskPushupsTitle": "10 push-ups",
+  "taskPushupsDesc": "A quick body reset.",
+  "taskReadBookTitle": "Read a book",
+  "taskReadBookDesc": "Ten quiet pages before rest.",
+  "prayerTitle": "Prayer",
+  "todaySchedule": "Today schedule",
+  "prayerSettings": "Prayer settings",
+  "prayerFajr": "Fajr",
+  "prayerSunrise": "Sunrise",
+  "prayerDhuhr": "Dhuhr",
+  "prayerAsr": "Asr",
+  "prayerMaghrib": "Maghrib",
+  "prayerIsha": "Isha",
+  "statusUpcoming": "Upcoming",
+  "statusCurrent": "Now",
+  "statusPast": "Passed",
+  "notifications": "Notifications",
+  "sound": "Sound",
+  "vibration": "Vibration",
+  "adhan": "Adhan",
+  "timeUntilPrayer": "{duration} until {prayer}",
+  "@timeUntilPrayer": {
+    "placeholders": {
+      "duration": { "type": "String" },
+      "prayer": { "type": "String" }
+    }
+  },
+  "habitQuran": "Read Quran",
+  "habitBook": "Read a book",
+  "habitPushups": "Push-ups",
+  "habitEnglish": "Learn English",
+  "habitProgramming": "Learn programming",
+  "habitWater": "Drink water",
+  "addHabit": "Add habit",
+  "editHabit": "Edit habit",
+  "emptyHabits": "No habits yet.",
+  "habitName": "Habit name",
+  "targetPerDay": "Target per day",
+  "habitProgress": "{completed}/{target} today",
+  "@habitProgress": {
+    "placeholders": {
+      "completed": { "type": "int" },
+      "target": { "type": "int" }
+    }
+  },
+  "streakDays": "{count} day streak",
+  "@streakDays": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "search": "Search",
+  "emptyNotes": "No notes yet.",
+  "editNote": "Edit note",
+  "noteTitleField": "Note title",
+  "noteContentField": "Content",
+  "tags": "Tags",
+  "noteToTask": "Make task",
+  "tasksDoneToday": "Tasks done today",
+  "tasksMissed": "Tasks missed",
+  "completion": "Completion",
+  "weekActivity": "Week activity",
+  "streaks": "Streaks",
+  "taskStreak": "Tasks: {count}d",
+  "@taskStreak": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "habitStreak": "Habits: {count}d",
+  "@habitStreak": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "prayerStreak": "Prayer: {count}d",
+  "@prayerStreak": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "appStreak": "App: {count}d",
+  "@appStreak": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "perfectDayStreak": "Perfect days: {count}d",
+  "@perfectDayStreak": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "insights": "Insights",
+  "bestWeekday": "Best weekday",
+  "stableHabit": "Most stable habit",
+  "mostMissedTask": "Most missed task",
+  "noData": "No data",
+  "monday": "Monday",
+  "tuesday": "Tuesday",
+  "wednesday": "Wednesday",
+  "thursday": "Thursday",
+  "friday": "Friday",
+  "saturday": "Saturday",
+  "sunday": "Sunday",
+  "aiTitle": "AI mentor",
+  "clearAiHistory": "Clear AI history",
+  "aiEmpty": "Ask about your day, laziness, tasks, prayer time, or a tiny next step.",
+  "aiInputHint": "Message your mentor...",
+  "aiOffReply": "AI mentor is turned off in settings.",
+  "aiLazyReply": "I get it. Do not do everything, do one tiny step. Before {prayer} in {duration}, finish 2 minutes and keep your {streak}-day streak alive.",
+  "@aiLazyReply": {
+    "placeholders": {
+      "prayer": { "type": "String" },
+      "duration": { "type": "String" },
+      "streak": { "type": "int" }
+    }
+  },
+  "aiSoftReply": "{name}, you have {openTasks} open tasks. Next prayer is {prayer} in {duration}. Pick the smallest one and close it calmly.",
+  "@aiSoftReply": {
+    "placeholders": {
+      "name": { "type": "String" },
+      "openTasks": { "type": "int" },
+      "prayer": { "type": "String" },
+      "duration": { "type": "String" }
+    }
+  },
+  "aiNormalReply": "You completed {completedTasks} tasks and still have {openTasks}. {prayer} is in {duration}. Close one small action now, then rest cleaner.",
+  "@aiNormalReply": {
+    "placeholders": {
+      "completedTasks": { "type": "int" },
+      "openTasks": { "type": "int" },
+      "prayer": { "type": "String" },
+      "duration": { "type": "String" }
+    }
+  },
+  "aiStrictReply": "Bro, {openTasks} tasks are still open. {prayer} is in {duration}. Do 2 minutes now. This is for you, not for anyone else.",
+  "@aiStrictReply": {
+    "placeholders": {
+      "openTasks": { "type": "int" },
+      "prayer": { "type": "String" },
+      "duration": { "type": "String" }
+    }
+  },
+  "aiContextTitle": "Live context",
+  "aiContextTasks": "{completed}/{total} tasks",
+  "@aiContextTasks": {
+    "placeholders": {
+      "completed": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "aiContextHabits": "{completed}/{total} habits",
+  "@aiContextHabits": {
+    "placeholders": {
+      "completed": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "aiContextNextPrayer": "{prayer} in {duration}",
+  "@aiContextNextPrayer": {
+    "placeholders": {
+      "prayer": { "type": "String" },
+      "duration": { "type": "String" }
+    }
+  },
+  "aiContextStreak": "{count}d streak",
+  "@aiContextStreak": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "aiTyping": "Mentor is thinking...",
+  "aiQuickLazy": "I'm lazy",
+  "aiQuickPlanDay": "Plan my day",
+  "aiQuickSummary": "Daily summary",
+  "aiQuickMotivate": "Motivate me",
+  "aiErrorPrefix": "AI error",
+  "aiUnavailable": "AI is temporarily unavailable. Try again later.",
+  "aiModeOffNotice": "AI mode is off. You can enable it in settings.",
+  "profile": "Profile",
+  "prayerNotifications": "Prayer notifications",
+  "aiSettings": "AI settings",
+  "aiAssistantToggle": "AI Assistant",
+  "aiBackendConnected": "Connected via backend",
+  "aiPrivacyNote": "AI uses only the data needed for advice: tasks, habits, streak, prayer, and statistics.",
+  "privacy": "Privacy",
+  "exportData": "Export data",
+  "deleteAccount": "Delete account",
+  "restartOnboarding": "Restart onboarding",
+  "stub": "Coming later",
+  "done": "Done"
+}
