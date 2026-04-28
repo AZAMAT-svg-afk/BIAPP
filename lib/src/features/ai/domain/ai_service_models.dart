@@ -21,16 +21,17 @@ class AiChatRequest {
 
   Map<String, Object?> toBackendJson() {
     final rawContext = context.toJson();
+
     return {
       'message': message,
       'language': context.language.code,
       'aiMode': context.mode.name,
       'userContext': {
         'name': context.userName,
-        'todayTasks': rawContext['today_tasks'],
-        'completedTasks': rawContext['completed_tasks'],
-        'missedTasks': rawContext['missed_tasks'],
-        'habits': rawContext['habits'],
+        'todayTasks': _safeList(rawContext['today_tasks']),
+        'completedTasks': _safeList(rawContext['completed_tasks']),
+        'missedTasks': _safeList(rawContext['missed_tasks']),
+        'habits': _safeList(rawContext['habits']),
         'streaks': {
           'task': context.taskStreak,
           'habit': context.habitStreak,
@@ -45,9 +46,36 @@ class AiChatRequest {
         'weeklyStats': {'completionRate': context.weeklyCompletionRate},
         'mood': context.mood,
       },
-      'context': rawContext,
-      'history': history.map(_messageToJson).toList(),
     };
+  }
+
+  List<Object?> _safeList(Object? value) {
+    if (value is List) {
+      return value.map(_jsonSafe).toList();
+    }
+    return const [];
+  }
+
+  Object? _jsonSafe(Object? value) {
+    if (value == null || value is String || value is num || value is bool) {
+      return value;
+    }
+
+    if (value is DateTime) {
+      return value.toIso8601String();
+    }
+
+    if (value is List) {
+      return value.map(_jsonSafe).toList();
+    }
+
+    if (value is Map) {
+      return value.map(
+        (key, mapValue) => MapEntry(key.toString(), _jsonSafe(mapValue)),
+      );
+    }
+
+    return value.toString();
   }
 
   Map<String, Object?> _messageToJson(AiMessage message) {
