@@ -1,20 +1,21 @@
 package model
 
-import "time"
-
 type AIMessage struct {
-	Role      string    `json:"role"`
-	Content   string    `json:"content"`
-	CreatedAt time.Time `json:"created_at,omitempty"`
+	Role      string `json:"role"`
+	Content   string `json:"content"`
+	CreatedAt string `json:"created_at,omitempty"`
 }
 
 type ChatRequest struct {
-	Message     string         `json:"message"`
-	Language    string         `json:"language"`
-	AIMode      string         `json:"aiMode"`
-	UserContext map[string]any `json:"userContext"`
-	Context     map[string]any `json:"context,omitempty"`
-	History     []AIMessage    `json:"history,omitempty"`
+	Message           string         `json:"message"`
+	Language          string         `json:"language"`
+	DetectedLanguage  string         `json:"detectedLanguage,omitempty"`
+	AIMode            string         `json:"aiMode"`
+	ModeSystemPrompt  string         `json:"modeSystemPrompt,omitempty"`
+	ReplyLanguageRule string         `json:"replyLanguageRule,omitempty"`
+	UserContext       map[string]any `json:"userContext"`
+	Context           map[string]any `json:"context,omitempty"`
+	History           []AIMessage    `json:"history,omitempty"`
 }
 
 type ChatResponse struct {
