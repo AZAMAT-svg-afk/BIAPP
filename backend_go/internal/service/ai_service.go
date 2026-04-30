@@ -2,7 +2,9 @@ package service
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"log"
 	"strings"
 	"unicode"
 
@@ -47,6 +49,8 @@ func newAIProvider(cfg config.Config) AIProvider {
 		return newHuggingFaceProvider("huggingface", cfg)
 	case "qwen":
 		return newHuggingFaceProvider("qwen", cfg)
+	case "alem":
+		return newAlemProvider(cfg)
 	default:
 		return MockAIProvider{}
 	}
@@ -61,6 +65,7 @@ func (s AIService) Chat(ctx context.Context, request model.ChatRequest) (model.C
 
 	if request.AIMode == "off" {
 		reply := localizedAIOff(request.Language)
+
 		return model.ChatResponse{
 			Reply:       reply,
 			Message:     reply,
@@ -73,7 +78,7 @@ func (s AIService) Chat(ctx context.Context, request model.ChatRequest) (model.C
 
 	systemPrompt := s.promptBuilder.Build(request)
 
-	reply, err := s.provider.Chat(ctx, AIProviderRequest{
+	providerRequest := AIProviderRequest{
 		Model:        s.cfg.AIModel,
 		SystemPrompt: systemPrompt,
 		UserMessage:  request.Message,
@@ -81,16 +86,38 @@ func (s AIService) Chat(ctx context.Context, request model.ChatRequest) (model.C
 		Mode:         request.AIMode,
 		UserContext:  request.UserContext,
 		History:      request.History,
-	})
+	}
+
+	providerName := s.provider.Name()
+	modelName := s.cfg.AIModel
+
+	reply, err := s.provider.Chat(ctx, providerRequest)
 	if err != nil {
-		return model.ChatResponse{}, err
+		log.Printf("ai provider %s failed: %v", providerName, err)
+
+		// Provider fallback protects the mobile app from external AI quota,
+		// timeout, payment, or provider outages. The app should not show
+		// “AI unavailable” just because an external model failed.
+		if errors.Is(err, ErrProviderFailure) || errors.Is(err, ErrProviderConfig) {
+			fallbackReply, fallbackErr := MockAIProvider{}.Chat(ctx, providerRequest)
+			if fallbackErr == nil && strings.TrimSpace(fallbackReply) != "" {
+				reply = fallbackReply
+				providerName = "local-fallback"
+				modelName = "local-fallback"
+			} else {
+				return model.ChatResponse{}, err
+			}
+		} else {
+			return model.ChatResponse{}, err
+		}
 	}
 
 	reply = normalizeAIReply(reply)
 
 	// Language repair: егер модель бұрыс тілде жауап берсе,
 	// бір рет қайта сұраймыз. Repair сәтсіз болса — оригиналды қалдырамыз.
-	if shouldAttemptLanguageRepair(s.provider.Name(), request.Language, reply) {
+	// local-fallback үшін repair жасамаймыз, себебі ол сыртқы provider-ге қайта бармауы керек.
+	if providerName != "local-fallback" && shouldAttemptLanguageRepair(providerName, request.Language, reply) {
 		repaired, repairErr := s.repairLanguage(ctx, request, reply)
 		if repairErr == nil && isUsableRepairedReply(request.Language, repaired) {
 			reply = normalizeAIReply(repaired)
@@ -107,8 +134,8 @@ func (s AIService) Chat(ctx context.Context, request model.ChatRequest) (model.C
 		Reply:       reply,
 		Message:     reply,
 		Mode:        request.AIMode,
-		Provider:    s.provider.Name(),
-		Model:       s.cfg.AIModel,
+		Provider:    providerName,
+		Model:       modelName,
 		ContextUsed: request.UserContext,
 	}, nil
 }
@@ -142,7 +169,7 @@ Rules:
 - Reply ONLY in Kazakh Cyrillic.
 - Do not add new facts.
 - Do not remove important meaning.
-- Do not change task names (e.g. "10 отжимание", "Go", "React" — keep as written).
+- Do not change task names, for example "10 отжимание", "Go", "React" — keep as written.
 - The sentence around task names must be Kazakh.
 - Do not ask new questions.
 - Do not use Russian, English, Turkish, Uzbek, Kyrgyz, or random words.
@@ -200,16 +227,14 @@ Rules:
 	}
 }
 
-// shouldAttemptLanguageRepair — жауап бұрыс тілде екенін анықтайды.
-// Qwen кейде тіл аралас немесе мүлдем басқа тілде жазады,
-// сондықтан тек forbidden fragments емес, тіл ratio-сын да тексереміз.
 func shouldAttemptLanguageRepair(provider string, language string, reply string) bool {
 	reply = strings.TrimSpace(reply)
 	if reply == "" {
 		return false
 	}
 
-	if strings.EqualFold(strings.TrimSpace(provider), "mock") {
+	if strings.EqualFold(strings.TrimSpace(provider), "mock") ||
+		strings.EqualFold(strings.TrimSpace(provider), "local-fallback") {
 		return false
 	}
 
@@ -218,23 +243,18 @@ func shouldAttemptLanguageRepair(provider string, language string, reply string)
 
 	switch language {
 	case "Kazakh":
-		// 1. Жауапта қазақ арнайы әріптері мүлдем жоқ және кирилл ratio төмен — бұрыс тіл
 		if !hasKazakhSpecificLetters(reply) && cyrillicRatio(reply) < 0.3 {
 			return true
 		}
-		// 2. Орыс/ағылшын forbidden fragments бар
 		return hasKazakhLanguageProblems(lower)
 
 	case "Russian":
-		// 1. Кирилл ratio тым төмен — орыс емес тілде жазылған
 		if cyrillicRatio(reply) < 0.5 {
 			return true
 		}
-		// 2. Қазақ арнайы әріптері немесе ағылшын fragments бар
 		return hasRussianLanguageProblems(reply)
 
 	case "English":
-		// Кирилл ratio тым жоғары — ағылшын емес
 		return hasEnglishLanguageProblems(reply)
 
 	default:
@@ -243,8 +263,6 @@ func shouldAttemptLanguageRepair(provider string, language string, reply string)
 }
 
 func hasKazakhLanguageProblems(lower string) bool {
-	// Тапсырма атауларын тіркелмейміз ("отжимание", "Go", "React") —
-	// олар орыс/ағылшын болса да task title ретінде сақталады.
 	forbiddenFragments := []string{
 		"начни",
 		"сейчас",
@@ -299,7 +317,6 @@ func hasRussianLanguageProblems(reply string) bool {
 }
 
 func hasEnglishLanguageProblems(reply string) bool {
-	// Кирилл ratio 25%-дан жоғары болса — модель сбился
 	return cyrillicRatio(reply) > 0.25
 }
 
@@ -386,9 +403,7 @@ func polishKazakhReply(reply string) string {
 		reply = strings.ReplaceAll(reply, replacement.old, replacement.new)
 	}
 
-	reply = cleanCommonPunctuation(reply)
-
-	return reply
+	return cleanCommonPunctuation(reply)
 }
 
 func polishRussianReply(reply string) string {
@@ -397,8 +412,7 @@ func polishRussianReply(reply string) string {
 		return ""
 	}
 
-	reply = cleanCommonPunctuation(reply)
-	return reply
+	return cleanCommonPunctuation(reply)
 }
 
 func polishEnglishReply(reply string) string {
@@ -407,8 +421,7 @@ func polishEnglishReply(reply string) string {
 		return ""
 	}
 
-	reply = cleanCommonPunctuation(reply)
-	return reply
+	return cleanCommonPunctuation(reply)
 }
 
 func normalizeAIReply(reply string) string {
@@ -453,7 +466,6 @@ func cleanCommonPunctuation(text string) string {
 		{" :", ":"},
 		{" ;", ";"},
 		{"..", "."},
-		{" ,", ","},
 	}
 
 	for _, replacement := range replacements {

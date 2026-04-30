@@ -34,7 +34,7 @@ func newOpenAIProvider(cfg config.Config) AIProvider {
 }
 
 func defaultAIHTTPClient() *http.Client {
-	return &http.Client{Timeout: 45 * time.Second}
+	return &http.Client{Timeout: 60 * time.Second}
 }
 
 func (p compatibleChatProvider) Name() string {
@@ -46,15 +46,31 @@ func (p compatibleChatProvider) Chat(ctx context.Context, request AIProviderRequ
 	if modelName == "" {
 		return "", providerConfigError("AI_MODEL is required for %s provider", p.name)
 	}
-	if strings.TrimSpace(p.apiKey) == "" {
+
+	apiKey := strings.TrimSpace(p.apiKey)
+	if apiKey == "" {
 		return "", providerConfigError("API key is required for %s provider", p.name)
 	}
+
+	disableThinking := false
 
 	body := chatCompletionRequest{
 		Model:       modelName,
 		Messages:    buildChatMessages(request),
-		MaxTokens:   180,
-		Temperature: 0.15,
+		MaxTokens:   2500,
+		Temperature: 0.2,
+		TopP:        0.9,
+		Stream:      false,
+
+		// Important for Qwen3 / Alem:
+		// bool false with omitempty is omitted, so this must be *bool.
+		EnableThinking: &disableThinking,
+
+		// Some OpenAI-compatible Qwen/vLLM routers use this field
+		// to disable thinking mode.
+		ChatTemplateKwargs: map[string]any{
+			"enable_thinking": false,
+		},
 	}
 
 	payload, err := json.Marshal(body)
@@ -67,7 +83,7 @@ func (p compatibleChatProvider) Chat(ctx context.Context, request AIProviderRequ
 		return "", providerFailure("create request: %v", err)
 	}
 
-	httpRequest.Header.Set("Authorization", "Bearer "+p.apiKey)
+	httpRequest.Header.Set("Authorization", "Bearer "+apiKey)
 	httpRequest.Header.Set("Content-Type", "application/json")
 	httpRequest.Header.Set("Accept", "application/json")
 
@@ -77,7 +93,7 @@ func (p compatibleChatProvider) Chat(ctx context.Context, request AIProviderRequ
 	}
 	defer response.Body.Close()
 
-	rawBody, err := io.ReadAll(io.LimitReader(response.Body, 1<<20))
+	rawBody, err := io.ReadAll(io.LimitReader(response.Body, 2<<20))
 	if err != nil {
 		return "", providerFailure("read response: %v", err)
 	}
@@ -95,18 +111,37 @@ func (p compatibleChatProvider) Chat(ctx context.Context, request AIProviderRequ
 		return "", providerFailure("%s error: %s", p.name, decoded.Error.Message)
 	}
 
-	if len(decoded.Choices) == 0 || strings.TrimSpace(decoded.Choices[0].Message.Content) == "" {
+	if len(decoded.Choices) == 0 {
+		return "", providerFailure("%s returned no choices. Body: %s", p.name, compactBody(rawBody))
+	}
+
+	content := strings.TrimSpace(decoded.Choices[0].Message.Content)
+	if content == "" {
+		reasoning := strings.TrimSpace(decoded.Choices[0].Message.ReasoningContent)
+		if reasoning != "" {
+			return "", providerFailure(
+				"%s returned reasoning only without final content. finish_reason=%s. Increase max_tokens or disable thinking. Body: %s",
+				p.name,
+				decoded.Choices[0].FinishReason,
+				compactBody(rawBody),
+			)
+		}
+
 		return "", providerFailure("%s returned empty reply. Body: %s", p.name, compactBody(rawBody))
 	}
 
-	return strings.TrimSpace(decoded.Choices[0].Message.Content), nil
+	return content, nil
 }
 
 type chatCompletionRequest struct {
-	Model       string                  `json:"model"`
-	Messages    []chatCompletionMessage `json:"messages"`
-	MaxTokens   int                     `json:"max_tokens,omitempty"`
-	Temperature float64                 `json:"temperature,omitempty"`
+	Model              string                  `json:"model"`
+	Messages           []chatCompletionMessage `json:"messages"`
+	MaxTokens          int                     `json:"max_tokens,omitempty"`
+	Temperature        float64                 `json:"temperature,omitempty"`
+	TopP               float64                 `json:"top_p,omitempty"`
+	Stream             bool                    `json:"stream"`
+	EnableThinking     *bool                   `json:"enable_thinking,omitempty"`
+	ChatTemplateKwargs map[string]any          `json:"chat_template_kwargs,omitempty"`
 }
 
 type chatCompletionMessage struct {
@@ -116,7 +151,12 @@ type chatCompletionMessage struct {
 
 type chatCompletionResponse struct {
 	Choices []struct {
-		Message chatCompletionMessage `json:"message"`
+		FinishReason string `json:"finish_reason"`
+		Message      struct {
+			Role             string `json:"role"`
+			Content          string `json:"content"`
+			ReasoningContent string `json:"reasoning_content,omitempty"`
+		} `json:"message"`
 	} `json:"choices"`
 	Error *struct {
 		Message string `json:"message"`
@@ -164,7 +204,7 @@ func isAllowedChatRole(role string) bool {
 }
 
 func compactBody(body []byte) string {
-	const limit = 320
+	const limit = 700
 
 	text := strings.TrimSpace(string(body))
 	if len(text) > limit {

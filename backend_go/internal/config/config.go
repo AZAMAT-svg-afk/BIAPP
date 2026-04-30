@@ -13,6 +13,8 @@ type Config struct {
 	AIModel           string
 	OpenAIAPIKey      string
 	HuggingFaceAPIKey string
+	AlemAPIKey        string
+	AlemEndpoint      string
 }
 
 func Load() Config {
@@ -28,6 +30,8 @@ func Load() Config {
 		AIModel:           os.Getenv("AI_MODEL"),
 		OpenAIAPIKey:      os.Getenv("OPENAI_API_KEY"),
 		HuggingFaceAPIKey: os.Getenv("HUGGINGFACE_API_KEY"),
+		AlemAPIKey:        os.Getenv("ALEM_API_KEY"),
+		AlemEndpoint:      env("ALEM_ENDPOINT", "https://llm.alem.ai/v1/chat/completions"),
 	}
 }
 
@@ -35,5 +39,6 @@ func env(key, fallback string) string {
 	if value := os.Getenv(key); value != "" {
 		return value
 	}
+
 	return fallback
 }
