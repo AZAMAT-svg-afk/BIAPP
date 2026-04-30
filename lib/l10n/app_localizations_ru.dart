@@ -190,6 +190,18 @@ class AppLocalizationsRu extends AppLocalizations {
   String get noMissedTasks => 'Пропущенных задач нет.';
 
   @override
+  String get upcomingTasks => 'Запланировано';
+
+  @override
+  String get noUpcomingTasks => 'Будущие задачи появятся здесь.';
+
+  @override
+  String get taskTomorrow => 'Завтра';
+
+  @override
+  String get taskDayAfterTomorrow => 'Послезавтра';
+
+  @override
   String get editTask => 'Редактировать задачу';
 
   @override

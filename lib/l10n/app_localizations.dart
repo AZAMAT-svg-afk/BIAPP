@@ -448,6 +448,30 @@ abstract class AppLocalizations {
   /// **'No missed tasks.'**
   String get noMissedTasks;
 
+  /// No description provided for @upcomingTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled'**
+  String get upcomingTasks;
+
+  /// No description provided for @noUpcomingTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Future tasks will appear here.'**
+  String get noUpcomingTasks;
+
+  /// No description provided for @taskTomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get taskTomorrow;
+
+  /// No description provided for @taskDayAfterTomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Day after tomorrow'**
+  String get taskDayAfterTomorrow;
+
   /// No description provided for @editTask.
   ///
   /// In en, this message translates to:

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../l10n/app_localizations.dart';
+import '../../../core/widgets/app_date_time_pickers.dart';
 import '../../../core/widgets/app_empty_state.dart';
 import '../../../core/widgets/app_motion.dart';
 import '../../../core/widgets/app_scaffold.dart';
@@ -170,7 +171,7 @@ class _HabitFormSheetState extends ConsumerState<_HabitFormSheet> {
   }
 
   Future<void> _pickTime() async {
-    final picked = await showTimePicker(
+    final picked = await AppDateTimePickers.pickTime(
       context: context,
       initialTime: _reminderTime ?? TimeOfDay.now(),
     );

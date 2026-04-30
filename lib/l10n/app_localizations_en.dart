@@ -191,6 +191,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noMissedTasks => 'No missed tasks.';
 
   @override
+  String get upcomingTasks => 'Scheduled';
+
+  @override
+  String get noUpcomingTasks => 'Future tasks will appear here.';
+
+  @override
+  String get taskTomorrow => 'Tomorrow';
+
+  @override
+  String get taskDayAfterTomorrow => 'Day after tomorrow';
+
+  @override
   String get editTask => 'Edit task';
 
   @override

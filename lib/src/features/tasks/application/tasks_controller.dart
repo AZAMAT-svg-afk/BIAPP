@@ -18,21 +18,37 @@ final tasksControllerProvider =
 final todayTasksProvider = Provider<List<TaskItem>>((ref) {
   final tasks = ref.watch(tasksControllerProvider);
   final now = DateTime.now();
-  return tasks.where((task) => _isSameDay(task.date, now)).toList();
+  final today = dateOnly(now);
+  return tasks.where((task) {
+    return !task.isCompleted &&
+        dateOnly(task.date) == today &&
+        !isTaskMissed(task, now);
+  }).toList()..sort(compareTasksByDueDate);
+});
+
+final upcomingTasksProvider = Provider<List<TaskItem>>((ref) {
+  final tasks = ref.watch(tasksControllerProvider);
+  final today = dateOnly(DateTime.now());
+  return tasks.where((task) {
+    return !task.isCompleted && dateOnly(task.date).isAfter(today);
+  }).toList()..sort(compareTasksByDueDate);
 });
 
 final completedTasksProvider = Provider<List<TaskItem>>((ref) {
   return ref.watch(tasksControllerProvider).where((task) {
     return task.isCompleted;
-  }).toList();
+  }).toList()..sort((a, b) {
+    final left = a.completedAt ?? a.updatedAt;
+    final right = b.completedAt ?? b.updatedAt;
+    return right.compareTo(left);
+  });
 });
 
 final missedTasksProvider = Provider<List<TaskItem>>((ref) {
-  final today = DateTime.now();
+  final now = DateTime.now();
   return ref.watch(tasksControllerProvider).where((task) {
-    return task.date.isBefore(DateTime(today.year, today.month, today.day)) &&
-        !task.isCompleted;
-  }).toList();
+    return isTaskMissed(task, now);
+  }).toList()..sort((a, b) => taskDueDateTime(b).compareTo(taskDueDateTime(a)));
 });
 
 class TasksController extends Notifier<List<TaskItem>> {
@@ -63,7 +79,7 @@ class TasksController extends Notifier<List<TaskItem>> {
       id: const Uuid().v4(),
       title: title.trim(),
       description: description.trim(),
-      date: date ?? DateTime(now.year, now.month, now.day),
+      date: dateOnly(date ?? now),
       time: time,
       isCompleted: false,
       priority: priority,
@@ -106,8 +122,39 @@ class TasksController extends Notifier<List<TaskItem>> {
   }
 }
 
-bool _isSameDay(DateTime first, DateTime second) {
-  return first.year == second.year &&
-      first.month == second.month &&
-      first.day == second.day;
+DateTime dateOnly(DateTime value) {
+  return DateTime(value.year, value.month, value.day);
+}
+
+DateTime taskDueDateTime(TaskItem task) {
+  final date = dateOnly(task.date);
+  final time = task.time;
+  if (time != null) {
+    return DateTime(date.year, date.month, date.day, time.hour, time.minute);
+  }
+
+  final reminderTime = task.reminderEnabled ? task.reminderTime : null;
+  if (reminderTime != null) {
+    return DateTime(
+      date.year,
+      date.month,
+      date.day,
+      reminderTime.hour,
+      reminderTime.minute,
+    );
+  }
+
+  return DateTime(date.year, date.month, date.day, 23, 59, 59, 999);
+}
+
+bool isTaskMissed(TaskItem task, DateTime now) {
+  return !task.isCompleted && taskDueDateTime(task).isBefore(now);
+}
+
+int compareTasksByDueDate(TaskItem a, TaskItem b) {
+  final byDueDate = taskDueDateTime(a).compareTo(taskDueDateTime(b));
+  if (byDueDate != 0) {
+    return byDueDate;
+  }
+  return b.updatedAt.compareTo(a.updatedAt);
 }

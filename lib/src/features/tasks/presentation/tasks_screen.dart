@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../core/theme/app_palette.dart';
 import '../../../core/widgets/app_card.dart';
+import '../../../core/widgets/app_date_time_pickers.dart';
 import '../../../core/widgets/app_empty_state.dart';
 import '../../../core/widgets/app_motion.dart';
 import '../../../core/widgets/app_scaffold.dart';
@@ -23,6 +24,7 @@ class TasksScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final todayTasks = ref.watch(todayTasksProvider);
+    final upcoming = ref.watch(upcomingTasksProvider);
     final completed = ref.watch(completedTasksProvider);
     final missed = ref.watch(missedTasksProvider);
     final controller = ref.read(tasksControllerProvider.notifier);
@@ -64,6 +66,21 @@ class TasksScreen extends ConsumerWidget {
                     ),
                   ),
                 const SizedBox(height: 18),
+                SectionHeader(title: l10n.upcomingTasks),
+                const SizedBox(height: 12),
+                if (upcoming.isEmpty)
+                  AppEmptyState(
+                    message: l10n.noUpcomingTasks,
+                    icon: Icons.event_available_outlined,
+                  )
+                else
+                  ..._buildUpcomingGroups(
+                    context: context,
+                    ref: ref,
+                    tasks: upcoming,
+                    controller: controller,
+                  ),
+                const SizedBox(height: 18),
                 SectionHeader(title: l10n.completedTasks),
                 const SizedBox(height: 12),
                 if (completed.isEmpty)
@@ -72,32 +89,23 @@ class TasksScreen extends ConsumerWidget {
                     icon: Icons.done_all,
                   )
                 else
-                  ...completed
-                      .take(4)
-                      .toList()
-                      .asMap()
-                      .entries
-                      .map(
-                        (entry) => Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
-                          child: AppMotion(
-                            delay: Duration(milliseconds: 30 * entry.key),
-                            child: TaskCard(
-                              key: ValueKey('completed-${entry.value.id}'),
-                              task: entry.value,
-                              onToggle: () =>
-                                  controller.toggleComplete(entry.value.id),
-                              onEdit: () => _showTaskSheet(
-                                context,
-                                ref,
-                                task: entry.value,
-                              ),
-                              onDelete: () =>
-                                  controller.deleteTask(entry.value.id),
-                            ),
-                          ),
+                  ...completed.toList().asMap().entries.map(
+                    (entry) => Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: AppMotion(
+                        delay: Duration(milliseconds: 30 * entry.key),
+                        child: TaskCard(
+                          key: ValueKey('completed-${entry.value.id}'),
+                          task: entry.value,
+                          onToggle: () =>
+                              controller.toggleComplete(entry.value.id),
+                          onEdit: () =>
+                              _showTaskSheet(context, ref, task: entry.value),
+                          onDelete: () => controller.deleteTask(entry.value.id),
                         ),
                       ),
+                    ),
+                  ),
                 const SizedBox(height: 18),
                 SectionHeader(title: l10n.missedTasks),
                 const SizedBox(height: 12),
@@ -156,6 +164,87 @@ class TasksScreen extends ConsumerWidget {
       useSafeArea: true,
       backgroundColor: Colors.transparent,
       builder: (context) => _TaskFormSheet(task: task),
+    );
+  }
+
+  List<Widget> _buildUpcomingGroups({
+    required BuildContext context,
+    required WidgetRef ref,
+    required List<TaskItem> tasks,
+    required TasksController controller,
+  }) {
+    final grouped = <DateTime, List<TaskItem>>{};
+    for (final task in tasks) {
+      final key = dateOnly(task.date);
+      grouped.putIfAbsent(key, () => []).add(task);
+    }
+
+    final dates = grouped.keys.toList()..sort();
+    final children = <Widget>[];
+
+    for (final date in dates) {
+      final groupTasks = grouped[date]!..sort(compareTasksByDueDate);
+      children.add(
+        Padding(
+          padding: const EdgeInsets.fromLTRB(2, 4, 2, 10),
+          child: _DateGroupLabel(date: date),
+        ),
+      );
+      children.addAll(
+        groupTasks.asMap().entries.map((entry) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: AppMotion(
+              delay: Duration(milliseconds: 28 * entry.key),
+              child: TaskCard(
+                key: ValueKey('upcoming-${entry.value.id}'),
+                task: entry.value,
+                onToggle: () => controller.toggleComplete(entry.value.id),
+                onEdit: () => _showTaskSheet(context, ref, task: entry.value),
+                onDelete: () => controller.deleteTask(entry.value.id),
+              ),
+            ),
+          );
+        }),
+      );
+    }
+
+    return children;
+  }
+}
+
+class _DateGroupLabel extends StatelessWidget {
+  const _DateGroupLabel({required this.date});
+
+  final DateTime date;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final label = _relativeDateLabel(l10n, date);
+
+    return Row(
+      children: [
+        Icon(
+          Icons.calendar_month_outlined,
+          size: 18,
+          color: Theme.of(context).colorScheme.primary,
+        ),
+        const SizedBox(width: 8),
+        Text(
+          label,
+          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Container(
+            height: 1,
+            color: Theme.of(context).colorScheme.outlineVariant,
+          ),
+        ),
+      ],
     );
   }
 }
@@ -377,7 +466,7 @@ class _TaskFormSheetState extends ConsumerState<_TaskFormSheet> {
   }
 
   Future<void> _pickDate() async {
-    final picked = await showDatePicker(
+    final picked = await AppDateTimePickers.pickDate(
       context: context,
       initialDate: _date,
       firstDate: DateTime.now().subtract(const Duration(days: 365)),
@@ -389,7 +478,7 @@ class _TaskFormSheetState extends ConsumerState<_TaskFormSheet> {
   }
 
   Future<void> _pickTime() async {
-    final picked = await showTimePicker(
+    final picked = await AppDateTimePickers.pickTime(
       context: context,
       initialTime: _time ?? TimeOfDay.now(),
     );
@@ -405,16 +494,28 @@ class _TaskFormSheetState extends ConsumerState<_TaskFormSheet> {
     }
 
     final controller = ref.read(tasksControllerProvider.notifier);
+    final selectedDate = dateOnly(_date);
+    final effectiveReminderEnabled = _reminderEnabled && _time != null;
+    final reminderTime = effectiveReminderEnabled
+        ? DateTime(
+            selectedDate.year,
+            selectedDate.month,
+            selectedDate.day,
+            _time!.hour,
+            _time!.minute,
+          )
+        : null;
 
     if (widget.task == null) {
       controller.addTask(
         title: title,
         description: _descriptionController.text,
-        date: _date,
+        date: selectedDate,
         time: _time,
         priority: _priority,
         category: _categoryController.text,
-        reminderEnabled: _reminderEnabled,
+        reminderEnabled: effectiveReminderEnabled,
+        reminderTime: reminderTime,
         repeatType: _repeatType,
       );
     } else {
@@ -423,10 +524,13 @@ class _TaskFormSheetState extends ConsumerState<_TaskFormSheet> {
           title: title,
           description: _descriptionController.text,
           category: _categoryController.text,
-          date: _date,
+          date: selectedDate,
           time: _time,
+          clearTime: _time == null,
           priority: _priority,
-          reminderEnabled: _reminderEnabled,
+          reminderEnabled: effectiveReminderEnabled,
+          reminderTime: reminderTime,
+          clearReminderTime: reminderTime == null,
           repeatType: _repeatType,
         ),
       );
@@ -458,4 +562,18 @@ class _PickerTile extends StatelessWidget {
       trailing: TextButton(onPressed: onTap, child: Text(action)),
     );
   }
+}
+
+String _relativeDateLabel(AppLocalizations l10n, DateTime date) {
+  final today = DateTime.now();
+  final target = DateTime(date.year, date.month, date.day);
+  final todayOnly = DateTime(today.year, today.month, today.day);
+  final difference = target.difference(todayOnly).inDays;
+
+  return switch (difference) {
+    0 => l10n.today,
+    1 => l10n.taskTomorrow,
+    2 => l10n.taskDayAfterTomorrow,
+    _ => DateFormat.yMMMd(l10n.localeName).format(target),
+  };
 }

@@ -190,6 +190,18 @@ class AppLocalizationsKk extends AppLocalizations {
   String get noMissedTasks => 'Өтіп кеткен тапсырма жоқ.';
 
   @override
+  String get upcomingTasks => 'Жоспарланған';
+
+  @override
+  String get noUpcomingTasks => 'Болашақ тапсырмалар осында шығады.';
+
+  @override
+  String get taskTomorrow => 'Ертең';
+
+  @override
+  String get taskDayAfterTomorrow => 'Бүрсігүні';
+
+  @override
   String get editTask => 'Тапсырманы өзгерту';
 
   @override

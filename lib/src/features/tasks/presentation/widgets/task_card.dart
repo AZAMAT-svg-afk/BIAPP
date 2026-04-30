@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../../l10n/app_localizations.dart';
 import '../../../../core/theme/app_palette.dart';
@@ -123,6 +124,14 @@ class TaskCard extends StatelessWidget {
                                   ),
                                   color: priorityColor,
                                 ),
+                                if (!_isSameDay(task.date, DateTime.now()))
+                                  AppChip(
+                                    label: _relativeDateLabel(l10n, task.date),
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                    icon: Icons.calendar_month_outlined,
+                                  ),
                                 if (task.time != null)
                                   AppChip(
                                     label: task.time!.format(context),
@@ -225,3 +234,23 @@ class _AnimatedCheckmark extends StatelessWidget {
 }
 
 enum _TaskAction { edit, delete }
+
+bool _isSameDay(DateTime first, DateTime second) {
+  return first.year == second.year &&
+      first.month == second.month &&
+      first.day == second.day;
+}
+
+String _relativeDateLabel(AppLocalizations l10n, DateTime date) {
+  final today = DateTime.now();
+  final target = DateTime(date.year, date.month, date.day);
+  final todayOnly = DateTime(today.year, today.month, today.day);
+  final difference = target.difference(todayOnly).inDays;
+
+  return switch (difference) {
+    0 => l10n.today,
+    1 => l10n.taskTomorrow,
+    2 => l10n.taskDayAfterTomorrow,
+    _ => DateFormat.MMMd(l10n.localeName).format(target),
+  };
+}

@@ -71,6 +71,14 @@ class AppTheme {
   }
 
   static ThemeData _base(ColorScheme scheme, AppPalette palette) {
+    final isDark = scheme.brightness == Brightness.dark;
+    final pickerSurface = isDark ? const Color(0xFF10212A) : palette.card;
+    final pickerField = isDark
+        ? const Color(0xFF172B35)
+        : scheme.surfaceContainer;
+    final pickerFieldSelected = scheme.primary.withValues(
+      alpha: isDark ? 0.24 : 0.16,
+    );
     final baseTextTheme = scheme.brightness == Brightness.dark
         ? Typography.material2021().white
         : Typography.material2021().black;
@@ -190,6 +198,150 @@ class AppTheme {
       ),
       dividerTheme: DividerThemeData(
         color: scheme.outlineVariant.withValues(alpha: 0.7),
+      ),
+      timePickerTheme: TimePickerThemeData(
+        backgroundColor: pickerSurface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+        hourMinuteShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+          side: BorderSide(color: scheme.outlineVariant),
+        ),
+        hourMinuteColor: WidgetStateColor.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return pickerFieldSelected;
+          }
+          return pickerField;
+        }),
+        hourMinuteTextColor: WidgetStateColor.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return scheme.primary;
+          }
+          return scheme.onSurface;
+        }),
+        dayPeriodShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+          side: BorderSide(color: scheme.outlineVariant),
+        ),
+        dayPeriodColor: WidgetStateColor.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return scheme.primary.withValues(alpha: 0.18);
+          }
+          return pickerField;
+        }),
+        dayPeriodTextColor: WidgetStateColor.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return scheme.primary;
+          }
+          return scheme.onSurfaceVariant;
+        }),
+        dialBackgroundColor: pickerField,
+        dialHandColor: scheme.primary,
+        dialTextColor: WidgetStateColor.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return scheme.onPrimary;
+          }
+          return scheme.onSurface;
+        }),
+        entryModeIconColor: scheme.primary,
+        helpTextStyle: textTheme.labelLarge?.copyWith(
+          color: palette.textMuted,
+          letterSpacing: 0,
+        ),
+        hourMinuteTextStyle: textTheme.displaySmall?.copyWith(
+          fontWeight: FontWeight.w900,
+        ),
+        dayPeriodTextStyle: textTheme.labelLarge,
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: pickerField,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: scheme.outlineVariant),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: scheme.outlineVariant),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: scheme.primary, width: 1.4),
+          ),
+        ),
+        cancelButtonStyle: TextButton.styleFrom(
+          foregroundColor: scheme.onSurfaceVariant,
+        ),
+        confirmButtonStyle: TextButton.styleFrom(
+          foregroundColor: scheme.primary,
+          textStyle: textTheme.labelLarge,
+        ),
+      ),
+      datePickerTheme: DatePickerThemeData(
+        backgroundColor: pickerSurface,
+        surfaceTintColor: Colors.transparent,
+        dividerColor: scheme.outlineVariant,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+        headerBackgroundColor: scheme.primary.withValues(
+          alpha: isDark ? 0.20 : 0.12,
+        ),
+        headerForegroundColor: scheme.onSurface,
+        headerHeadlineStyle: textTheme.headlineSmall?.copyWith(
+          fontWeight: FontWeight.w900,
+        ),
+        headerHelpStyle: textTheme.labelLarge?.copyWith(
+          color: palette.textMuted,
+          letterSpacing: 0,
+        ),
+        weekdayStyle: textTheme.labelMedium?.copyWith(
+          color: palette.textMuted,
+          fontWeight: FontWeight.w900,
+        ),
+        dayStyle: textTheme.labelLarge,
+        yearStyle: textTheme.labelLarge,
+        dayForegroundColor: WidgetStateColor.resolveWith((states) {
+          if (states.contains(WidgetState.disabled)) {
+            return scheme.onSurface.withValues(alpha: 0.34);
+          }
+          if (states.contains(WidgetState.selected)) {
+            return scheme.onPrimary;
+          }
+          return scheme.onSurface;
+        }),
+        dayBackgroundColor: WidgetStateColor.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return scheme.primary;
+          }
+          return Colors.transparent;
+        }),
+        todayForegroundColor: WidgetStateColor.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return scheme.onPrimary;
+          }
+          return scheme.primary;
+        }),
+        todayBackgroundColor: const WidgetStatePropertyAll(Colors.transparent),
+        todayBorder: BorderSide(color: scheme.primary, width: 1.4),
+        yearForegroundColor: WidgetStateColor.resolveWith((states) {
+          if (states.contains(WidgetState.disabled)) {
+            return scheme.onSurface.withValues(alpha: 0.34);
+          }
+          if (states.contains(WidgetState.selected)) {
+            return scheme.onPrimary;
+          }
+          return scheme.onSurface;
+        }),
+        yearBackgroundColor: WidgetStateColor.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return scheme.primary;
+          }
+          return Colors.transparent;
+        }),
+        cancelButtonStyle: TextButton.styleFrom(
+          foregroundColor: scheme.onSurfaceVariant,
+        ),
+        confirmButtonStyle: TextButton.styleFrom(
+          foregroundColor: scheme.primary,
+          textStyle: textTheme.labelLarge,
+        ),
       ),
       pageTransitionsTheme: const PageTransitionsTheme(
         builders: {
