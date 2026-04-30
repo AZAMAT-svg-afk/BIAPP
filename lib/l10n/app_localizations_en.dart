@@ -33,7 +33,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get habitsTitle => 'Habits';
 
   @override
-  String get statsTitle => 'Stats';
+  String get statsTitle => 'Statistics';
 
   @override
   String get settingsTitle => 'Settings';
@@ -398,7 +398,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get completion => 'Completion';
 
   @override
-  String get weekActivity => 'Week activity';
+  String get weekActivity => 'Weekly activity';
 
   @override
   String get streaks => 'Streaks';
@@ -463,6 +463,112 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sunday => 'Sunday';
+
+  @override
+  String get statsSubtitle => 'Your progress for today and the week';
+
+  @override
+  String get statsDone => 'Done';
+
+  @override
+  String get statsMissed => 'Missed';
+
+  @override
+  String get statsProgress => 'Progress';
+
+  @override
+  String get statsTodayNoActivity =>
+      'No activity yet today. Start with one small step.';
+
+  @override
+  String get statsStartSmall => 'Start with one small step.';
+
+  @override
+  String get statsNoTasksToday => 'No tasks for today';
+
+  @override
+  String statsTasksCount(int completed, int total) {
+    return '$completed of $total tasks';
+  }
+
+  @override
+  String get statsWeeklyNoData => 'Data will appear after you complete tasks.';
+
+  @override
+  String get statsMondayShort => 'Mon';
+
+  @override
+  String get statsTuesdayShort => 'Tue';
+
+  @override
+  String get statsWednesdayShort => 'Wed';
+
+  @override
+  String get statsThursdayShort => 'Thu';
+
+  @override
+  String get statsFridayShort => 'Fri';
+
+  @override
+  String get statsSaturdayShort => 'Sat';
+
+  @override
+  String get statsSundayShort => 'Sun';
+
+  @override
+  String get statsTaskStreakTitle => 'Tasks';
+
+  @override
+  String get statsHabitStreakTitle => 'Habits';
+
+  @override
+  String get statsPrayerStreakTitle => 'Prayer';
+
+  @override
+  String get statsAppStreakTitle => 'App';
+
+  @override
+  String get statsPerfectDayStreakTitle => 'Perfect day';
+
+  @override
+  String get statsTaskStreakHint => 'Complete tasks daily';
+
+  @override
+  String get statsHabitStreakHint => 'Keep habits steady';
+
+  @override
+  String get statsPrayerStreakHint => 'Protect prayer rhythm';
+
+  @override
+  String get statsAppStreakHint => 'Show up every day';
+
+  @override
+  String get statsPerfectDayStreakHint => 'Task, habit, and prayer';
+
+  @override
+  String statsDaysCount(int count) {
+    return '$count days';
+  }
+
+  @override
+  String statsBestStreakInsight(String label, int count) {
+    return 'Best streak now: $label - $count days';
+  }
+
+  @override
+  String get statsCloseDayOneTask =>
+      'You can close the day with one small task.';
+
+  @override
+  String get statsGreatProgress => 'Good progress. Keep the rhythm calm.';
+
+  @override
+  String get statsPerfectDayInsight =>
+      'Perfect day: complete a task, a habit, and do not miss prayer.';
+
+  @override
+  String get statsInsightsEmpty =>
+      'Insights will appear after a few days of activity.';
 
   @override
   String get aiTitle => 'AI mentor';

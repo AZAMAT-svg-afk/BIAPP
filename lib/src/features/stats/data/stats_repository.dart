@@ -17,20 +17,29 @@ class StatsRepository {
     final completionRate = todayTasks.isEmpty
         ? 0.0
         : completedTasks / todayTasks.length;
+    final completedHabits = habits.where((habit) {
+      return habit.isCompletedToday;
+    }).length;
     final stableHabit = habits.isEmpty
         ? null
         : habits.reduce((a, b) => a.streak >= b.streak ? a : b);
     final prayerCompleted = prayers
+        .where((prayer) => prayer.type != PrayerType.sunrise)
         .where((prayer) => prayer.isCompleted)
+        .length;
+    final prayerTotal = prayers
+        .where((prayer) => prayer.type != PrayerType.sunrise)
         .length;
     final habitStreak = stableHabit?.streak ?? 0;
     final currentPerfectDay =
         todayTasks.isNotEmpty &&
         completionRate >= 1 &&
         habits.every((habit) => habit.isCompletedToday) &&
-        prayerCompleted >= 5;
+        prayerCompleted >= prayerTotal &&
+        prayerTotal > 0;
 
     return StatsSnapshot(
+      todayTasksTotal: todayTasks.length,
       completedTasksToday: completedTasks,
       missedTasks: missedTasks.length,
       completionRate: completionRate,
@@ -42,6 +51,10 @@ class StatsRepository {
       perfectDayStreak: currentPerfectDay
           ? streakSummary.perfectDayStreak.clamp(1, 999)
           : streakSummary.perfectDayStreak,
+      completedHabitsToday: completedHabits,
+      totalHabits: habits.length,
+      completedPrayersToday: prayerCompleted,
+      totalPrayers: prayerTotal,
       bestWeekdayIndex: 4,
       stableHabit: stableHabit,
       mostMissedTask: missedTasks.isEmpty ? null : missedTasks.first,

@@ -465,6 +465,112 @@ class AppLocalizationsRu extends AppLocalizations {
   String get sunday => 'Воскресенье';
 
   @override
+  String get statsSubtitle => 'Твой прогресс за сегодня и неделю';
+
+  @override
+  String get statsDone => 'Выполнено';
+
+  @override
+  String get statsMissed => 'Пропущено';
+
+  @override
+  String get statsProgress => 'Прогресс';
+
+  @override
+  String get statsTodayNoActivity =>
+      'Сегодня ещё нет активности. Начни с одной маленькой задачи.';
+
+  @override
+  String get statsStartSmall => 'Начни с одной маленькой задачи.';
+
+  @override
+  String get statsNoTasksToday => 'Нет задач на сегодня';
+
+  @override
+  String statsTasksCount(int completed, int total) {
+    return '$completed из $total задач';
+  }
+
+  @override
+  String get statsWeeklyNoData => 'Данные появятся после выполнения задач.';
+
+  @override
+  String get statsMondayShort => 'Пн';
+
+  @override
+  String get statsTuesdayShort => 'Вт';
+
+  @override
+  String get statsWednesdayShort => 'Ср';
+
+  @override
+  String get statsThursdayShort => 'Чт';
+
+  @override
+  String get statsFridayShort => 'Пт';
+
+  @override
+  String get statsSaturdayShort => 'Сб';
+
+  @override
+  String get statsSundayShort => 'Вс';
+
+  @override
+  String get statsTaskStreakTitle => 'Задачи';
+
+  @override
+  String get statsHabitStreakTitle => 'Привычки';
+
+  @override
+  String get statsPrayerStreakTitle => 'Намаз';
+
+  @override
+  String get statsAppStreakTitle => 'Приложение';
+
+  @override
+  String get statsPerfectDayStreakTitle => 'Идеальный день';
+
+  @override
+  String get statsTaskStreakHint => 'Выполняй задачи ежедневно';
+
+  @override
+  String get statsHabitStreakHint => 'Держи привычки стабильно';
+
+  @override
+  String get statsPrayerStreakHint => 'Береги ритм намаза';
+
+  @override
+  String get statsAppStreakHint => 'Возвращайся каждый день';
+
+  @override
+  String get statsPerfectDayStreakHint => 'Задача, привычка и намаз';
+
+  @override
+  String statsDaysCount(int count) {
+    return '$count дней';
+  }
+
+  @override
+  String statsBestStreakInsight(String label, int count) {
+    return 'Лучший streak сейчас: $label — $count дней';
+  }
+
+  @override
+  String get statsCloseDayOneTask =>
+      'Сегодня можно закрыть день одной маленькой задачей.';
+
+  @override
+  String get statsGreatProgress => 'Хороший прогресс. Держи спокойный ритм.';
+
+  @override
+  String get statsPerfectDayInsight =>
+      'Идеальный день: выполни задачу, привычку и не пропусти намаз.';
+
+  @override
+  String get statsInsightsEmpty =>
+      'Инсайты появятся после нескольких дней активности.';
+
+  @override
   String get aiTitle => 'AI-наставник';
 
   @override

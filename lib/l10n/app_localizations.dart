@@ -151,7 +151,7 @@ abstract class AppLocalizations {
   /// No description provided for @statsTitle.
   ///
   /// In en, this message translates to:
-  /// **'Stats'**
+  /// **'Statistics'**
   String get statsTitle;
 
   /// No description provided for @settingsTitle.
@@ -853,7 +853,7 @@ abstract class AppLocalizations {
   /// No description provided for @weekActivity.
   ///
   /// In en, this message translates to:
-  /// **'Week activity'**
+  /// **'Weekly activity'**
   String get weekActivity;
 
   /// No description provided for @streaks.
@@ -963,6 +963,198 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sunday'**
   String get sunday;
+
+  /// No description provided for @statsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your progress for today and the week'**
+  String get statsSubtitle;
+
+  /// No description provided for @statsDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get statsDone;
+
+  /// No description provided for @statsMissed.
+  ///
+  /// In en, this message translates to:
+  /// **'Missed'**
+  String get statsMissed;
+
+  /// No description provided for @statsProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress'**
+  String get statsProgress;
+
+  /// No description provided for @statsTodayNoActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'No activity yet today. Start with one small step.'**
+  String get statsTodayNoActivity;
+
+  /// No description provided for @statsStartSmall.
+  ///
+  /// In en, this message translates to:
+  /// **'Start with one small step.'**
+  String get statsStartSmall;
+
+  /// No description provided for @statsNoTasksToday.
+  ///
+  /// In en, this message translates to:
+  /// **'No tasks for today'**
+  String get statsNoTasksToday;
+
+  /// No description provided for @statsTasksCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{completed} of {total} tasks'**
+  String statsTasksCount(int completed, int total);
+
+  /// No description provided for @statsWeeklyNoData.
+  ///
+  /// In en, this message translates to:
+  /// **'Data will appear after you complete tasks.'**
+  String get statsWeeklyNoData;
+
+  /// No description provided for @statsMondayShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Mon'**
+  String get statsMondayShort;
+
+  /// No description provided for @statsTuesdayShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Tue'**
+  String get statsTuesdayShort;
+
+  /// No description provided for @statsWednesdayShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Wed'**
+  String get statsWednesdayShort;
+
+  /// No description provided for @statsThursdayShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Thu'**
+  String get statsThursdayShort;
+
+  /// No description provided for @statsFridayShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Fri'**
+  String get statsFridayShort;
+
+  /// No description provided for @statsSaturdayShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Sat'**
+  String get statsSaturdayShort;
+
+  /// No description provided for @statsSundayShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Sun'**
+  String get statsSundayShort;
+
+  /// No description provided for @statsTaskStreakTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks'**
+  String get statsTaskStreakTitle;
+
+  /// No description provided for @statsHabitStreakTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Habits'**
+  String get statsHabitStreakTitle;
+
+  /// No description provided for @statsPrayerStreakTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Prayer'**
+  String get statsPrayerStreakTitle;
+
+  /// No description provided for @statsAppStreakTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'App'**
+  String get statsAppStreakTitle;
+
+  /// No description provided for @statsPerfectDayStreakTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect day'**
+  String get statsPerfectDayStreakTitle;
+
+  /// No description provided for @statsTaskStreakHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete tasks daily'**
+  String get statsTaskStreakHint;
+
+  /// No description provided for @statsHabitStreakHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep habits steady'**
+  String get statsHabitStreakHint;
+
+  /// No description provided for @statsPrayerStreakHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Protect prayer rhythm'**
+  String get statsPrayerStreakHint;
+
+  /// No description provided for @statsAppStreakHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Show up every day'**
+  String get statsAppStreakHint;
+
+  /// No description provided for @statsPerfectDayStreakHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Task, habit, and prayer'**
+  String get statsPerfectDayStreakHint;
+
+  /// No description provided for @statsDaysCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days'**
+  String statsDaysCount(int count);
+
+  /// No description provided for @statsBestStreakInsight.
+  ///
+  /// In en, this message translates to:
+  /// **'Best streak now: {label} - {count} days'**
+  String statsBestStreakInsight(String label, int count);
+
+  /// No description provided for @statsCloseDayOneTask.
+  ///
+  /// In en, this message translates to:
+  /// **'You can close the day with one small task.'**
+  String get statsCloseDayOneTask;
+
+  /// No description provided for @statsGreatProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Good progress. Keep the rhythm calm.'**
+  String get statsGreatProgress;
+
+  /// No description provided for @statsPerfectDayInsight.
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect day: complete a task, a habit, and do not miss prayer.'**
+  String get statsPerfectDayInsight;
+
+  /// No description provided for @statsInsightsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Insights will appear after a few days of activity.'**
+  String get statsInsightsEmpty;
 
   /// No description provided for @aiTitle.
   ///

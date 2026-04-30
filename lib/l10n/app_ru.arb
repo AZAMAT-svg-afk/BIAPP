@@ -144,6 +144,55 @@
   "friday": "Пятница",
   "saturday": "Суббота",
   "sunday": "Воскресенье",
+  "statsSubtitle": "Твой прогресс за сегодня и неделю",
+  "statsDone": "Выполнено",
+  "statsMissed": "Пропущено",
+  "statsProgress": "Прогресс",
+  "statsTodayNoActivity": "Сегодня ещё нет активности. Начни с одной маленькой задачи.",
+  "statsStartSmall": "Начни с одной маленькой задачи.",
+  "statsNoTasksToday": "Нет задач на сегодня",
+  "statsTasksCount": "{completed} из {total} задач",
+  "@statsTasksCount": {
+    "placeholders": {
+      "completed": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "statsWeeklyNoData": "Данные появятся после выполнения задач.",
+  "statsMondayShort": "Пн",
+  "statsTuesdayShort": "Вт",
+  "statsWednesdayShort": "Ср",
+  "statsThursdayShort": "Чт",
+  "statsFridayShort": "Пт",
+  "statsSaturdayShort": "Сб",
+  "statsSundayShort": "Вс",
+  "statsTaskStreakTitle": "Задачи",
+  "statsHabitStreakTitle": "Привычки",
+  "statsPrayerStreakTitle": "Намаз",
+  "statsAppStreakTitle": "Приложение",
+  "statsPerfectDayStreakTitle": "Идеальный день",
+  "statsTaskStreakHint": "Выполняй задачи ежедневно",
+  "statsHabitStreakHint": "Держи привычки стабильно",
+  "statsPrayerStreakHint": "Береги ритм намаза",
+  "statsAppStreakHint": "Возвращайся каждый день",
+  "statsPerfectDayStreakHint": "Задача, привычка и намаз",
+  "statsDaysCount": "{count} дней",
+  "@statsDaysCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "statsBestStreakInsight": "Лучший streak сейчас: {label} — {count} дней",
+  "@statsBestStreakInsight": {
+    "placeholders": {
+      "label": { "type": "String" },
+      "count": { "type": "int" }
+    }
+  },
+  "statsCloseDayOneTask": "Сегодня можно закрыть день одной маленькой задачей.",
+  "statsGreatProgress": "Хороший прогресс. Держи спокойный ритм.",
+  "statsPerfectDayInsight": "Идеальный день: выполни задачу, привычку и не пропусти намаз.",
+  "statsInsightsEmpty": "Инсайты появятся после нескольких дней активности.",
   "aiTitle": "AI-наставник",
   "clearAiHistory": "Очистить историю AI",
   "aiEmpty": "Спроси про день, лень, задачи, время намаза или маленький следующий шаг.",

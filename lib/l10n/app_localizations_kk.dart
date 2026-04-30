@@ -464,6 +464,113 @@ class AppLocalizationsKk extends AppLocalizations {
   String get sunday => 'Жексенбі';
 
   @override
+  String get statsSubtitle => 'Бүгінгі және апталық прогресің';
+
+  @override
+  String get statsDone => 'Орындалды';
+
+  @override
+  String get statsMissed => 'Өткізілді';
+
+  @override
+  String get statsProgress => 'Прогресс';
+
+  @override
+  String get statsTodayNoActivity =>
+      'Бүгін әзірге белсенділік жоқ. Бір кішкентай қадамнан баста.';
+
+  @override
+  String get statsStartSmall => 'Бір кішкентай қадамнан баста.';
+
+  @override
+  String get statsNoTasksToday => 'Бүгінге тапсырма жоқ';
+
+  @override
+  String statsTasksCount(int completed, int total) {
+    return '$completed/$total тапсырма';
+  }
+
+  @override
+  String get statsWeeklyNoData =>
+      'Дерек тапсырмалар орындалғаннан кейін пайда болады.';
+
+  @override
+  String get statsMondayShort => 'Дс';
+
+  @override
+  String get statsTuesdayShort => 'Сс';
+
+  @override
+  String get statsWednesdayShort => 'Ср';
+
+  @override
+  String get statsThursdayShort => 'Бс';
+
+  @override
+  String get statsFridayShort => 'Жм';
+
+  @override
+  String get statsSaturdayShort => 'Сн';
+
+  @override
+  String get statsSundayShort => 'Жс';
+
+  @override
+  String get statsTaskStreakTitle => 'Тапсырма';
+
+  @override
+  String get statsHabitStreakTitle => 'Әдет';
+
+  @override
+  String get statsPrayerStreakTitle => 'Намаз';
+
+  @override
+  String get statsAppStreakTitle => 'Қолданба';
+
+  @override
+  String get statsPerfectDayStreakTitle => 'Мінсіз күн';
+
+  @override
+  String get statsTaskStreakHint => 'Күн сайын тапсырма орында';
+
+  @override
+  String get statsHabitStreakHint => 'Әдеттерді тұрақты ұста';
+
+  @override
+  String get statsPrayerStreakHint => 'Намаз ырғағын сақта';
+
+  @override
+  String get statsAppStreakHint => 'Күн сайын орал';
+
+  @override
+  String get statsPerfectDayStreakHint => 'Тапсырма, әдет және намаз';
+
+  @override
+  String statsDaysCount(int count) {
+    return '$count күн';
+  }
+
+  @override
+  String statsBestStreakInsight(String label, int count) {
+    return 'Қазір ең жақсы streak: $label — $count күн';
+  }
+
+  @override
+  String get statsCloseDayOneTask =>
+      'Бүгін күнді бір кішкентай тапсырмамен жабуға болады.';
+
+  @override
+  String get statsGreatProgress => 'Жақсы прогресс. Ырғақты тыныш сақта.';
+
+  @override
+  String get statsPerfectDayInsight =>
+      'Мінсіз күн: тапсырма, әдет орында және намазды өткізбе.';
+
+  @override
+  String get statsInsightsEmpty =>
+      'Инсайттар бірнеше күндік белсенділіктен кейін пайда болады.';
+
+  @override
   String get aiTitle => 'AI-наставник';
 
   @override

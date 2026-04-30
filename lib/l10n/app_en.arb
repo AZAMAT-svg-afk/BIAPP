@@ -8,7 +8,7 @@
   "moreTab": "More",
   "notesTitle": "Notes",
   "habitsTitle": "Habits",
-  "statsTitle": "Stats",
+  "statsTitle": "Statistics",
   "settingsTitle": "Settings",
   "onboardingTitle": "Set your niyyah",
   "onboardingSubtitle": "A calm mobile space for prayer, tasks, habits, notes, streaks, and a respectful AI mentor.",
@@ -153,7 +153,7 @@
   "tasksDoneToday": "Tasks done today",
   "tasksMissed": "Tasks missed",
   "completion": "Completion",
-  "weekActivity": "Week activity",
+  "weekActivity": "Weekly activity",
   "streaks": "Streaks",
   "taskStreak": "Tasks: {count}d",
   "@taskStreak": {
@@ -197,6 +197,55 @@
   "friday": "Friday",
   "saturday": "Saturday",
   "sunday": "Sunday",
+  "statsSubtitle": "Your progress for today and the week",
+  "statsDone": "Done",
+  "statsMissed": "Missed",
+  "statsProgress": "Progress",
+  "statsTodayNoActivity": "No activity yet today. Start with one small step.",
+  "statsStartSmall": "Start with one small step.",
+  "statsNoTasksToday": "No tasks for today",
+  "statsTasksCount": "{completed} of {total} tasks",
+  "@statsTasksCount": {
+    "placeholders": {
+      "completed": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "statsWeeklyNoData": "Data will appear after you complete tasks.",
+  "statsMondayShort": "Mon",
+  "statsTuesdayShort": "Tue",
+  "statsWednesdayShort": "Wed",
+  "statsThursdayShort": "Thu",
+  "statsFridayShort": "Fri",
+  "statsSaturdayShort": "Sat",
+  "statsSundayShort": "Sun",
+  "statsTaskStreakTitle": "Tasks",
+  "statsHabitStreakTitle": "Habits",
+  "statsPrayerStreakTitle": "Prayer",
+  "statsAppStreakTitle": "App",
+  "statsPerfectDayStreakTitle": "Perfect day",
+  "statsTaskStreakHint": "Complete tasks daily",
+  "statsHabitStreakHint": "Keep habits steady",
+  "statsPrayerStreakHint": "Protect prayer rhythm",
+  "statsAppStreakHint": "Show up every day",
+  "statsPerfectDayStreakHint": "Task, habit, and prayer",
+  "statsDaysCount": "{count} days",
+  "@statsDaysCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "statsBestStreakInsight": "Best streak now: {label} - {count} days",
+  "@statsBestStreakInsight": {
+    "placeholders": {
+      "label": { "type": "String" },
+      "count": { "type": "int" }
+    }
+  },
+  "statsCloseDayOneTask": "You can close the day with one small task.",
+  "statsGreatProgress": "Good progress. Keep the rhythm calm.",
+  "statsPerfectDayInsight": "Perfect day: complete a task, a habit, and do not miss prayer.",
+  "statsInsightsEmpty": "Insights will appear after a few days of activity.",
   "aiTitle": "AI mentor",
   "clearAiHistory": "Clear AI history",
   "aiEmpty": "Ask about your day, laziness, tasks, prayer time, or a tiny next step.",

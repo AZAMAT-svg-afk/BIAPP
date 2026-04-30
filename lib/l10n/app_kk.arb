@@ -144,6 +144,55 @@
   "friday": "Жұма",
   "saturday": "Сенбі",
   "sunday": "Жексенбі",
+  "statsSubtitle": "Бүгінгі және апталық прогресің",
+  "statsDone": "Орындалды",
+  "statsMissed": "Өткізілді",
+  "statsProgress": "Прогресс",
+  "statsTodayNoActivity": "Бүгін әзірге белсенділік жоқ. Бір кішкентай қадамнан баста.",
+  "statsStartSmall": "Бір кішкентай қадамнан баста.",
+  "statsNoTasksToday": "Бүгінге тапсырма жоқ",
+  "statsTasksCount": "{completed}/{total} тапсырма",
+  "@statsTasksCount": {
+    "placeholders": {
+      "completed": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "statsWeeklyNoData": "Дерек тапсырмалар орындалғаннан кейін пайда болады.",
+  "statsMondayShort": "Дс",
+  "statsTuesdayShort": "Сс",
+  "statsWednesdayShort": "Ср",
+  "statsThursdayShort": "Бс",
+  "statsFridayShort": "Жм",
+  "statsSaturdayShort": "Сн",
+  "statsSundayShort": "Жс",
+  "statsTaskStreakTitle": "Тапсырма",
+  "statsHabitStreakTitle": "Әдет",
+  "statsPrayerStreakTitle": "Намаз",
+  "statsAppStreakTitle": "Қолданба",
+  "statsPerfectDayStreakTitle": "Мінсіз күн",
+  "statsTaskStreakHint": "Күн сайын тапсырма орында",
+  "statsHabitStreakHint": "Әдеттерді тұрақты ұста",
+  "statsPrayerStreakHint": "Намаз ырғағын сақта",
+  "statsAppStreakHint": "Күн сайын орал",
+  "statsPerfectDayStreakHint": "Тапсырма, әдет және намаз",
+  "statsDaysCount": "{count} күн",
+  "@statsDaysCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "statsBestStreakInsight": "Қазір ең жақсы streak: {label} — {count} күн",
+  "@statsBestStreakInsight": {
+    "placeholders": {
+      "label": { "type": "String" },
+      "count": { "type": "int" }
+    }
+  },
+  "statsCloseDayOneTask": "Бүгін күнді бір кішкентай тапсырмамен жабуға болады.",
+  "statsGreatProgress": "Жақсы прогресс. Ырғақты тыныш сақта.",
+  "statsPerfectDayInsight": "Мінсіз күн: тапсырма, әдет орында және намазды өткізбе.",
+  "statsInsightsEmpty": "Инсайттар бірнеше күндік белсенділіктен кейін пайда болады.",
   "aiTitle": "AI-наставник",
   "clearAiHistory": "AI тарихын тазалау",
   "aiEmpty": "Күн, жалқаулық, тапсырмалар, намаз уақыты немесе шағын келесі қадам туралы сұра.",
