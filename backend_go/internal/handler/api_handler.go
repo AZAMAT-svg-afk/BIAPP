@@ -53,6 +53,8 @@ func (h APIHandler) Routes() http.Handler {
 	mux.Handle("GET /stats/month", h.protected(h.statsMonth))
 
 	mux.HandleFunc("POST /ai/chat", h.aiChat)
+	mux.HandleFunc("POST /ai/embed", h.aiEmbed)
+	mux.HandleFunc("POST /ai/rerank", h.aiRerank)
 	mux.Handle("POST /ai/daily-summary", h.protected(h.aiDailySummary))
 	mux.Handle("POST /ai/motivation", h.protected(h.aiMotivation))
 	mux.Handle("POST /ai/task-suggestions", h.protected(h.aiTaskSuggestions))
@@ -369,6 +371,32 @@ func (h APIHandler) aiChat(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	output, err := h.services.AI.Chat(r.Context(), input)
+	if err != nil {
+		writeServiceError(w, err)
+		return
+	}
+	response.JSON(w, http.StatusOK, output)
+}
+
+func (h APIHandler) aiEmbed(w http.ResponseWriter, r *http.Request) {
+	input, ok := decodeJSON[model.EmbeddingRequest](w, r)
+	if !ok {
+		return
+	}
+	output, err := h.services.AI.Embed(r.Context(), input)
+	if err != nil {
+		writeServiceError(w, err)
+		return
+	}
+	response.JSON(w, http.StatusOK, output)
+}
+
+func (h APIHandler) aiRerank(w http.ResponseWriter, r *http.Request) {
+	input, ok := decodeJSON[model.RerankRequest](w, r)
+	if !ok {
+		return
+	}
+	output, err := h.services.AI.Rerank(r.Context(), input)
 	if err != nil {
 		writeServiceError(w, err)
 		return

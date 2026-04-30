@@ -11,7 +11,8 @@ The current backend uses in-memory storage for MVP development. The handler, ser
 - In-memory repository
 - CORS middleware
 - JWT middleware for protected CRUD endpoints
-- AI provider abstraction: `mock`, `openai`, `huggingface`, `qwen`
+- AI provider abstraction: `mock`, `openai`, `huggingface`, `qwen`, `alem`
+- Alem semantic endpoints for embeddings and reranking
 - PostgreSQL-ready repository boundary
 
 ## Structure
@@ -75,6 +76,9 @@ AI_PROVIDER=mock
 AI_MODEL=Qwen/Qwen3.6-35B-A3B
 OPENAI_API_KEY=your_openai_key_here
 HUGGINGFACE_API_KEY=your_huggingface_key_here
+ALEM_API_KEY=your_alem_chat_qwen3_6_key_here
+ALEM_EMBEDDING_API_KEY=your_alem_embedding_text_1024_key_here
+ALEM_RERANK_API_KEY=your_alem_reranker_key_here
 ```
 
 Other supported variables:
@@ -85,6 +89,11 @@ JWT_SECRET=dev-change-me
 DATABASE_URL=memory://local
 CORS_ALLOWED_ORIGIN=*
 APP_ENV=development
+ALEM_ENDPOINT=https://llm.alem.ai/v1/chat/completions
+ALEM_EMBEDDING_ENDPOINT=https://llm.alem.ai/v1/embeddings
+ALEM_EMBEDDING_MODEL=text-1024
+ALEM_RERANK_ENDPOINT=https://llm.alem.ai/v1/rerank
+ALEM_RERANK_MODEL=reranker
 ```
 
 ## AI Providers
@@ -123,6 +132,28 @@ $env:AI_MODEL="Qwen/Qwen3.6-35B-A3B"
 go run ./cmd/server
 ```
 
+Alem chat + semantic search:
+
+```powershell
+$env:AI_PROVIDER="alem"
+$env:AI_MODEL="qwen3-6"
+$env:ALEM_API_KEY="your_qwen3_6_chat_key_here"
+$env:ALEM_EMBEDDING_API_KEY="your_text_1024_embedding_key_here"
+$env:ALEM_RERANK_API_KEY="your_reranker_key_here"
+$env:ALEM_EMBEDDING_ENDPOINT="https://llm.alem.ai/v1/embeddings"
+$env:ALEM_EMBEDDING_MODEL="text-1024"
+$env:ALEM_RERANK_ENDPOINT="https://llm.alem.ai/v1/rerank"
+$env:ALEM_RERANK_MODEL="reranker"
+go run ./cmd/server
+```
+
+If the Alem dashboard shows different embedding or rerank endpoints/model names,
+use the dashboard values. The Flutter app never receives any Alem API key.
+
+`/ai/chat` uses `ALEM_API_KEY`, `/ai/embed` uses `ALEM_EMBEDDING_API_KEY`,
+and `/ai/rerank` uses `ALEM_RERANK_API_KEY`. Embed and rerank fall back to
+`ALEM_API_KEY` only when their dedicated key is not configured.
+
 ## Public Endpoints
 
 - `GET /health`
@@ -130,6 +161,8 @@ go run ./cmd/server
 - `POST /auth/login`
 - `POST /auth/refresh`
 - `POST /ai/chat`
+- `POST /ai/embed`
+- `POST /ai/rerank`
 
 ## Protected Endpoints
 
@@ -192,6 +225,29 @@ Response:
   "reply": "...",
   "provider": "mock",
   "model": ""
+}
+```
+
+## AI Semantic Payloads
+
+Embedding:
+
+```json
+{
+  "input": "Kitap oku and sport"
+}
+```
+
+Rerank:
+
+```json
+{
+  "query": "sport",
+  "documents": [
+    { "id": "1", "text": "10 push-ups" },
+    { "id": "2", "text": "read a book" }
+  ],
+  "topK": 2
 }
 ```
 

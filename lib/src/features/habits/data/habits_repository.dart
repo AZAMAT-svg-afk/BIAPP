@@ -17,6 +17,14 @@ class HabitsRepository {
         .asyncMap(_mapRecords);
   }
 
+  Future<List<Habit>> listHabits() async {
+    await ensureSeedData();
+    final records = await (_database.select(
+      _database.habitRecords,
+    )..orderBy([(habit) => OrderingTerm.desc(habit.updatedAt)])).get();
+    return _mapRecords(records);
+  }
+
   Future<void> ensureSeedData() async {
     final existing = await (_database.select(
       _database.habitRecords,

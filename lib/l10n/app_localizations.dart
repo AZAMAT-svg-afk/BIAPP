@@ -1310,6 +1310,84 @@ abstract class AppLocalizations {
   /// **'Restart onboarding'**
   String get restartOnboarding;
 
+  /// No description provided for @smartSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart search'**
+  String get smartSearch;
+
+  /// No description provided for @searchByMeaning.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by meaning'**
+  String get searchByMeaning;
+
+  /// No description provided for @noResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No results'**
+  String get noResults;
+
+  /// No description provided for @indexing.
+  ///
+  /// In en, this message translates to:
+  /// **'Indexing...'**
+  String get indexing;
+
+  /// No description provided for @rebuildIndex.
+  ///
+  /// In en, this message translates to:
+  /// **'Rebuild index'**
+  String get rebuildIndex;
+
+  /// No description provided for @rebuildAiMemoryIndex.
+  ///
+  /// In en, this message translates to:
+  /// **'Rebuild AI memory index'**
+  String get rebuildAiMemoryIndex;
+
+  /// No description provided for @searchNotesAndTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Search notes and tasks'**
+  String get searchNotesAndTasks;
+
+  /// No description provided for @rerankingResults.
+  ///
+  /// In en, this message translates to:
+  /// **'Reranking results'**
+  String get rerankingResults;
+
+  /// No description provided for @smartSearchPrivacyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Search sends note and task text to the AI backend for embeddings and reranking. The API key is stored only on the backend.'**
+  String get smartSearchPrivacyNote;
+
+  /// No description provided for @indexFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Some items could not be indexed. Check backend embedder settings.'**
+  String get indexFailed;
+
+  /// No description provided for @sourceNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Note'**
+  String get sourceNote;
+
+  /// No description provided for @sourceTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Task'**
+  String get sourceTask;
+
+  /// No description provided for @sourceHabit.
+  ///
+  /// In en, this message translates to:
+  /// **'Habit'**
+  String get sourceHabit;
+
   /// No description provided for @stub.
   ///
   /// In en, this message translates to:

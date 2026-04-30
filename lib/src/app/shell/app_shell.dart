@@ -12,6 +12,7 @@ import '../../features/habits/presentation/habits_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/notes/presentation/notes_screen.dart';
 import '../../features/prayer/presentation/prayer_screen.dart';
+import '../../features/search/presentation/smart_search_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/stats/presentation/stats_screen.dart';
 import '../../features/tasks/presentation/tasks_screen.dart';
@@ -166,6 +167,7 @@ class _DestinationLayer extends StatelessWidget {
       AppDestination.notes => const NotesScreen(),
       AppDestination.habits => const HabitsScreen(),
       AppDestination.stats => const StatsScreen(),
+      AppDestination.smartSearch => const SmartSearchScreen(),
       AppDestination.settings => const SettingsScreen(),
     };
   }
@@ -181,6 +183,11 @@ class MoreScreen extends ConsumerWidget {
       _MoreItem(l10n.notesTitle, Icons.notes, AppDestination.notes),
       _MoreItem(l10n.habitsTitle, Icons.track_changes, AppDestination.habits),
       _MoreItem(l10n.statsTitle, Icons.insights, AppDestination.stats),
+      _MoreItem(
+        l10n.smartSearch,
+        Icons.travel_explore,
+        AppDestination.smartSearch,
+      ),
       _MoreItem(l10n.settingsTitle, Icons.settings, AppDestination.settings),
     ];
 

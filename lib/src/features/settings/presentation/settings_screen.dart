@@ -13,6 +13,7 @@ import '../../ai/application/ai_controller.dart';
 import '../../prayer/data/prayer_repository.dart';
 import '../../prayer/presentation/prayer_labels.dart';
 import '../../prayer/presentation/widgets/prayer_offset_editor.dart';
+import '../../search/application/smart_search_controller.dart';
 import '../application/settings_controller.dart';
 import '../domain/user_settings.dart';
 import 'settings_labels.dart';
@@ -24,6 +25,7 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final settings = ref.watch(settingsControllerProvider);
+    final smartSearch = ref.watch(smartSearchControllerProvider);
     final controller = ref.read(settingsControllerProvider.notifier);
 
     return AppScaffold(
@@ -186,6 +188,27 @@ class SettingsScreen extends ConsumerWidget {
                   leading: const Icon(Icons.cloud_done_outlined),
                   title: Text(l10n.aiBackendConnected),
                   subtitle: Text(l10n.aiPrivacyNote),
+                ),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Icon(Icons.travel_explore),
+                  title: Text(l10n.rebuildAiMemoryIndex),
+                  subtitle: Text(
+                    smartSearch.isIndexing
+                        ? '${l10n.indexing} ${smartSearch.indexDoneCount}/${smartSearch.indexTotalCount}'
+                        : l10n.smartSearchPrivacyNote,
+                  ),
+                  trailing: smartSearch.isIndexing
+                      ? const SizedBox.square(
+                          dimension: 22,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.sync),
+                  onTap: smartSearch.isIndexing
+                      ? null
+                      : () => ref
+                            .read(smartSearchControllerProvider.notifier)
+                            .rebuildIndex(l10n),
                 ),
                 ListTile(
                   contentPadding: EdgeInsets.zero,

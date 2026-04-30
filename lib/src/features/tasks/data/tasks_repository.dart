@@ -19,6 +19,17 @@ class TasksRepository {
         .map((records) => records.map(_fromRecord).toList());
   }
 
+  Future<List<TaskItem>> listTasks() async {
+    await ensureSeedData();
+    final records =
+        await (_database.select(_database.taskRecords)..orderBy([
+              (task) => OrderingTerm.desc(task.date),
+              (task) => OrderingTerm.desc(task.updatedAt),
+            ]))
+            .get();
+    return records.map(_fromRecord).toList();
+  }
+
   Future<void> ensureSeedData() async {
     final existing = await (_database.select(
       _database.taskRecords,

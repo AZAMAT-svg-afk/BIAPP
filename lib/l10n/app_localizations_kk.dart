@@ -662,6 +662,47 @@ class AppLocalizationsKk extends AppLocalizations {
   String get restartOnboarding => 'Onboarding қайта бастау';
 
   @override
+  String get smartSearch => 'Ақылды іздеу';
+
+  @override
+  String get searchByMeaning => 'Мағынасы бойынша іздеу';
+
+  @override
+  String get noResults => 'Нәтиже жоқ';
+
+  @override
+  String get indexing => 'Индекстеу...';
+
+  @override
+  String get rebuildIndex => 'Индексті қайта құру';
+
+  @override
+  String get rebuildAiMemoryIndex => 'AI жады индексін қайта құру';
+
+  @override
+  String get searchNotesAndTasks => 'Жазбалар мен тапсырмалардан іздеу';
+
+  @override
+  String get rerankingResults => 'Нәтижелерді reranking жасау';
+
+  @override
+  String get smartSearchPrivacyNote =>
+      'Ақылды іздеу жазбалар мен тапсырмалар мәтінін embeddings және reranking жасау үшін AI backend-ке жібереді. API кілт тек backend ішінде сақталады.';
+
+  @override
+  String get indexFailed =>
+      'Кейбір деректер индекстелмеді. Backend embedder баптауларын тексеріңіз.';
+
+  @override
+  String get sourceNote => 'Жазба';
+
+  @override
+  String get sourceTask => 'Тапсырма';
+
+  @override
+  String get sourceHabit => 'Әдет';
+
+  @override
   String get stub => 'Кейін қосылады';
 
   @override

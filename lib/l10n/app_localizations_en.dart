@@ -663,6 +663,47 @@ class AppLocalizationsEn extends AppLocalizations {
   String get restartOnboarding => 'Restart onboarding';
 
   @override
+  String get smartSearch => 'Smart search';
+
+  @override
+  String get searchByMeaning => 'Search by meaning';
+
+  @override
+  String get noResults => 'No results';
+
+  @override
+  String get indexing => 'Indexing...';
+
+  @override
+  String get rebuildIndex => 'Rebuild index';
+
+  @override
+  String get rebuildAiMemoryIndex => 'Rebuild AI memory index';
+
+  @override
+  String get searchNotesAndTasks => 'Search notes and tasks';
+
+  @override
+  String get rerankingResults => 'Reranking results';
+
+  @override
+  String get smartSearchPrivacyNote =>
+      'Smart Search sends note and task text to the AI backend for embeddings and reranking. The API key is stored only on the backend.';
+
+  @override
+  String get indexFailed =>
+      'Some items could not be indexed. Check backend embedder settings.';
+
+  @override
+  String get sourceNote => 'Note';
+
+  @override
+  String get sourceTask => 'Task';
+
+  @override
+  String get sourceHabit => 'Habit';
+
+  @override
   String get stub => 'Coming later';
 
   @override

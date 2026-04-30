@@ -19,6 +19,16 @@ class NotesRepository {
         .map((records) => records.map(_fromRecord).toList());
   }
 
+  Future<List<NoteItem>> listNotes() async {
+    final records =
+        await (_database.select(_database.noteRecords)..orderBy([
+              (note) => OrderingTerm.desc(note.isPinned),
+              (note) => OrderingTerm.desc(note.updatedAt),
+            ]))
+            .get();
+    return records.map(_fromRecord).toList();
+  }
+
   Future<void> addNote(NoteItem note) {
     return _database
         .into(_database.noteRecords)

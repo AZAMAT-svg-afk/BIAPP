@@ -28,16 +28,18 @@ type AIProviderRequest struct {
 }
 
 type AIService struct {
-	cfg           config.Config
-	provider      AIProvider
-	promptBuilder AIPromptBuilder
+	cfg              config.Config
+	provider         AIProvider
+	semanticProvider AlemSemanticProvider
+	promptBuilder    AIPromptBuilder
 }
 
 func NewAIService(cfg config.Config) AIService {
 	return AIService{
-		cfg:           cfg,
-		provider:      newAIProvider(cfg),
-		promptBuilder: AIPromptBuilder{},
+		cfg:              cfg,
+		provider:         newAIProvider(cfg),
+		semanticProvider: newAlemSemanticProvider(cfg),
+		promptBuilder:    AIPromptBuilder{},
 	}
 }
 
@@ -137,6 +139,59 @@ func (s AIService) Chat(ctx context.Context, request model.ChatRequest) (model.C
 		Provider:    providerName,
 		Model:       modelName,
 		ContextUsed: request.UserContext,
+	}, nil
+}
+
+func (s AIService) Embed(ctx context.Context, request model.EmbeddingRequest) (model.EmbeddingResponse, error) {
+	input := strings.TrimSpace(request.Input)
+	if input == "" {
+		return model.EmbeddingResponse{}, ErrInvalidInput
+	}
+
+	embedding, err := s.semanticProvider.Embed(ctx, input)
+	if err != nil {
+		log.Printf("ai semantic provider %s embed failed: %v", s.semanticProvider.Name(), err)
+		return model.EmbeddingResponse{}, err
+	}
+
+	return model.EmbeddingResponse{
+		Embedding: embedding,
+		Model:     s.cfg.AlemEmbeddingModel,
+		Provider:  s.semanticProvider.Name(),
+	}, nil
+}
+
+func (s AIService) Rerank(ctx context.Context, request model.RerankRequest) (model.RerankResponse, error) {
+	query := strings.TrimSpace(request.Query)
+	if query == "" || len(request.Documents) == 0 {
+		return model.RerankResponse{}, ErrInvalidInput
+	}
+
+	documents := make([]model.RerankDocument, 0, len(request.Documents))
+	for _, document := range request.Documents {
+		document.ID = strings.TrimSpace(document.ID)
+		document.Text = trimRunes(strings.TrimSpace(document.Text), 1200)
+		if document.ID == "" || document.Text == "" {
+			return model.RerankResponse{}, ErrInvalidInput
+		}
+		documents = append(documents, document)
+	}
+
+	topK := request.TopK
+	if topK <= 0 || topK > len(documents) {
+		topK = len(documents)
+	}
+
+	results, err := s.semanticProvider.Rerank(ctx, query, documents, topK)
+	if err != nil {
+		log.Printf("ai semantic provider %s rerank failed: %v", s.semanticProvider.Name(), err)
+		return model.RerankResponse{}, err
+	}
+
+	return model.RerankResponse{
+		Results:  results,
+		Model:    s.cfg.AlemRerankModel,
+		Provider: s.semanticProvider.Name(),
 	}, nil
 }
 
@@ -629,6 +684,19 @@ func nestedString(parent map[string]any, key string, nestedKey string) string {
 	}
 
 	return stringFromAny(value[nestedKey], "")
+}
+
+func trimRunes(value string, limit int) string {
+	if limit <= 0 {
+		return ""
+	}
+
+	runes := []rune(value)
+	if len(runes) <= limit {
+		return value
+	}
+
+	return string(runes[:limit])
 }
 
 func providerConfigError(format string, args ...any) error {

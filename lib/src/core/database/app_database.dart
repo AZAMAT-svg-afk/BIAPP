@@ -136,6 +136,19 @@ class AppActivityRecords extends Table {
   Set<Column<Object>> get primaryKey => {date};
 }
 
+class SemanticIndexItems extends Table {
+  TextColumn get id => text()();
+  TextColumn get sourceType => text()();
+  TextColumn get sourceId => text()();
+  TextColumn get title => text()();
+  TextColumn get content => text().withDefault(const Constant(''))();
+  TextColumn get embeddingJson => text()();
+  DateTimeColumn get updatedAt => dateTime()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {id};
+}
+
 @DriftDatabase(
   tables: [
     TaskRecords,
@@ -144,6 +157,7 @@ class AppActivityRecords extends Table {
     NoteRecords,
     SettingsRecords,
     AppActivityRecords,
+    SemanticIndexItems,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -152,7 +166,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -180,6 +194,9 @@ class AppDatabase extends _$AppDatabase {
         await m.addColumn(settingsRecords, settingsRecords.autoSpeakAiReply);
         await m.addColumn(settingsRecords, settingsRecords.voiceRate);
         await m.addColumn(settingsRecords, settingsRecords.voicePitch);
+      }
+      if (from < 3) {
+        await m.createTable(semanticIndexItems);
       }
     },
   );

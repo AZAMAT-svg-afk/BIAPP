@@ -663,6 +663,47 @@ class AppLocalizationsRu extends AppLocalizations {
   String get restartOnboarding => 'Запустить onboarding заново';
 
   @override
+  String get smartSearch => 'Умный поиск';
+
+  @override
+  String get searchByMeaning => 'Поиск по смыслу';
+
+  @override
+  String get noResults => 'Нет результатов';
+
+  @override
+  String get indexing => 'Индексация...';
+
+  @override
+  String get rebuildIndex => 'Пересобрать индекс';
+
+  @override
+  String get rebuildAiMemoryIndex => 'Пересобрать индекс AI-памяти';
+
+  @override
+  String get searchNotesAndTasks => 'Искать заметки и задачи';
+
+  @override
+  String get rerankingResults => 'Переранжирование результатов';
+
+  @override
+  String get smartSearchPrivacyNote =>
+      'Умный поиск отправляет текст заметок и задач на AI backend для создания embeddings и reranking. API ключ хранится только на backend.';
+
+  @override
+  String get indexFailed =>
+      'Не удалось проиндексировать часть данных. Проверь настройки embedder на backend.';
+
+  @override
+  String get sourceNote => 'Заметка';
+
+  @override
+  String get sourceTask => 'Задача';
+
+  @override
+  String get sourceHabit => 'Привычка';
+
+  @override
   String get stub => 'Будет позже';
 
   @override

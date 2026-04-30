@@ -4676,6 +4676,474 @@ class AppActivityRecordsCompanion extends UpdateCompanion<AppActivityRecord> {
   }
 }
 
+class $SemanticIndexItemsTable extends SemanticIndexItems
+    with TableInfo<$SemanticIndexItemsTable, SemanticIndexItem> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SemanticIndexItemsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sourceTypeMeta = const VerificationMeta(
+    'sourceType',
+  );
+  @override
+  late final GeneratedColumn<String> sourceType = GeneratedColumn<String>(
+    'source_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sourceIdMeta = const VerificationMeta(
+    'sourceId',
+  );
+  @override
+  late final GeneratedColumn<String> sourceId = GeneratedColumn<String>(
+    'source_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _contentMeta = const VerificationMeta(
+    'content',
+  );
+  @override
+  late final GeneratedColumn<String> content = GeneratedColumn<String>(
+    'content',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
+  static const VerificationMeta _embeddingJsonMeta = const VerificationMeta(
+    'embeddingJson',
+  );
+  @override
+  late final GeneratedColumn<String> embeddingJson = GeneratedColumn<String>(
+    'embedding_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    sourceType,
+    sourceId,
+    title,
+    content,
+    embeddingJson,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'semantic_index_items';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SemanticIndexItem> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('source_type')) {
+      context.handle(
+        _sourceTypeMeta,
+        sourceType.isAcceptableOrUnknown(data['source_type']!, _sourceTypeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceTypeMeta);
+    }
+    if (data.containsKey('source_id')) {
+      context.handle(
+        _sourceIdMeta,
+        sourceId.isAcceptableOrUnknown(data['source_id']!, _sourceIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceIdMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('content')) {
+      context.handle(
+        _contentMeta,
+        content.isAcceptableOrUnknown(data['content']!, _contentMeta),
+      );
+    }
+    if (data.containsKey('embedding_json')) {
+      context.handle(
+        _embeddingJsonMeta,
+        embeddingJson.isAcceptableOrUnknown(
+          data['embedding_json']!,
+          _embeddingJsonMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_embeddingJsonMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  SemanticIndexItem map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SemanticIndexItem(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      sourceType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_type'],
+      )!,
+      sourceId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_id'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      content: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content'],
+      )!,
+      embeddingJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}embedding_json'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $SemanticIndexItemsTable createAlias(String alias) {
+    return $SemanticIndexItemsTable(attachedDatabase, alias);
+  }
+}
+
+class SemanticIndexItem extends DataClass
+    implements Insertable<SemanticIndexItem> {
+  final String id;
+  final String sourceType;
+  final String sourceId;
+  final String title;
+  final String content;
+  final String embeddingJson;
+  final DateTime updatedAt;
+  const SemanticIndexItem({
+    required this.id,
+    required this.sourceType,
+    required this.sourceId,
+    required this.title,
+    required this.content,
+    required this.embeddingJson,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['source_type'] = Variable<String>(sourceType);
+    map['source_id'] = Variable<String>(sourceId);
+    map['title'] = Variable<String>(title);
+    map['content'] = Variable<String>(content);
+    map['embedding_json'] = Variable<String>(embeddingJson);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  SemanticIndexItemsCompanion toCompanion(bool nullToAbsent) {
+    return SemanticIndexItemsCompanion(
+      id: Value(id),
+      sourceType: Value(sourceType),
+      sourceId: Value(sourceId),
+      title: Value(title),
+      content: Value(content),
+      embeddingJson: Value(embeddingJson),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory SemanticIndexItem.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SemanticIndexItem(
+      id: serializer.fromJson<String>(json['id']),
+      sourceType: serializer.fromJson<String>(json['sourceType']),
+      sourceId: serializer.fromJson<String>(json['sourceId']),
+      title: serializer.fromJson<String>(json['title']),
+      content: serializer.fromJson<String>(json['content']),
+      embeddingJson: serializer.fromJson<String>(json['embeddingJson']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'sourceType': serializer.toJson<String>(sourceType),
+      'sourceId': serializer.toJson<String>(sourceId),
+      'title': serializer.toJson<String>(title),
+      'content': serializer.toJson<String>(content),
+      'embeddingJson': serializer.toJson<String>(embeddingJson),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  SemanticIndexItem copyWith({
+    String? id,
+    String? sourceType,
+    String? sourceId,
+    String? title,
+    String? content,
+    String? embeddingJson,
+    DateTime? updatedAt,
+  }) => SemanticIndexItem(
+    id: id ?? this.id,
+    sourceType: sourceType ?? this.sourceType,
+    sourceId: sourceId ?? this.sourceId,
+    title: title ?? this.title,
+    content: content ?? this.content,
+    embeddingJson: embeddingJson ?? this.embeddingJson,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  SemanticIndexItem copyWithCompanion(SemanticIndexItemsCompanion data) {
+    return SemanticIndexItem(
+      id: data.id.present ? data.id.value : this.id,
+      sourceType: data.sourceType.present
+          ? data.sourceType.value
+          : this.sourceType,
+      sourceId: data.sourceId.present ? data.sourceId.value : this.sourceId,
+      title: data.title.present ? data.title.value : this.title,
+      content: data.content.present ? data.content.value : this.content,
+      embeddingJson: data.embeddingJson.present
+          ? data.embeddingJson.value
+          : this.embeddingJson,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SemanticIndexItem(')
+          ..write('id: $id, ')
+          ..write('sourceType: $sourceType, ')
+          ..write('sourceId: $sourceId, ')
+          ..write('title: $title, ')
+          ..write('content: $content, ')
+          ..write('embeddingJson: $embeddingJson, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    sourceType,
+    sourceId,
+    title,
+    content,
+    embeddingJson,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SemanticIndexItem &&
+          other.id == this.id &&
+          other.sourceType == this.sourceType &&
+          other.sourceId == this.sourceId &&
+          other.title == this.title &&
+          other.content == this.content &&
+          other.embeddingJson == this.embeddingJson &&
+          other.updatedAt == this.updatedAt);
+}
+
+class SemanticIndexItemsCompanion extends UpdateCompanion<SemanticIndexItem> {
+  final Value<String> id;
+  final Value<String> sourceType;
+  final Value<String> sourceId;
+  final Value<String> title;
+  final Value<String> content;
+  final Value<String> embeddingJson;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const SemanticIndexItemsCompanion({
+    this.id = const Value.absent(),
+    this.sourceType = const Value.absent(),
+    this.sourceId = const Value.absent(),
+    this.title = const Value.absent(),
+    this.content = const Value.absent(),
+    this.embeddingJson = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SemanticIndexItemsCompanion.insert({
+    required String id,
+    required String sourceType,
+    required String sourceId,
+    required String title,
+    this.content = const Value.absent(),
+    required String embeddingJson,
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       sourceType = Value(sourceType),
+       sourceId = Value(sourceId),
+       title = Value(title),
+       embeddingJson = Value(embeddingJson),
+       updatedAt = Value(updatedAt);
+  static Insertable<SemanticIndexItem> custom({
+    Expression<String>? id,
+    Expression<String>? sourceType,
+    Expression<String>? sourceId,
+    Expression<String>? title,
+    Expression<String>? content,
+    Expression<String>? embeddingJson,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (sourceType != null) 'source_type': sourceType,
+      if (sourceId != null) 'source_id': sourceId,
+      if (title != null) 'title': title,
+      if (content != null) 'content': content,
+      if (embeddingJson != null) 'embedding_json': embeddingJson,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SemanticIndexItemsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? sourceType,
+    Value<String>? sourceId,
+    Value<String>? title,
+    Value<String>? content,
+    Value<String>? embeddingJson,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return SemanticIndexItemsCompanion(
+      id: id ?? this.id,
+      sourceType: sourceType ?? this.sourceType,
+      sourceId: sourceId ?? this.sourceId,
+      title: title ?? this.title,
+      content: content ?? this.content,
+      embeddingJson: embeddingJson ?? this.embeddingJson,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (sourceType.present) {
+      map['source_type'] = Variable<String>(sourceType.value);
+    }
+    if (sourceId.present) {
+      map['source_id'] = Variable<String>(sourceId.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (content.present) {
+      map['content'] = Variable<String>(content.value);
+    }
+    if (embeddingJson.present) {
+      map['embedding_json'] = Variable<String>(embeddingJson.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SemanticIndexItemsCompanion(')
+          ..write('id: $id, ')
+          ..write('sourceType: $sourceType, ')
+          ..write('sourceId: $sourceId, ')
+          ..write('title: $title, ')
+          ..write('content: $content, ')
+          ..write('embeddingJson: $embeddingJson, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -4689,6 +5157,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   );
   late final $AppActivityRecordsTable appActivityRecords =
       $AppActivityRecordsTable(this);
+  late final $SemanticIndexItemsTable semanticIndexItems =
+      $SemanticIndexItemsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -4700,6 +5170,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     noteRecords,
     settingsRecords,
     appActivityRecords,
+    semanticIndexItems,
   ];
 }
 
@@ -7141,6 +7612,261 @@ typedef $$AppActivityRecordsTableProcessedTableManager =
       AppActivityRecord,
       PrefetchHooks Function()
     >;
+typedef $$SemanticIndexItemsTableCreateCompanionBuilder =
+    SemanticIndexItemsCompanion Function({
+      required String id,
+      required String sourceType,
+      required String sourceId,
+      required String title,
+      Value<String> content,
+      required String embeddingJson,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$SemanticIndexItemsTableUpdateCompanionBuilder =
+    SemanticIndexItemsCompanion Function({
+      Value<String> id,
+      Value<String> sourceType,
+      Value<String> sourceId,
+      Value<String> title,
+      Value<String> content,
+      Value<String> embeddingJson,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+class $$SemanticIndexItemsTableFilterComposer
+    extends Composer<_$AppDatabase, $SemanticIndexItemsTable> {
+  $$SemanticIndexItemsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceType => $composableBuilder(
+    column: $table.sourceType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceId => $composableBuilder(
+    column: $table.sourceId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get content => $composableBuilder(
+    column: $table.content,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get embeddingJson => $composableBuilder(
+    column: $table.embeddingJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$SemanticIndexItemsTableOrderingComposer
+    extends Composer<_$AppDatabase, $SemanticIndexItemsTable> {
+  $$SemanticIndexItemsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceType => $composableBuilder(
+    column: $table.sourceType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceId => $composableBuilder(
+    column: $table.sourceId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get content => $composableBuilder(
+    column: $table.content,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get embeddingJson => $composableBuilder(
+    column: $table.embeddingJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SemanticIndexItemsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SemanticIndexItemsTable> {
+  $$SemanticIndexItemsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceType => $composableBuilder(
+    column: $table.sourceType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get sourceId =>
+      $composableBuilder(column: $table.sourceId, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get content =>
+      $composableBuilder(column: $table.content, builder: (column) => column);
+
+  GeneratedColumn<String> get embeddingJson => $composableBuilder(
+    column: $table.embeddingJson,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$SemanticIndexItemsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SemanticIndexItemsTable,
+          SemanticIndexItem,
+          $$SemanticIndexItemsTableFilterComposer,
+          $$SemanticIndexItemsTableOrderingComposer,
+          $$SemanticIndexItemsTableAnnotationComposer,
+          $$SemanticIndexItemsTableCreateCompanionBuilder,
+          $$SemanticIndexItemsTableUpdateCompanionBuilder,
+          (
+            SemanticIndexItem,
+            BaseReferences<
+              _$AppDatabase,
+              $SemanticIndexItemsTable,
+              SemanticIndexItem
+            >,
+          ),
+          SemanticIndexItem,
+          PrefetchHooks Function()
+        > {
+  $$SemanticIndexItemsTableTableManager(
+    _$AppDatabase db,
+    $SemanticIndexItemsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SemanticIndexItemsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SemanticIndexItemsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SemanticIndexItemsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> sourceType = const Value.absent(),
+                Value<String> sourceId = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<String> content = const Value.absent(),
+                Value<String> embeddingJson = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SemanticIndexItemsCompanion(
+                id: id,
+                sourceType: sourceType,
+                sourceId: sourceId,
+                title: title,
+                content: content,
+                embeddingJson: embeddingJson,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String sourceType,
+                required String sourceId,
+                required String title,
+                Value<String> content = const Value.absent(),
+                required String embeddingJson,
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => SemanticIndexItemsCompanion.insert(
+                id: id,
+                sourceType: sourceType,
+                sourceId: sourceId,
+                title: title,
+                content: content,
+                embeddingJson: embeddingJson,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$SemanticIndexItemsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SemanticIndexItemsTable,
+      SemanticIndexItem,
+      $$SemanticIndexItemsTableFilterComposer,
+      $$SemanticIndexItemsTableOrderingComposer,
+      $$SemanticIndexItemsTableAnnotationComposer,
+      $$SemanticIndexItemsTableCreateCompanionBuilder,
+      $$SemanticIndexItemsTableUpdateCompanionBuilder,
+      (
+        SemanticIndexItem,
+        BaseReferences<
+          _$AppDatabase,
+          $SemanticIndexItemsTable,
+          SemanticIndexItem
+        >,
+      ),
+      SemanticIndexItem,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -7157,4 +7883,6 @@ class $AppDatabaseManager {
       $$SettingsRecordsTableTableManager(_db, _db.settingsRecords);
   $$AppActivityRecordsTableTableManager get appActivityRecords =>
       $$AppActivityRecordsTableTableManager(_db, _db.appActivityRecords);
+  $$SemanticIndexItemsTableTableManager get semanticIndexItems =>
+      $$SemanticIndexItemsTableTableManager(_db, _db.semanticIndexItems);
 }
