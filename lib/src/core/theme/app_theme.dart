@@ -8,13 +8,13 @@ class AppTheme {
     const palette = AppPalette(
       emerald: Color(0xFF0C8F6C),
       gold: Color(0xFFE3B85C),
-      card: Color(0x2BFFFFFF),
-      softCard: Color(0x38FFFFFF),
-      glass: Color(0x26FFFFFF),
-      background: Color(0xFFF2FAF6),
-      backgroundAlt: Color(0xFFDDF4EA),
-      textMuted: Color(0xFF60736B),
-      shadow: Color(0x1A0F3D34),
+      card: Color(0xFFFFFFFF),
+      softCard: Color(0xFFF2F8F5),
+      glass: Color(0xFFFFFFFF),
+      background: Color(0xFFF7FAF8),
+      backgroundAlt: Color(0xFFEAF4EF),
+      textMuted: Color(0xFF5D6F68),
+      shadow: Color(0x140B3329),
       success: Color(0xFF20A36B),
       warning: Color(0xFFD9982F),
       danger: Color(0xFFE45656),
@@ -27,8 +27,8 @@ class AppTheme {
       secondary: palette.gold,
       surface: palette.background,
       surfaceContainer: palette.softCard,
-      surfaceContainerHighest: const Color(0xFFE1EDE7),
-      outlineVariant: const Color(0xFFD8E4DE),
+      surfaceContainerHighest: const Color(0xFFE4EFE9),
+      outlineVariant: const Color(0xFFD3E1DA),
     );
 
     return _base(scheme, palette).copyWith(
@@ -163,7 +163,7 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: scheme.surfaceContainer.withValues(alpha: 0.78),
+        fillColor: scheme.surfaceContainer,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 15,

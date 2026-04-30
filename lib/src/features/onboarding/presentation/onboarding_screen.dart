@@ -7,6 +7,7 @@ import '../../../core/theme/app_palette.dart';
 import '../../../core/widgets/app_background.dart';
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/primary_button.dart';
+import '../../prayer/data/prayer_repository.dart';
 import '../../settings/application/settings_controller.dart';
 import '../../settings/domain/user_settings.dart';
 import '../../settings/presentation/settings_labels.dart';
@@ -20,20 +21,17 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   late final TextEditingController _nameController;
-  late final TextEditingController _cityController;
 
   @override
   void initState() {
     super.initState();
     final settings = ref.read(settingsControllerProvider);
     _nameController = TextEditingController(text: settings.userName);
-    _cityController = TextEditingController(text: settings.prayer.city);
   }
 
   @override
   void dispose() {
     _nameController.dispose();
-    _cityController.dispose();
     super.dispose();
   }
 
@@ -42,6 +40,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     final l10n = AppLocalizations.of(context)!;
     final settings = ref.watch(settingsControllerProvider);
     final controller = ref.read(settingsControllerProvider.notifier);
+    final selectedCity = PrayerCityProfiles.resolve(settings.prayer.city);
+    final calculationMethod =
+        PrayerCalculationProfiles.values.contains(
+          settings.prayer.calculationMethod,
+        )
+        ? settings.prayer.calculationMethod
+        : selectedCity.calculationMethod;
 
     return Scaffold(
       body: AppBackground(
@@ -92,12 +97,25 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _Label(l10n.prayerSetup),
-                    TextField(
-                      controller: _cityController,
+                    DropdownButtonFormField<PrayerCityProfile>(
+                      initialValue: selectedCity,
                       decoration: InputDecoration(labelText: l10n.city),
-                      onChanged: (value) {
+                      items: PrayerCityProfiles.cities.map((city) {
+                        return DropdownMenuItem(
+                          value: city,
+                          child: Text(city.localizedName(l10n.localeName)),
+                        );
+                      }).toList(),
+                      onChanged: (city) {
+                        if (city == null) {
+                          return;
+                        }
                         controller.updatePrayer(
-                          settings.prayer.copyWith(city: value),
+                          settings.prayer.copyWith(
+                            city: city.id,
+                            calculationMethod: city.calculationMethod,
+                            madhhab: city.defaultMadhhab,
+                          ),
                         );
                       },
                     ),
@@ -112,21 +130,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       },
                     ),
                     DropdownButtonFormField<String>(
-                      initialValue: settings.prayer.calculationMethod,
+                      initialValue: calculationMethod,
                       decoration: InputDecoration(
                         labelText: l10n.calculationMethod,
                       ),
-                      items:
-                          const [
-                            'Muslim World League',
-                            'Umm al-Qura',
-                            'Karachi',
-                          ].map((method) {
-                            return DropdownMenuItem(
-                              value: method,
-                              child: Text(method),
-                            );
-                          }).toList(),
+                      items: PrayerCalculationProfiles.values.map((method) {
+                        return DropdownMenuItem(
+                          value: method,
+                          child: Text(method),
+                        );
+                      }).toList(),
                       onChanged: (value) {
                         if (value != null) {
                           controller.updatePrayer(

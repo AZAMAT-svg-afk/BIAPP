@@ -12,6 +12,7 @@ import '../../../core/widgets/section_header.dart';
 import '../../ai/application/ai_controller.dart';
 import '../../prayer/data/prayer_repository.dart';
 import '../../prayer/presentation/prayer_labels.dart';
+import '../../prayer/presentation/widgets/prayer_offset_editor.dart';
 import '../application/settings_controller.dart';
 import '../domain/user_settings.dart';
 import 'settings_labels.dart';
@@ -91,9 +92,9 @@ class SettingsScreen extends ConsumerWidget {
                 _ValueTile(
                   icon: Icons.location_city,
                   title: l10n.city,
-                  value: KazakhstanPrayerCity.resolve(
+                  value: PrayerCityProfiles.resolve(
                     settings.prayer.city,
-                  ).displayName,
+                  ).localizedName(l10n.localeName),
                   onTap: () => _showCitySelector(context, ref),
                 ),
                 _ValueTile(
@@ -115,6 +116,11 @@ class SettingsScreen extends ConsumerWidget {
                       settings.prayer.copyWith(notificationsEnabled: value),
                     );
                   },
+                ),
+                const Divider(height: 24),
+                PrayerOffsetEditor(
+                  settings: settings.prayer,
+                  onChanged: controller.updatePrayer,
                 ),
               ],
             ),
@@ -194,6 +200,13 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 22),
+          SectionHeader(title: l10n.voiceSettings),
+          const SizedBox(height: 12),
+          _VoiceSettingsCard(
+            settings: settings.voice,
+            onChanged: controller.updateVoice,
+          ),
+          const SizedBox(height: 22),
           SectionHeader(title: l10n.privacy),
           const SizedBox(height: 12),
           AppCard(
@@ -235,9 +248,9 @@ class SettingsScreen extends ConsumerWidget {
 
   Future<void> _showCitySelector(BuildContext context, WidgetRef ref) async {
     final settings = ref.read(settingsControllerProvider);
-    final selected = KazakhstanPrayerCity.resolve(settings.prayer.city);
+    final selected = PrayerCityProfiles.resolve(settings.prayer.city);
     final l10n = AppLocalizations.of(context)!;
-    final value = await showModalBottomSheet<KazakhstanPrayerCity>(
+    final value = await showModalBottomSheet<PrayerCityProfile>(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
@@ -257,21 +270,22 @@ class SettingsScreen extends ConsumerWidget {
                 Flexible(
                   child: ListView.separated(
                     shrinkWrap: true,
-                    itemCount: KazakhstanPrayerCity.cities.length,
+                    itemCount: PrayerCityProfiles.cities.length,
                     separatorBuilder: (context, index) =>
                         const Divider(height: 1),
                     itemBuilder: (context, index) {
-                      final city = KazakhstanPrayerCity.cities[index];
-                      final isSelected =
-                          city.displayName == selected.displayName;
+                      final city = PrayerCityProfiles.cities[index];
+                      final isSelected = city.id == selected.id;
                       return ListTile(
                         leading: Icon(
                           isSelected
                               ? Icons.location_on
                               : Icons.location_city_outlined,
                         ),
-                        title: Text(city.displayName),
-                        subtitle: Text(city.timezone),
+                        title: Text(city.localizedName(l10n.localeName)),
+                        subtitle: Text(
+                          '${city.englishName} · ${city.timezone}',
+                        ),
                         trailing: isSelected
                             ? const Icon(Icons.check_circle)
                             : null,
@@ -290,8 +304,126 @@ class SettingsScreen extends ConsumerWidget {
     if (value != null) {
       ref
           .read(settingsControllerProvider.notifier)
-          .updatePrayer(settings.prayer.copyWith(city: value.displayName));
+          .updatePrayer(
+            settings.prayer.copyWith(
+              city: value.id,
+              calculationMethod: value.calculationMethod,
+              madhhab: value.defaultMadhhab,
+            ),
+          );
     }
+  }
+}
+
+class _VoiceSettingsCard extends StatelessWidget {
+  const _VoiceSettingsCard({required this.settings, required this.onChanged});
+
+  final VoiceSettings settings;
+  final ValueChanged<VoiceSettings> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            value: settings.voiceInputEnabled,
+            title: Text(l10n.voiceInput),
+            onChanged: (value) {
+              onChanged(settings.copyWith(voiceInputEnabled: value));
+            },
+          ),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            value: settings.voiceReplyEnabled,
+            title: Text(l10n.voiceReply),
+            onChanged: (value) {
+              onChanged(settings.copyWith(voiceReplyEnabled: value));
+            },
+          ),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            value: settings.autoSpeakAiReply,
+            title: Text(l10n.autoSpeakAiReply),
+            onChanged: settings.voiceReplyEnabled
+                ? (value) {
+                    onChanged(settings.copyWith(autoSpeakAiReply: value));
+                  }
+                : null,
+          ),
+          const SizedBox(height: 8),
+          _VoiceSlider(
+            label: l10n.voiceRate,
+            value: settings.rate,
+            min: 0.2,
+            max: 0.9,
+            divisions: 14,
+            onChanged: (value) => onChanged(settings.copyWith(rate: value)),
+          ),
+          _VoiceSlider(
+            label: l10n.voicePitch,
+            value: settings.pitch,
+            min: 0.5,
+            max: 1.5,
+            divisions: 20,
+            onChanged: (value) => onChanged(settings.copyWith(pitch: value)),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _VoiceSlider extends StatelessWidget {
+  const _VoiceSlider({
+    required this.label,
+    required this.value,
+    required this.min,
+    required this.max,
+    required this.divisions,
+    required this.onChanged,
+  });
+
+  final String label;
+  final double value;
+  final double min;
+  final double max;
+  final int divisions;
+  final ValueChanged<double> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final displayValue = value.toStringAsFixed(2);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  label,
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+              ),
+              Text(displayValue, style: Theme.of(context).textTheme.labelLarge),
+            ],
+          ),
+          Slider(
+            value: value,
+            min: min,
+            max: max,
+            divisions: divisions,
+            label: displayValue,
+            onChanged: onChanged,
+          ),
+        ],
+      ),
+    );
   }
 }
 

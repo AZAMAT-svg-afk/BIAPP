@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -9,10 +11,12 @@ import '../../../core/widgets/app_chip.dart';
 import '../../../core/widgets/app_motion.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/widgets/app_skeleton.dart';
+import '../../settings/application/settings_controller.dart';
 import '../../settings/domain/user_settings.dart';
 import '../../settings/presentation/settings_labels.dart';
 import '../application/ai_context_builder.dart';
 import '../application/ai_controller.dart';
+import '../application/ai_voice_controller.dart';
 import '../domain/ai_message.dart';
 import 'widgets/ai_message_bubble.dart';
 
@@ -29,6 +33,7 @@ class _AiScreenState extends ConsumerState<AiScreen> {
 
   @override
   void dispose() {
+    unawaited(ref.read(aiVoiceControllerProvider.notifier).stopAll());
     _controller.dispose();
     _scrollController.dispose();
     super.dispose();
@@ -38,12 +43,54 @@ class _AiScreenState extends ConsumerState<AiScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final chat = ref.watch(aiControllerProvider);
+    final voice = ref.watch(aiVoiceControllerProvider);
+    final settings = ref.watch(settingsControllerProvider);
     final aiContext = ref.watch(aiContextBuilderProvider).build(l10n);
 
     ref.listen(aiControllerProvider, (previous, next) {
       if ((previous?.messages.length ?? 0) != next.messages.length) {
         WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
       }
+      final previousLength = previous?.messages.length ?? 0;
+      if (next.messages.length <= previousLength) {
+        return;
+      }
+      final latest = next.messages.last;
+      if (latest.role == AiMessageRole.assistant &&
+          settings.voice.voiceReplyEnabled &&
+          settings.voice.autoSpeakAiReply) {
+        unawaited(
+          ref
+              .read(aiVoiceControllerProvider.notifier)
+              .speak(latest.content, settings.language),
+        );
+      }
+    });
+
+    ref.listen(
+      aiVoiceControllerProvider.select((value) => value.recognizedText),
+      (previous, next) {
+        if (next.trim().isEmpty || previous == next) {
+          return;
+        }
+        _controller
+          ..text = next
+          ..selection = TextSelection.fromPosition(
+            TextPosition(offset: next.length),
+          );
+      },
+    );
+
+    ref.listen(aiVoiceControllerProvider.select((value) => value.error), (
+      previous,
+      next,
+    ) {
+      if (next == null || previous == next) {
+        return;
+      }
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(_voiceErrorLabel(l10n, next))));
     });
 
     return AppScaffold(
@@ -94,12 +141,35 @@ class _AiScreenState extends ConsumerState<AiScreen> {
                 ),
               ),
             ),
+          if (voice.isListening)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 4, 20, 0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  l10n.listening,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+            ),
           SafeArea(
             top: false,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
               child: Row(
                 children: [
+                  _VoiceMicButton(
+                    enabled:
+                        settings.voice.voiceInputEnabled && !chat.isSending,
+                    isListening: voice.isListening,
+                    onPressed: () => ref
+                        .read(aiVoiceControllerProvider.notifier)
+                        .toggleListening(settings.language),
+                  ),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: TextField(
                       controller: _controller,
@@ -114,6 +184,16 @@ class _AiScreenState extends ConsumerState<AiScreen> {
                     ),
                   ),
                   const SizedBox(width: 10),
+                  if (voice.isSpeaking) ...[
+                    IconButton.filledTonal(
+                      tooltip: l10n.stopSpeaking,
+                      onPressed: () => ref
+                          .read(aiVoiceControllerProvider.notifier)
+                          .stopSpeaking(),
+                      icon: const Icon(Icons.volume_off_outlined),
+                    ),
+                    const SizedBox(width: 8),
+                  ],
                   IconButton.filled(
                     onPressed: chat.isSending ? null : _send,
                     icon: chat.isSending
@@ -136,6 +216,11 @@ class _AiScreenState extends ConsumerState<AiScreen> {
   Future<void> _send() async {
     final l10n = AppLocalizations.of(context)!;
     final contextData = ref.read(aiContextBuilderProvider).build(l10n);
+    final voiceController = ref.read(aiVoiceControllerProvider.notifier);
+    await voiceController.stopSpeaking();
+    if (ref.read(aiVoiceControllerProvider).isListening) {
+      await voiceController.stopListening();
+    }
     await ref
         .read(aiControllerProvider.notifier)
         .sendMessage(input: _controller.text, context: contextData);
@@ -157,6 +242,58 @@ class _AiScreenState extends ConsumerState<AiScreen> {
       _scrollController.position.maxScrollExtent,
       duration: const Duration(milliseconds: 280),
       curve: Curves.easeOutCubic,
+    );
+  }
+
+  String _voiceErrorLabel(AppLocalizations l10n, AiVoiceError error) {
+    return switch (error) {
+      AiVoiceError.microphonePermissionRequired =>
+        l10n.microphonePermissionRequired,
+      AiVoiceError.speechRecognitionUnavailable =>
+        l10n.speechRecognitionUnavailable,
+      AiVoiceError.voiceLanguageUnavailable => l10n.voiceLanguageUnavailable,
+      AiVoiceError.ttsUnavailable => l10n.ttsUnavailable,
+      AiVoiceError.noSpeechDetected => l10n.noSpeechDetected,
+    };
+  }
+}
+
+class _VoiceMicButton extends StatelessWidget {
+  const _VoiceMicButton({
+    required this.enabled,
+    required this.isListening,
+    required this.onPressed,
+  });
+
+  final bool enabled;
+  final bool isListening;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final scheme = Theme.of(context).colorScheme;
+    return Semantics(
+      button: true,
+      label: isListening ? l10n.listening : l10n.tapToSpeak,
+      child: AnimatedScale(
+        scale: isListening ? 1.06 : 1,
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeOutCubic,
+        child: IconButton.filledTonal(
+          tooltip: isListening ? l10n.listening : l10n.tapToSpeak,
+          onPressed: enabled ? onPressed : null,
+          style: IconButton.styleFrom(
+            backgroundColor: isListening
+                ? scheme.errorContainer
+                : scheme.surfaceContainerHighest,
+            foregroundColor: isListening
+                ? scheme.onErrorContainer
+                : scheme.onSurfaceVariant,
+          ),
+          icon: Icon(isListening ? Icons.mic : Icons.mic_none_outlined),
+        ),
+      ),
     );
   }
 }

@@ -593,6 +593,64 @@ class AppLocalizationsRu extends AppLocalizations {
   String get backgroundParticles => 'Звезды';
 
   @override
+  String get prayerCorrectionTitle => 'Коррекция времени намаза';
+
+  @override
+  String get syncWithSajda => 'Синхронизация с Sajda / местной мечетью';
+
+  @override
+  String get manualPrayerCorrection => 'Ручная коррекция';
+
+  @override
+  String get prayerCorrectionExplanation =>
+      'Время намаза может отличаться в разных приложениях из-за метода расчета и местных расписаний. Вы можете настроить коррекцию, чтобы совпадало с Sajda или местной мечетью.';
+
+  @override
+  String get resetPrayerCorrection => 'Сбросить коррекцию';
+
+  @override
+  String get voiceSettings => 'Голос';
+
+  @override
+  String get voiceInput => 'Голосовой ввод';
+
+  @override
+  String get voiceReply => 'Голосовой ответ';
+
+  @override
+  String get autoSpeakAiReply => 'Автоматически озвучивать ответ AI';
+
+  @override
+  String get voiceRate => 'Скорость голоса';
+
+  @override
+  String get voicePitch => 'Тон голоса';
+
+  @override
+  String get microphonePermissionRequired => 'Нужно разрешение на микрофон';
+
+  @override
+  String get listening => 'Слушаю...';
+
+  @override
+  String get tapToSpeak => 'Нажмите, чтобы говорить';
+
+  @override
+  String get stopSpeaking => 'Остановить озвучку';
+
+  @override
+  String get speechRecognitionUnavailable => 'Распознавание речи недоступно';
+
+  @override
+  String get voiceLanguageUnavailable => 'Язык голоса недоступен';
+
+  @override
+  String get ttsUnavailable => 'Озвучка недоступна';
+
+  @override
+  String get noSpeechDetected => 'Речь не распознана';
+
+  @override
   String get privacy => 'Приватность';
 
   @override

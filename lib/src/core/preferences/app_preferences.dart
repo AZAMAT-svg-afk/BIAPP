@@ -27,7 +27,7 @@ final backgroundStyleControllerProvider =
 
 class AppPreferences {
   AppPreferences({SharedPreferencesAsync? preferences})
-    : _preferences = preferences ?? SharedPreferencesAsync();
+    : _preferences = preferences;
 
   static const userNameKey = 'user_name';
   static const appLanguageKey = 'app_language';
@@ -35,14 +35,22 @@ class AppPreferences {
   static const prayerCityKey = 'prayer_city';
   static const backgroundStyleKey = 'background_animation_style';
 
-  final SharedPreferencesAsync _preferences;
+  final SharedPreferencesAsync? _preferences;
 
-  Future<void> setString(String key, String value) {
-    return _preferences.setString(key, value);
+  Future<void> setString(String key, String value) async {
+    final preferences = _safePreferences();
+    if (preferences == null) {
+      return;
+    }
+    return preferences.setString(key, value);
   }
 
-  Future<String?> getString(String key) {
-    return _preferences.getString(key);
+  Future<String?> getString(String key) async {
+    final preferences = _safePreferences();
+    if (preferences == null) {
+      return null;
+    }
+    return preferences.getString(key);
   }
 
   Future<void> setBackgroundStyle(BackgroundAnimationStyle style) {
@@ -53,6 +61,14 @@ class AppPreferences {
     return BackgroundAnimationStyle.fromName(
       await getString(backgroundStyleKey),
     );
+  }
+
+  SharedPreferencesAsync? _safePreferences() {
+    try {
+      return _preferences ?? SharedPreferencesAsync();
+    } on Object {
+      return null;
+    }
   }
 }
 

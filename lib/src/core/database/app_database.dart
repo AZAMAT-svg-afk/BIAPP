@@ -90,7 +90,26 @@ class SettingsRecords extends Table {
   BoolColumn get soundEnabled => boolean()();
   BoolColumn get vibrationEnabled => boolean()();
   BoolColumn get adhanEnabled => boolean()();
+  BoolColumn get manualPrayerOffsetsEnabled =>
+      boolean().withDefault(const Constant(false))();
+  IntColumn get fajrOffsetMinutes => integer().withDefault(const Constant(0))();
+  IntColumn get sunriseOffsetMinutes =>
+      integer().withDefault(const Constant(0))();
+  IntColumn get dhuhrOffsetMinutes =>
+      integer().withDefault(const Constant(0))();
+  IntColumn get asrOffsetMinutes => integer().withDefault(const Constant(0))();
+  IntColumn get maghribOffsetMinutes =>
+      integer().withDefault(const Constant(0))();
+  IntColumn get ishaOffsetMinutes => integer().withDefault(const Constant(0))();
   TextColumn get aiMode => text()();
+  BoolColumn get voiceInputEnabled =>
+      boolean().withDefault(const Constant(true))();
+  BoolColumn get voiceReplyEnabled =>
+      boolean().withDefault(const Constant(true))();
+  BoolColumn get autoSpeakAiReply =>
+      boolean().withDefault(const Constant(false))();
+  RealColumn get voiceRate => real().withDefault(const Constant(0.48))();
+  RealColumn get voicePitch => real().withDefault(const Constant(1.0))();
   BoolColumn get activeMentorEnabled => boolean()();
   TextColumn get activeMentorMode => text()();
   IntColumn get maxFollowUpsPerItem => integer()();
@@ -133,11 +152,37 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
-  MigrationStrategy get migration =>
-      MigrationStrategy(onCreate: (m) => m.createAll());
+  MigrationStrategy get migration => MigrationStrategy(
+    onCreate: (m) => m.createAll(),
+    onUpgrade: (m, from, to) async {
+      if (from < 2) {
+        await m.addColumn(
+          settingsRecords,
+          settingsRecords.manualPrayerOffsetsEnabled,
+        );
+        await m.addColumn(settingsRecords, settingsRecords.fajrOffsetMinutes);
+        await m.addColumn(
+          settingsRecords,
+          settingsRecords.sunriseOffsetMinutes,
+        );
+        await m.addColumn(settingsRecords, settingsRecords.dhuhrOffsetMinutes);
+        await m.addColumn(settingsRecords, settingsRecords.asrOffsetMinutes);
+        await m.addColumn(
+          settingsRecords,
+          settingsRecords.maghribOffsetMinutes,
+        );
+        await m.addColumn(settingsRecords, settingsRecords.ishaOffsetMinutes);
+        await m.addColumn(settingsRecords, settingsRecords.voiceInputEnabled);
+        await m.addColumn(settingsRecords, settingsRecords.voiceReplyEnabled);
+        await m.addColumn(settingsRecords, settingsRecords.autoSpeakAiReply);
+        await m.addColumn(settingsRecords, settingsRecords.voiceRate);
+        await m.addColumn(settingsRecords, settingsRecords.voicePitch);
+      }
+    },
+  );
 }
 
 LazyDatabase _openConnection() {

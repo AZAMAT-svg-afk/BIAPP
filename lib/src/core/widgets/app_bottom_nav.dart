@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 import '../theme/app_palette.dart';
@@ -31,6 +29,8 @@ class AppBottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = context.palette;
+    final scheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return SafeArea(
       top: false,
       minimum: const EdgeInsets.fromLTRB(10, 0, 10, 8),
@@ -55,32 +55,26 @@ class AppBottomNav extends StatelessWidget {
               top: Radius.circular(24),
               bottom: Radius.circular(24),
             ),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: palette.glass.withValues(alpha: 0.38),
-                  border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.25),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 6,
-                    vertical: 6,
-                  ),
-                  child: Row(
-                    children: [
-                      for (var index = 0; index < items.length; index++)
-                        Expanded(
-                          child: _BottomNavButton(
-                            item: items[index],
-                            selected: index == selectedIndex,
-                            onTap: () => onSelected(index),
-                          ),
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: isDark
+                    ? palette.card.withValues(alpha: 0.96)
+                    : palette.card,
+                border: Border.all(color: scheme.outlineVariant),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+                child: Row(
+                  children: [
+                    for (var index = 0; index < items.length; index++)
+                      Expanded(
+                        child: _BottomNavButton(
+                          item: items[index],
+                          selected: index == selectedIndex,
+                          onTap: () => onSelected(index),
                         ),
-                    ],
-                  ),
+                      ),
+                  ],
                 ),
               ),
             ),

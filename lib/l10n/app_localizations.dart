@@ -1172,6 +1172,120 @@ abstract class AppLocalizations {
   /// **'Stars'**
   String get backgroundParticles;
 
+  /// No description provided for @prayerCorrectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Prayer time correction'**
+  String get prayerCorrectionTitle;
+
+  /// No description provided for @syncWithSajda.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync with Sajda / local mosque'**
+  String get syncWithSajda;
+
+  /// No description provided for @manualPrayerCorrection.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual correction'**
+  String get manualPrayerCorrection;
+
+  /// No description provided for @prayerCorrectionExplanation.
+  ///
+  /// In en, this message translates to:
+  /// **'Prayer times may differ between apps because of calculation methods and local timetables. Adjust these offsets to match Sajda or your local mosque.'**
+  String get prayerCorrectionExplanation;
+
+  /// No description provided for @resetPrayerCorrection.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset correction'**
+  String get resetPrayerCorrection;
+
+  /// No description provided for @voiceSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice'**
+  String get voiceSettings;
+
+  /// No description provided for @voiceInput.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice input'**
+  String get voiceInput;
+
+  /// No description provided for @voiceReply.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice reply'**
+  String get voiceReply;
+
+  /// No description provided for @autoSpeakAiReply.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto speak AI reply'**
+  String get autoSpeakAiReply;
+
+  /// No description provided for @voiceRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice rate'**
+  String get voiceRate;
+
+  /// No description provided for @voicePitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice pitch'**
+  String get voicePitch;
+
+  /// No description provided for @microphonePermissionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone permission required'**
+  String get microphonePermissionRequired;
+
+  /// No description provided for @listening.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening...'**
+  String get listening;
+
+  /// No description provided for @tapToSpeak.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to speak'**
+  String get tapToSpeak;
+
+  /// No description provided for @stopSpeaking.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop speaking'**
+  String get stopSpeaking;
+
+  /// No description provided for @speechRecognitionUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Speech recognition unavailable'**
+  String get speechRecognitionUnavailable;
+
+  /// No description provided for @voiceLanguageUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice language unavailable'**
+  String get voiceLanguageUnavailable;
+
+  /// No description provided for @ttsUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Text-to-speech unavailable'**
+  String get ttsUnavailable;
+
+  /// No description provided for @noSpeechDetected.
+  ///
+  /// In en, this message translates to:
+  /// **'No speech detected'**
+  String get noSpeechDetected;
+
   /// No description provided for @privacy.
   ///
   /// In en, this message translates to:

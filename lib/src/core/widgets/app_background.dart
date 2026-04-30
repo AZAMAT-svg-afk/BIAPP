@@ -8,7 +8,7 @@ import '../theme/app_palette.dart';
 
 enum AppBackgroundMood { calm, home, prayer, ai, stats }
 
-class AppBackground extends ConsumerStatefulWidget {
+class AppBackground extends ConsumerWidget {
   const AppBackground({
     required this.child,
     this.mood = AppBackgroundMood.calm,
@@ -19,33 +19,10 @@ class AppBackground extends ConsumerStatefulWidget {
   final AppBackgroundMood mood;
 
   @override
-  ConsumerState<AppBackground> createState() => _AppBackgroundState();
-}
-
-class _AppBackgroundState extends ConsumerState<AppBackground>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 24),
-    )..repeat();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final palette = context.palette;
     final scheme = Theme.of(context).colorScheme;
-    final colors = _BackgroundColors.from(context, widget.mood);
+    final colors = _BackgroundColors.from(context, mood);
     final style = ref.watch(backgroundStyleControllerProvider);
 
     return RepaintBoundary(
@@ -62,10 +39,9 @@ class _AppBackgroundState extends ConsumerState<AppBackground>
           children: [
             IgnorePointer(
               child: CustomPaint(
-                painter: _AnimatedBackgroundPainter(
-                  repaint: _controller,
+                painter: _StaticBackgroundPainter(
                   style: style,
-                  mood: widget.mood,
+                  mood: mood,
                   primary: scheme.primary,
                   secondary: scheme.secondary,
                   line: scheme.outlineVariant,
@@ -74,7 +50,7 @@ class _AppBackgroundState extends ConsumerState<AppBackground>
                 ),
               ),
             ),
-            widget.child,
+            child,
           ],
         ),
       ),
@@ -134,9 +110,8 @@ class _BackgroundColors {
   }
 }
 
-class _AnimatedBackgroundPainter extends CustomPainter {
-  _AnimatedBackgroundPainter({
-    required Animation<double> repaint,
+class _StaticBackgroundPainter extends CustomPainter {
+  _StaticBackgroundPainter({
     required this.style,
     required this.mood,
     required this.primary,
@@ -144,10 +119,8 @@ class _AnimatedBackgroundPainter extends CustomPainter {
     required this.line,
     required this.surface,
     required this.brightness,
-  }) : _progress = repaint,
-       super(repaint: repaint);
+  });
 
-  final Animation<double> _progress;
   final BackgroundAnimationStyle style;
   final AppBackgroundMood mood;
   final Color primary;
@@ -158,7 +131,7 @@ class _AnimatedBackgroundPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final progress = _progress.value;
+    const progress = 0.32;
     _paintAuroraWash(canvas, size, progress);
 
     switch (style) {
@@ -345,7 +318,7 @@ class _AnimatedBackgroundPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _AnimatedBackgroundPainter oldDelegate) {
+  bool shouldRepaint(covariant _StaticBackgroundPainter oldDelegate) {
     return oldDelegate.style != style ||
         oldDelegate.mood != mood ||
         oldDelegate.primary != primary ||

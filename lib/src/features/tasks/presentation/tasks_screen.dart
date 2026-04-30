@@ -29,104 +29,116 @@ class TasksScreen extends ConsumerWidget {
 
     return AppScaffold(
       title: l10n.tasksTitle,
-      body: Stack(
+      body: Column(
         children: [
-          ListView(
-            padding: const EdgeInsets.fromLTRB(20, 8, 20, 168),
-            children: [
-              _TasksHeader(
-                title: l10n.tasksTitle,
-                subtitle: l10n.tasksSubtitle,
-                onCalendarTap: () {},
-              ),
-              const SizedBox(height: 20),
-              SectionHeader(title: l10n.today),
-              const SizedBox(height: 12),
-              if (todayTasks.isEmpty)
-                AppEmptyState(message: l10n.emptyTasks, icon: Icons.task_alt)
-              else
-                ...todayTasks.toList().asMap().entries.map(
-                  (entry) => Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: AppMotion(
-                      delay: Duration(milliseconds: 35 * entry.key),
-                      child: TaskCard(
-                        task: entry.value,
-                        onToggle: () =>
-                            controller.toggleComplete(entry.value.id),
-                        onEdit: () =>
-                            _showTaskSheet(context, ref, task: entry.value),
-                        onDelete: () => controller.deleteTask(entry.value.id),
-                      ),
-                    ),
-                  ),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+              children: [
+                _TasksHeader(
+                  title: l10n.tasksTitle,
+                  subtitle: l10n.tasksSubtitle,
+                  onCalendarTap: () {},
                 ),
-              const SizedBox(height: 18),
-              SectionHeader(title: l10n.completedTasks),
-              const SizedBox(height: 12),
-              if (completed.isEmpty)
-                AppEmptyState(
-                  message: l10n.emptyCompleted,
-                  icon: Icons.done_all,
-                )
-              else
-                ...completed
-                    .take(4)
-                    .toList()
-                    .asMap()
-                    .entries
-                    .map(
-                      (entry) => Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: AppMotion(
-                          delay: Duration(milliseconds: 30 * entry.key),
-                          child: TaskCard(
-                            task: entry.value,
-                            onToggle: () =>
-                                controller.toggleComplete(entry.value.id),
-                            onEdit: () =>
-                                _showTaskSheet(context, ref, task: entry.value),
-                            onDelete: () =>
-                                controller.deleteTask(entry.value.id),
-                          ),
+                const SizedBox(height: 20),
+                SectionHeader(title: l10n.today),
+                const SizedBox(height: 12),
+                if (todayTasks.isEmpty)
+                  AppEmptyState(message: l10n.emptyTasks, icon: Icons.task_alt)
+                else
+                  ...todayTasks.toList().asMap().entries.map(
+                    (entry) => Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: AppMotion(
+                        delay: Duration(milliseconds: 35 * entry.key),
+                        child: TaskCard(
+                          key: ValueKey('today-${entry.value.id}'),
+                          task: entry.value,
+                          onToggle: () =>
+                              controller.toggleComplete(entry.value.id),
+                          onEdit: () =>
+                              _showTaskSheet(context, ref, task: entry.value),
+                          onDelete: () => controller.deleteTask(entry.value.id),
                         ),
                       ),
                     ),
-              const SizedBox(height: 18),
-              SectionHeader(title: l10n.missedTasks),
-              const SizedBox(height: 12),
-              if (missed.isEmpty)
-                AppEmptyState(
-                  message: l10n.noMissedTasks,
-                  icon: Icons.event_busy,
-                )
-              else
-                ...missed.toList().asMap().entries.map(
-                  (entry) => Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: AppMotion(
-                      delay: Duration(milliseconds: 30 * entry.key),
-                      child: TaskCard(
-                        task: entry.value,
-                        onToggle: () =>
-                            controller.toggleComplete(entry.value.id),
-                        onEdit: () =>
-                            _showTaskSheet(context, ref, task: entry.value),
-                        onDelete: () => controller.deleteTask(entry.value.id),
+                  ),
+                const SizedBox(height: 18),
+                SectionHeader(title: l10n.completedTasks),
+                const SizedBox(height: 12),
+                if (completed.isEmpty)
+                  AppEmptyState(
+                    message: l10n.emptyCompleted,
+                    icon: Icons.done_all,
+                  )
+                else
+                  ...completed
+                      .take(4)
+                      .toList()
+                      .asMap()
+                      .entries
+                      .map(
+                        (entry) => Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: AppMotion(
+                            delay: Duration(milliseconds: 30 * entry.key),
+                            child: TaskCard(
+                              key: ValueKey('completed-${entry.value.id}'),
+                              task: entry.value,
+                              onToggle: () =>
+                                  controller.toggleComplete(entry.value.id),
+                              onEdit: () => _showTaskSheet(
+                                context,
+                                ref,
+                                task: entry.value,
+                              ),
+                              onDelete: () =>
+                                  controller.deleteTask(entry.value.id),
+                            ),
+                          ),
+                        ),
+                      ),
+                const SizedBox(height: 18),
+                SectionHeader(title: l10n.missedTasks),
+                const SizedBox(height: 12),
+                if (missed.isEmpty)
+                  AppEmptyState(
+                    message: l10n.noMissedTasks,
+                    icon: Icons.event_busy,
+                  )
+                else
+                  ...missed.toList().asMap().entries.map(
+                    (entry) => Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: AppMotion(
+                        delay: Duration(milliseconds: 30 * entry.key),
+                        child: TaskCard(
+                          key: ValueKey('missed-${entry.value.id}'),
+                          task: entry.value,
+                          onToggle: () =>
+                              controller.toggleComplete(entry.value.id),
+                          onEdit: () =>
+                              _showTaskSheet(context, ref, task: entry.value),
+                          onDelete: () => controller.deleteTask(entry.value.id),
+                        ),
                       ),
                     ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
-          Positioned(
-            left: 20,
-            right: 20,
-            bottom: 80 + MediaQuery.paddingOf(context).bottom,
-            child: AppMotion(
-              distance: -14,
+          SafeArea(
+            top: false,
+            minimum: EdgeInsets.fromLTRB(
+              20,
+              8,
+              20,
+              MediaQuery.paddingOf(context).bottom + 88,
+            ),
+            child: SizedBox(
+              width: double.infinity,
               child: GradientActionButton(
-                label: '+ ${l10n.addTask}',
+                label: l10n.addTask,
                 icon: Icons.add,
                 onPressed: () => _showTaskSheet(context, ref),
               ),

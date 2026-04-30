@@ -593,6 +593,64 @@ class AppLocalizationsEn extends AppLocalizations {
   String get backgroundParticles => 'Stars';
 
   @override
+  String get prayerCorrectionTitle => 'Prayer time correction';
+
+  @override
+  String get syncWithSajda => 'Sync with Sajda / local mosque';
+
+  @override
+  String get manualPrayerCorrection => 'Manual correction';
+
+  @override
+  String get prayerCorrectionExplanation =>
+      'Prayer times may differ between apps because of calculation methods and local timetables. Adjust these offsets to match Sajda or your local mosque.';
+
+  @override
+  String get resetPrayerCorrection => 'Reset correction';
+
+  @override
+  String get voiceSettings => 'Voice';
+
+  @override
+  String get voiceInput => 'Voice input';
+
+  @override
+  String get voiceReply => 'Voice reply';
+
+  @override
+  String get autoSpeakAiReply => 'Auto speak AI reply';
+
+  @override
+  String get voiceRate => 'Voice rate';
+
+  @override
+  String get voicePitch => 'Voice pitch';
+
+  @override
+  String get microphonePermissionRequired => 'Microphone permission required';
+
+  @override
+  String get listening => 'Listening...';
+
+  @override
+  String get tapToSpeak => 'Tap to speak';
+
+  @override
+  String get stopSpeaking => 'Stop speaking';
+
+  @override
+  String get speechRecognitionUnavailable => 'Speech recognition unavailable';
+
+  @override
+  String get voiceLanguageUnavailable => 'Voice language unavailable';
+
+  @override
+  String get ttsUnavailable => 'Text-to-speech unavailable';
+
+  @override
+  String get noSpeechDetected => 'No speech detected';
+
+  @override
   String get privacy => 'Privacy';
 
   @override

@@ -592,6 +592,64 @@ class AppLocalizationsKk extends AppLocalizations {
   String get backgroundParticles => 'Жұлдыздар';
 
   @override
+  String get prayerCorrectionTitle => 'Намаз уақытын түзету';
+
+  @override
+  String get syncWithSajda => 'Sajda / жергілікті мешітпен сәйкестендіру';
+
+  @override
+  String get manualPrayerCorrection => 'Қолмен түзету';
+
+  @override
+  String get prayerCorrectionExplanation =>
+      'Намаз уақыты есептеу әдісі мен жергілікті кестеге байланысты қолданбаларда әртүрлі болуы мүмкін. Sajda немесе жергілікті мешітпен сәйкестендіру үшін түзету енгізе аласыз.';
+
+  @override
+  String get resetPrayerCorrection => 'Түзетуді қалпына келтіру';
+
+  @override
+  String get voiceSettings => 'Дауыс';
+
+  @override
+  String get voiceInput => 'Дауыспен енгізу';
+
+  @override
+  String get voiceReply => 'Дауысты жауап';
+
+  @override
+  String get autoSpeakAiReply => 'AI жауабын автоматты оқу';
+
+  @override
+  String get voiceRate => 'Дауыс жылдамдығы';
+
+  @override
+  String get voicePitch => 'Дауыс үні';
+
+  @override
+  String get microphonePermissionRequired => 'Микрофонға рұқсат қажет';
+
+  @override
+  String get listening => 'Тыңдап тұрмын...';
+
+  @override
+  String get tapToSpeak => 'Сөйлеу үшін басыңыз';
+
+  @override
+  String get stopSpeaking => 'Оқуды тоқтату';
+
+  @override
+  String get speechRecognitionUnavailable => 'Сөйлеуді тану қолжетімсіз';
+
+  @override
+  String get voiceLanguageUnavailable => 'Дауыс тілі қолжетімсіз';
+
+  @override
+  String get ttsUnavailable => 'Дауыстап оқу қолжетімсіз';
+
+  @override
+  String get noSpeechDetected => 'Сөйлеу анықталмады';
+
+  @override
   String get privacy => 'Құпиялық';
 
   @override

@@ -56,6 +56,10 @@ class SettingsController extends Notifier<UserSettings> {
     );
   }
 
+  void updateVoice(VoiceSettings voice) {
+    _save(state.copyWith(voice: voice));
+  }
+
   void updateNotifications(bool enabled) {
     _save(state.copyWith(notificationsEnabled: enabled));
   }

@@ -16,6 +16,7 @@ import '../data/prayer_repository.dart';
 import '../domain/prayer_time.dart';
 import 'prayer_labels.dart';
 import 'widgets/prayer_card.dart';
+import 'widgets/prayer_offset_editor.dart';
 
 class PrayerScreen extends ConsumerWidget {
   const PrayerScreen({super.key});
@@ -27,6 +28,13 @@ class PrayerScreen extends ConsumerWidget {
     final nextPrayer = ref.watch(nextPrayerProvider);
     final settings = ref.watch(settingsControllerProvider);
     final prayerSettings = settings.prayer;
+    final city = PrayerCityProfiles.resolve(prayerSettings.city);
+    final calculationMethod =
+        PrayerCalculationProfiles.values.contains(
+          prayerSettings.calculationMethod,
+        )
+        ? prayerSettings.calculationMethod
+        : city.calculationMethod;
 
     return AppScaffold(
       title: l10n.prayerTitle,
@@ -82,6 +90,24 @@ class PrayerScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 10),
                   _Countdown(nextPrayer: nextPrayer),
+                  const SizedBox(height: 12),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      _InfoPill(
+                        icon: Icons.location_city_outlined,
+                        label: city.localizedName(l10n.localeName),
+                      ),
+                      _InfoPill(
+                        icon: Icons.school_outlined,
+                        label: PrayerLabels.madhhab(
+                          l10n,
+                          prayerSettings.madhhab,
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -120,11 +146,7 @@ class PrayerScreen extends ConsumerWidget {
                   contentPadding: EdgeInsets.zero,
                   leading: const Icon(Icons.location_city),
                   title: Text(l10n.city),
-                  subtitle: Text(
-                    KazakhstanPrayerCity.resolve(
-                      prayerSettings.city,
-                    ).displayName,
-                  ),
+                  subtitle: Text(city.localizedName(l10n.localeName)),
                   trailing: TextButton(
                     onPressed: () =>
                         _showCitySelector(context, ref, prayerSettings),
@@ -143,12 +165,15 @@ class PrayerScreen extends ConsumerWidget {
                   },
                 ),
                 DropdownButtonFormField<String>(
-                  initialValue: prayerSettings.calculationMethod,
+                  initialValue: calculationMethod,
                   decoration: InputDecoration(
                     labelText: l10n.calculationMethod,
                   ),
-                  items: const ['Muslim World League', 'Karachi'].map((method) {
-                    return DropdownMenuItem(value: method, child: Text(method));
+                  items: PrayerCalculationProfiles.values.map((method) {
+                    return DropdownMenuItem(
+                      value: method,
+                      child: Text(method, overflow: TextOverflow.ellipsis),
+                    );
                   }).toList(),
                   onChanged: (value) {
                     if (value != null) {
@@ -178,6 +203,14 @@ class PrayerScreen extends ConsumerWidget {
                       prayerSettings.copyWith(madhhab: value.first),
                     );
                   },
+                ),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Icon(Icons.tune_outlined),
+                  title: Text(l10n.prayerCorrectionTitle),
+                  subtitle: Text(l10n.syncWithSajda),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => _showCorrectionSheet(context, ref),
                 ),
                 SwitchListTile(
                   contentPadding: EdgeInsets.zero,
@@ -237,8 +270,8 @@ class PrayerScreen extends ConsumerWidget {
     PrayerSettings settings,
   ) async {
     final l10n = AppLocalizations.of(context)!;
-    final selected = KazakhstanPrayerCity.resolve(settings.city);
-    final value = await showModalBottomSheet<KazakhstanPrayerCity>(
+    final selected = PrayerCityProfiles.resolve(settings.city);
+    final value = await showModalBottomSheet<PrayerCityProfile>(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
@@ -267,13 +300,12 @@ class PrayerScreen extends ConsumerWidget {
                 Flexible(
                   child: ListView.separated(
                     shrinkWrap: true,
-                    itemCount: KazakhstanPrayerCity.cities.length,
+                    itemCount: PrayerCityProfiles.cities.length,
                     separatorBuilder: (context, index) =>
                         const Divider(height: 1),
                     itemBuilder: (context, index) {
-                      final city = KazakhstanPrayerCity.cities[index];
-                      final isSelected =
-                          city.displayName == selected.displayName;
+                      final city = PrayerCityProfiles.cities[index];
+                      final isSelected = city.id == selected.id;
                       return ListTile(
                         leading: Icon(
                           isSelected
@@ -283,8 +315,10 @@ class PrayerScreen extends ConsumerWidget {
                               ? Theme.of(context).colorScheme.primary
                               : null,
                         ),
-                        title: Text(city.displayName),
-                        subtitle: Text(city.timezone),
+                        title: Text(city.localizedName(l10n.localeName)),
+                        subtitle: Text(
+                          '${city.englishName} · ${city.timezone}',
+                        ),
                         trailing: isSelected
                             ? const Icon(Icons.check_circle)
                             : null,
@@ -307,16 +341,108 @@ class PrayerScreen extends ConsumerWidget {
     );
 
     if (value != null) {
-      _updatePrayer(ref, settings.copyWith(city: value.displayName));
+      _updatePrayer(
+        ref,
+        settings.copyWith(
+          city: value.id,
+          calculationMethod: value.calculationMethod,
+          madhhab: value.defaultMadhhab,
+        ),
+      );
     }
   }
 
+  Future<void> _showCorrectionSheet(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    return showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Padding(
+        padding: EdgeInsets.fromLTRB(
+          14,
+          0,
+          14,
+          MediaQuery.viewInsetsOf(context).bottom + 14,
+        ),
+        child: AppCard(
+          borderRadius: 28,
+          padding: const EdgeInsets.fromLTRB(18, 16, 18, 18),
+          child: SafeArea(
+            top: false,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 42,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.outlineVariant,
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    l10n.prayerCorrectionTitle,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: 8),
+                  Consumer(
+                    builder: (context, sheetRef, _) {
+                      final settings = sheetRef.watch(
+                        settingsControllerProvider,
+                      );
+                      return PrayerOffsetEditor(
+                        settings: settings.prayer,
+                        onChanged: (next) => _updatePrayer(sheetRef, next),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   void _updatePrayer(WidgetRef ref, PrayerSettings prayer) {
-    final current = ref.read(settingsControllerProvider);
     ref.read(settingsControllerProvider.notifier).updatePrayer(prayer);
-    ref
-        .read(settingsControllerProvider.notifier)
-        .updateNotifications(current.notificationsEnabled);
+  }
+}
+
+class _InfoPill extends StatelessWidget {
+  const _InfoPill({required this.icon, required this.label});
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.72),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 15, color: Theme.of(context).colorScheme.primary),
+            const SizedBox(width: 6),
+            Text(label, style: Theme.of(context).textTheme.labelMedium),
+          ],
+        ),
+      ),
+    );
   }
 }
 

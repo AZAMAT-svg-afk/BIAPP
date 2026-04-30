@@ -2475,6 +2475,90 @@ class $SettingsRecordsTable extends SettingsRecords
       'CHECK ("adhan_enabled" IN (0, 1))',
     ),
   );
+  static const VerificationMeta _manualPrayerOffsetsEnabledMeta =
+      const VerificationMeta('manualPrayerOffsetsEnabled');
+  @override
+  late final GeneratedColumn<bool> manualPrayerOffsetsEnabled =
+      GeneratedColumn<bool>(
+        'manual_prayer_offsets_enabled',
+        aliasedName,
+        false,
+        type: DriftSqlType.bool,
+        requiredDuringInsert: false,
+        defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("manual_prayer_offsets_enabled" IN (0, 1))',
+        ),
+        defaultValue: const Constant(false),
+      );
+  static const VerificationMeta _fajrOffsetMinutesMeta = const VerificationMeta(
+    'fajrOffsetMinutes',
+  );
+  @override
+  late final GeneratedColumn<int> fajrOffsetMinutes = GeneratedColumn<int>(
+    'fajr_offset_minutes',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _sunriseOffsetMinutesMeta =
+      const VerificationMeta('sunriseOffsetMinutes');
+  @override
+  late final GeneratedColumn<int> sunriseOffsetMinutes = GeneratedColumn<int>(
+    'sunrise_offset_minutes',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _dhuhrOffsetMinutesMeta =
+      const VerificationMeta('dhuhrOffsetMinutes');
+  @override
+  late final GeneratedColumn<int> dhuhrOffsetMinutes = GeneratedColumn<int>(
+    'dhuhr_offset_minutes',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _asrOffsetMinutesMeta = const VerificationMeta(
+    'asrOffsetMinutes',
+  );
+  @override
+  late final GeneratedColumn<int> asrOffsetMinutes = GeneratedColumn<int>(
+    'asr_offset_minutes',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _maghribOffsetMinutesMeta =
+      const VerificationMeta('maghribOffsetMinutes');
+  @override
+  late final GeneratedColumn<int> maghribOffsetMinutes = GeneratedColumn<int>(
+    'maghrib_offset_minutes',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _ishaOffsetMinutesMeta = const VerificationMeta(
+    'ishaOffsetMinutes',
+  );
+  @override
+  late final GeneratedColumn<int> ishaOffsetMinutes = GeneratedColumn<int>(
+    'isha_offset_minutes',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   static const VerificationMeta _aiModeMeta = const VerificationMeta('aiMode');
   @override
   late final GeneratedColumn<String> aiMode = GeneratedColumn<String>(
@@ -2483,6 +2567,75 @@ class $SettingsRecordsTable extends SettingsRecords
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _voiceInputEnabledMeta = const VerificationMeta(
+    'voiceInputEnabled',
+  );
+  @override
+  late final GeneratedColumn<bool> voiceInputEnabled = GeneratedColumn<bool>(
+    'voice_input_enabled',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("voice_input_enabled" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _voiceReplyEnabledMeta = const VerificationMeta(
+    'voiceReplyEnabled',
+  );
+  @override
+  late final GeneratedColumn<bool> voiceReplyEnabled = GeneratedColumn<bool>(
+    'voice_reply_enabled',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("voice_reply_enabled" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _autoSpeakAiReplyMeta = const VerificationMeta(
+    'autoSpeakAiReply',
+  );
+  @override
+  late final GeneratedColumn<bool> autoSpeakAiReply = GeneratedColumn<bool>(
+    'auto_speak_ai_reply',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("auto_speak_ai_reply" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _voiceRateMeta = const VerificationMeta(
+    'voiceRate',
+  );
+  @override
+  late final GeneratedColumn<double> voiceRate = GeneratedColumn<double>(
+    'voice_rate',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0.48),
+  );
+  static const VerificationMeta _voicePitchMeta = const VerificationMeta(
+    'voicePitch',
+  );
+  @override
+  late final GeneratedColumn<double> voicePitch = GeneratedColumn<double>(
+    'voice_pitch',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1.0),
   );
   static const VerificationMeta _activeMentorEnabledMeta =
       const VerificationMeta('activeMentorEnabled');
@@ -2589,7 +2742,19 @@ class $SettingsRecordsTable extends SettingsRecords
     soundEnabled,
     vibrationEnabled,
     adhanEnabled,
+    manualPrayerOffsetsEnabled,
+    fajrOffsetMinutes,
+    sunriseOffsetMinutes,
+    dhuhrOffsetMinutes,
+    asrOffsetMinutes,
+    maghribOffsetMinutes,
+    ishaOffsetMinutes,
     aiMode,
+    voiceInputEnabled,
+    voiceReplyEnabled,
+    autoSpeakAiReply,
+    voiceRate,
+    voicePitch,
     activeMentorEnabled,
     activeMentorMode,
     maxFollowUpsPerItem,
@@ -2720,6 +2885,69 @@ class $SettingsRecordsTable extends SettingsRecords
     } else if (isInserting) {
       context.missing(_adhanEnabledMeta);
     }
+    if (data.containsKey('manual_prayer_offsets_enabled')) {
+      context.handle(
+        _manualPrayerOffsetsEnabledMeta,
+        manualPrayerOffsetsEnabled.isAcceptableOrUnknown(
+          data['manual_prayer_offsets_enabled']!,
+          _manualPrayerOffsetsEnabledMeta,
+        ),
+      );
+    }
+    if (data.containsKey('fajr_offset_minutes')) {
+      context.handle(
+        _fajrOffsetMinutesMeta,
+        fajrOffsetMinutes.isAcceptableOrUnknown(
+          data['fajr_offset_minutes']!,
+          _fajrOffsetMinutesMeta,
+        ),
+      );
+    }
+    if (data.containsKey('sunrise_offset_minutes')) {
+      context.handle(
+        _sunriseOffsetMinutesMeta,
+        sunriseOffsetMinutes.isAcceptableOrUnknown(
+          data['sunrise_offset_minutes']!,
+          _sunriseOffsetMinutesMeta,
+        ),
+      );
+    }
+    if (data.containsKey('dhuhr_offset_minutes')) {
+      context.handle(
+        _dhuhrOffsetMinutesMeta,
+        dhuhrOffsetMinutes.isAcceptableOrUnknown(
+          data['dhuhr_offset_minutes']!,
+          _dhuhrOffsetMinutesMeta,
+        ),
+      );
+    }
+    if (data.containsKey('asr_offset_minutes')) {
+      context.handle(
+        _asrOffsetMinutesMeta,
+        asrOffsetMinutes.isAcceptableOrUnknown(
+          data['asr_offset_minutes']!,
+          _asrOffsetMinutesMeta,
+        ),
+      );
+    }
+    if (data.containsKey('maghrib_offset_minutes')) {
+      context.handle(
+        _maghribOffsetMinutesMeta,
+        maghribOffsetMinutes.isAcceptableOrUnknown(
+          data['maghrib_offset_minutes']!,
+          _maghribOffsetMinutesMeta,
+        ),
+      );
+    }
+    if (data.containsKey('isha_offset_minutes')) {
+      context.handle(
+        _ishaOffsetMinutesMeta,
+        ishaOffsetMinutes.isAcceptableOrUnknown(
+          data['isha_offset_minutes']!,
+          _ishaOffsetMinutesMeta,
+        ),
+      );
+    }
     if (data.containsKey('ai_mode')) {
       context.handle(
         _aiModeMeta,
@@ -2727,6 +2955,45 @@ class $SettingsRecordsTable extends SettingsRecords
       );
     } else if (isInserting) {
       context.missing(_aiModeMeta);
+    }
+    if (data.containsKey('voice_input_enabled')) {
+      context.handle(
+        _voiceInputEnabledMeta,
+        voiceInputEnabled.isAcceptableOrUnknown(
+          data['voice_input_enabled']!,
+          _voiceInputEnabledMeta,
+        ),
+      );
+    }
+    if (data.containsKey('voice_reply_enabled')) {
+      context.handle(
+        _voiceReplyEnabledMeta,
+        voiceReplyEnabled.isAcceptableOrUnknown(
+          data['voice_reply_enabled']!,
+          _voiceReplyEnabledMeta,
+        ),
+      );
+    }
+    if (data.containsKey('auto_speak_ai_reply')) {
+      context.handle(
+        _autoSpeakAiReplyMeta,
+        autoSpeakAiReply.isAcceptableOrUnknown(
+          data['auto_speak_ai_reply']!,
+          _autoSpeakAiReplyMeta,
+        ),
+      );
+    }
+    if (data.containsKey('voice_rate')) {
+      context.handle(
+        _voiceRateMeta,
+        voiceRate.isAcceptableOrUnknown(data['voice_rate']!, _voiceRateMeta),
+      );
+    }
+    if (data.containsKey('voice_pitch')) {
+      context.handle(
+        _voicePitchMeta,
+        voicePitch.isAcceptableOrUnknown(data['voice_pitch']!, _voicePitchMeta),
+      );
     }
     if (data.containsKey('active_mentor_enabled')) {
       context.handle(
@@ -2870,9 +3137,57 @@ class $SettingsRecordsTable extends SettingsRecords
         DriftSqlType.bool,
         data['${effectivePrefix}adhan_enabled'],
       )!,
+      manualPrayerOffsetsEnabled: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}manual_prayer_offsets_enabled'],
+      )!,
+      fajrOffsetMinutes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}fajr_offset_minutes'],
+      )!,
+      sunriseOffsetMinutes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}sunrise_offset_minutes'],
+      )!,
+      dhuhrOffsetMinutes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}dhuhr_offset_minutes'],
+      )!,
+      asrOffsetMinutes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}asr_offset_minutes'],
+      )!,
+      maghribOffsetMinutes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}maghrib_offset_minutes'],
+      )!,
+      ishaOffsetMinutes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}isha_offset_minutes'],
+      )!,
       aiMode: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}ai_mode'],
+      )!,
+      voiceInputEnabled: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}voice_input_enabled'],
+      )!,
+      voiceReplyEnabled: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}voice_reply_enabled'],
+      )!,
+      autoSpeakAiReply: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}auto_speak_ai_reply'],
+      )!,
+      voiceRate: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}voice_rate'],
+      )!,
+      voicePitch: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}voice_pitch'],
       )!,
       activeMentorEnabled: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
@@ -2928,7 +3243,19 @@ class SettingsRecord extends DataClass implements Insertable<SettingsRecord> {
   final bool soundEnabled;
   final bool vibrationEnabled;
   final bool adhanEnabled;
+  final bool manualPrayerOffsetsEnabled;
+  final int fajrOffsetMinutes;
+  final int sunriseOffsetMinutes;
+  final int dhuhrOffsetMinutes;
+  final int asrOffsetMinutes;
+  final int maghribOffsetMinutes;
+  final int ishaOffsetMinutes;
   final String aiMode;
+  final bool voiceInputEnabled;
+  final bool voiceReplyEnabled;
+  final bool autoSpeakAiReply;
+  final double voiceRate;
+  final double voicePitch;
   final bool activeMentorEnabled;
   final String activeMentorMode;
   final int maxFollowUpsPerItem;
@@ -2950,7 +3277,19 @@ class SettingsRecord extends DataClass implements Insertable<SettingsRecord> {
     required this.soundEnabled,
     required this.vibrationEnabled,
     required this.adhanEnabled,
+    required this.manualPrayerOffsetsEnabled,
+    required this.fajrOffsetMinutes,
+    required this.sunriseOffsetMinutes,
+    required this.dhuhrOffsetMinutes,
+    required this.asrOffsetMinutes,
+    required this.maghribOffsetMinutes,
+    required this.ishaOffsetMinutes,
     required this.aiMode,
+    required this.voiceInputEnabled,
+    required this.voiceReplyEnabled,
+    required this.autoSpeakAiReply,
+    required this.voiceRate,
+    required this.voicePitch,
     required this.activeMentorEnabled,
     required this.activeMentorMode,
     required this.maxFollowUpsPerItem,
@@ -2977,7 +3316,21 @@ class SettingsRecord extends DataClass implements Insertable<SettingsRecord> {
     map['sound_enabled'] = Variable<bool>(soundEnabled);
     map['vibration_enabled'] = Variable<bool>(vibrationEnabled);
     map['adhan_enabled'] = Variable<bool>(adhanEnabled);
+    map['manual_prayer_offsets_enabled'] = Variable<bool>(
+      manualPrayerOffsetsEnabled,
+    );
+    map['fajr_offset_minutes'] = Variable<int>(fajrOffsetMinutes);
+    map['sunrise_offset_minutes'] = Variable<int>(sunriseOffsetMinutes);
+    map['dhuhr_offset_minutes'] = Variable<int>(dhuhrOffsetMinutes);
+    map['asr_offset_minutes'] = Variable<int>(asrOffsetMinutes);
+    map['maghrib_offset_minutes'] = Variable<int>(maghribOffsetMinutes);
+    map['isha_offset_minutes'] = Variable<int>(ishaOffsetMinutes);
     map['ai_mode'] = Variable<String>(aiMode);
+    map['voice_input_enabled'] = Variable<bool>(voiceInputEnabled);
+    map['voice_reply_enabled'] = Variable<bool>(voiceReplyEnabled);
+    map['auto_speak_ai_reply'] = Variable<bool>(autoSpeakAiReply);
+    map['voice_rate'] = Variable<double>(voiceRate);
+    map['voice_pitch'] = Variable<double>(voicePitch);
     map['active_mentor_enabled'] = Variable<bool>(activeMentorEnabled);
     map['active_mentor_mode'] = Variable<String>(activeMentorMode);
     map['max_follow_ups_per_item'] = Variable<int>(maxFollowUpsPerItem);
@@ -3003,7 +3356,19 @@ class SettingsRecord extends DataClass implements Insertable<SettingsRecord> {
       soundEnabled: Value(soundEnabled),
       vibrationEnabled: Value(vibrationEnabled),
       adhanEnabled: Value(adhanEnabled),
+      manualPrayerOffsetsEnabled: Value(manualPrayerOffsetsEnabled),
+      fajrOffsetMinutes: Value(fajrOffsetMinutes),
+      sunriseOffsetMinutes: Value(sunriseOffsetMinutes),
+      dhuhrOffsetMinutes: Value(dhuhrOffsetMinutes),
+      asrOffsetMinutes: Value(asrOffsetMinutes),
+      maghribOffsetMinutes: Value(maghribOffsetMinutes),
+      ishaOffsetMinutes: Value(ishaOffsetMinutes),
       aiMode: Value(aiMode),
+      voiceInputEnabled: Value(voiceInputEnabled),
+      voiceReplyEnabled: Value(voiceReplyEnabled),
+      autoSpeakAiReply: Value(autoSpeakAiReply),
+      voiceRate: Value(voiceRate),
+      voicePitch: Value(voicePitch),
       activeMentorEnabled: Value(activeMentorEnabled),
       activeMentorMode: Value(activeMentorMode),
       maxFollowUpsPerItem: Value(maxFollowUpsPerItem),
@@ -3035,7 +3400,25 @@ class SettingsRecord extends DataClass implements Insertable<SettingsRecord> {
       soundEnabled: serializer.fromJson<bool>(json['soundEnabled']),
       vibrationEnabled: serializer.fromJson<bool>(json['vibrationEnabled']),
       adhanEnabled: serializer.fromJson<bool>(json['adhanEnabled']),
+      manualPrayerOffsetsEnabled: serializer.fromJson<bool>(
+        json['manualPrayerOffsetsEnabled'],
+      ),
+      fajrOffsetMinutes: serializer.fromJson<int>(json['fajrOffsetMinutes']),
+      sunriseOffsetMinutes: serializer.fromJson<int>(
+        json['sunriseOffsetMinutes'],
+      ),
+      dhuhrOffsetMinutes: serializer.fromJson<int>(json['dhuhrOffsetMinutes']),
+      asrOffsetMinutes: serializer.fromJson<int>(json['asrOffsetMinutes']),
+      maghribOffsetMinutes: serializer.fromJson<int>(
+        json['maghribOffsetMinutes'],
+      ),
+      ishaOffsetMinutes: serializer.fromJson<int>(json['ishaOffsetMinutes']),
       aiMode: serializer.fromJson<String>(json['aiMode']),
+      voiceInputEnabled: serializer.fromJson<bool>(json['voiceInputEnabled']),
+      voiceReplyEnabled: serializer.fromJson<bool>(json['voiceReplyEnabled']),
+      autoSpeakAiReply: serializer.fromJson<bool>(json['autoSpeakAiReply']),
+      voiceRate: serializer.fromJson<double>(json['voiceRate']),
+      voicePitch: serializer.fromJson<double>(json['voicePitch']),
       activeMentorEnabled: serializer.fromJson<bool>(
         json['activeMentorEnabled'],
       ),
@@ -3076,7 +3459,21 @@ class SettingsRecord extends DataClass implements Insertable<SettingsRecord> {
       'soundEnabled': serializer.toJson<bool>(soundEnabled),
       'vibrationEnabled': serializer.toJson<bool>(vibrationEnabled),
       'adhanEnabled': serializer.toJson<bool>(adhanEnabled),
+      'manualPrayerOffsetsEnabled': serializer.toJson<bool>(
+        manualPrayerOffsetsEnabled,
+      ),
+      'fajrOffsetMinutes': serializer.toJson<int>(fajrOffsetMinutes),
+      'sunriseOffsetMinutes': serializer.toJson<int>(sunriseOffsetMinutes),
+      'dhuhrOffsetMinutes': serializer.toJson<int>(dhuhrOffsetMinutes),
+      'asrOffsetMinutes': serializer.toJson<int>(asrOffsetMinutes),
+      'maghribOffsetMinutes': serializer.toJson<int>(maghribOffsetMinutes),
+      'ishaOffsetMinutes': serializer.toJson<int>(ishaOffsetMinutes),
       'aiMode': serializer.toJson<String>(aiMode),
+      'voiceInputEnabled': serializer.toJson<bool>(voiceInputEnabled),
+      'voiceReplyEnabled': serializer.toJson<bool>(voiceReplyEnabled),
+      'autoSpeakAiReply': serializer.toJson<bool>(autoSpeakAiReply),
+      'voiceRate': serializer.toJson<double>(voiceRate),
+      'voicePitch': serializer.toJson<double>(voicePitch),
       'activeMentorEnabled': serializer.toJson<bool>(activeMentorEnabled),
       'activeMentorMode': serializer.toJson<String>(activeMentorMode),
       'maxFollowUpsPerItem': serializer.toJson<int>(maxFollowUpsPerItem),
@@ -3101,7 +3498,19 @@ class SettingsRecord extends DataClass implements Insertable<SettingsRecord> {
     bool? soundEnabled,
     bool? vibrationEnabled,
     bool? adhanEnabled,
+    bool? manualPrayerOffsetsEnabled,
+    int? fajrOffsetMinutes,
+    int? sunriseOffsetMinutes,
+    int? dhuhrOffsetMinutes,
+    int? asrOffsetMinutes,
+    int? maghribOffsetMinutes,
+    int? ishaOffsetMinutes,
     String? aiMode,
+    bool? voiceInputEnabled,
+    bool? voiceReplyEnabled,
+    bool? autoSpeakAiReply,
+    double? voiceRate,
+    double? voicePitch,
     bool? activeMentorEnabled,
     String? activeMentorMode,
     int? maxFollowUpsPerItem,
@@ -3124,7 +3533,20 @@ class SettingsRecord extends DataClass implements Insertable<SettingsRecord> {
     soundEnabled: soundEnabled ?? this.soundEnabled,
     vibrationEnabled: vibrationEnabled ?? this.vibrationEnabled,
     adhanEnabled: adhanEnabled ?? this.adhanEnabled,
+    manualPrayerOffsetsEnabled:
+        manualPrayerOffsetsEnabled ?? this.manualPrayerOffsetsEnabled,
+    fajrOffsetMinutes: fajrOffsetMinutes ?? this.fajrOffsetMinutes,
+    sunriseOffsetMinutes: sunriseOffsetMinutes ?? this.sunriseOffsetMinutes,
+    dhuhrOffsetMinutes: dhuhrOffsetMinutes ?? this.dhuhrOffsetMinutes,
+    asrOffsetMinutes: asrOffsetMinutes ?? this.asrOffsetMinutes,
+    maghribOffsetMinutes: maghribOffsetMinutes ?? this.maghribOffsetMinutes,
+    ishaOffsetMinutes: ishaOffsetMinutes ?? this.ishaOffsetMinutes,
     aiMode: aiMode ?? this.aiMode,
+    voiceInputEnabled: voiceInputEnabled ?? this.voiceInputEnabled,
+    voiceReplyEnabled: voiceReplyEnabled ?? this.voiceReplyEnabled,
+    autoSpeakAiReply: autoSpeakAiReply ?? this.autoSpeakAiReply,
+    voiceRate: voiceRate ?? this.voiceRate,
+    voicePitch: voicePitch ?? this.voicePitch,
     activeMentorEnabled: activeMentorEnabled ?? this.activeMentorEnabled,
     activeMentorMode: activeMentorMode ?? this.activeMentorMode,
     maxFollowUpsPerItem: maxFollowUpsPerItem ?? this.maxFollowUpsPerItem,
@@ -3161,7 +3583,41 @@ class SettingsRecord extends DataClass implements Insertable<SettingsRecord> {
       adhanEnabled: data.adhanEnabled.present
           ? data.adhanEnabled.value
           : this.adhanEnabled,
+      manualPrayerOffsetsEnabled: data.manualPrayerOffsetsEnabled.present
+          ? data.manualPrayerOffsetsEnabled.value
+          : this.manualPrayerOffsetsEnabled,
+      fajrOffsetMinutes: data.fajrOffsetMinutes.present
+          ? data.fajrOffsetMinutes.value
+          : this.fajrOffsetMinutes,
+      sunriseOffsetMinutes: data.sunriseOffsetMinutes.present
+          ? data.sunriseOffsetMinutes.value
+          : this.sunriseOffsetMinutes,
+      dhuhrOffsetMinutes: data.dhuhrOffsetMinutes.present
+          ? data.dhuhrOffsetMinutes.value
+          : this.dhuhrOffsetMinutes,
+      asrOffsetMinutes: data.asrOffsetMinutes.present
+          ? data.asrOffsetMinutes.value
+          : this.asrOffsetMinutes,
+      maghribOffsetMinutes: data.maghribOffsetMinutes.present
+          ? data.maghribOffsetMinutes.value
+          : this.maghribOffsetMinutes,
+      ishaOffsetMinutes: data.ishaOffsetMinutes.present
+          ? data.ishaOffsetMinutes.value
+          : this.ishaOffsetMinutes,
       aiMode: data.aiMode.present ? data.aiMode.value : this.aiMode,
+      voiceInputEnabled: data.voiceInputEnabled.present
+          ? data.voiceInputEnabled.value
+          : this.voiceInputEnabled,
+      voiceReplyEnabled: data.voiceReplyEnabled.present
+          ? data.voiceReplyEnabled.value
+          : this.voiceReplyEnabled,
+      autoSpeakAiReply: data.autoSpeakAiReply.present
+          ? data.autoSpeakAiReply.value
+          : this.autoSpeakAiReply,
+      voiceRate: data.voiceRate.present ? data.voiceRate.value : this.voiceRate,
+      voicePitch: data.voicePitch.present
+          ? data.voicePitch.value
+          : this.voicePitch,
       activeMentorEnabled: data.activeMentorEnabled.present
           ? data.activeMentorEnabled.value
           : this.activeMentorEnabled,
@@ -3202,7 +3658,19 @@ class SettingsRecord extends DataClass implements Insertable<SettingsRecord> {
           ..write('soundEnabled: $soundEnabled, ')
           ..write('vibrationEnabled: $vibrationEnabled, ')
           ..write('adhanEnabled: $adhanEnabled, ')
+          ..write('manualPrayerOffsetsEnabled: $manualPrayerOffsetsEnabled, ')
+          ..write('fajrOffsetMinutes: $fajrOffsetMinutes, ')
+          ..write('sunriseOffsetMinutes: $sunriseOffsetMinutes, ')
+          ..write('dhuhrOffsetMinutes: $dhuhrOffsetMinutes, ')
+          ..write('asrOffsetMinutes: $asrOffsetMinutes, ')
+          ..write('maghribOffsetMinutes: $maghribOffsetMinutes, ')
+          ..write('ishaOffsetMinutes: $ishaOffsetMinutes, ')
           ..write('aiMode: $aiMode, ')
+          ..write('voiceInputEnabled: $voiceInputEnabled, ')
+          ..write('voiceReplyEnabled: $voiceReplyEnabled, ')
+          ..write('autoSpeakAiReply: $autoSpeakAiReply, ')
+          ..write('voiceRate: $voiceRate, ')
+          ..write('voicePitch: $voicePitch, ')
           ..write('activeMentorEnabled: $activeMentorEnabled, ')
           ..write('activeMentorMode: $activeMentorMode, ')
           ..write('maxFollowUpsPerItem: $maxFollowUpsPerItem, ')
@@ -3229,7 +3697,19 @@ class SettingsRecord extends DataClass implements Insertable<SettingsRecord> {
     soundEnabled,
     vibrationEnabled,
     adhanEnabled,
+    manualPrayerOffsetsEnabled,
+    fajrOffsetMinutes,
+    sunriseOffsetMinutes,
+    dhuhrOffsetMinutes,
+    asrOffsetMinutes,
+    maghribOffsetMinutes,
+    ishaOffsetMinutes,
     aiMode,
+    voiceInputEnabled,
+    voiceReplyEnabled,
+    autoSpeakAiReply,
+    voiceRate,
+    voicePitch,
     activeMentorEnabled,
     activeMentorMode,
     maxFollowUpsPerItem,
@@ -3255,7 +3735,19 @@ class SettingsRecord extends DataClass implements Insertable<SettingsRecord> {
           other.soundEnabled == this.soundEnabled &&
           other.vibrationEnabled == this.vibrationEnabled &&
           other.adhanEnabled == this.adhanEnabled &&
+          other.manualPrayerOffsetsEnabled == this.manualPrayerOffsetsEnabled &&
+          other.fajrOffsetMinutes == this.fajrOffsetMinutes &&
+          other.sunriseOffsetMinutes == this.sunriseOffsetMinutes &&
+          other.dhuhrOffsetMinutes == this.dhuhrOffsetMinutes &&
+          other.asrOffsetMinutes == this.asrOffsetMinutes &&
+          other.maghribOffsetMinutes == this.maghribOffsetMinutes &&
+          other.ishaOffsetMinutes == this.ishaOffsetMinutes &&
           other.aiMode == this.aiMode &&
+          other.voiceInputEnabled == this.voiceInputEnabled &&
+          other.voiceReplyEnabled == this.voiceReplyEnabled &&
+          other.autoSpeakAiReply == this.autoSpeakAiReply &&
+          other.voiceRate == this.voiceRate &&
+          other.voicePitch == this.voicePitch &&
           other.activeMentorEnabled == this.activeMentorEnabled &&
           other.activeMentorMode == this.activeMentorMode &&
           other.maxFollowUpsPerItem == this.maxFollowUpsPerItem &&
@@ -3279,7 +3771,19 @@ class SettingsRecordsCompanion extends UpdateCompanion<SettingsRecord> {
   final Value<bool> soundEnabled;
   final Value<bool> vibrationEnabled;
   final Value<bool> adhanEnabled;
+  final Value<bool> manualPrayerOffsetsEnabled;
+  final Value<int> fajrOffsetMinutes;
+  final Value<int> sunriseOffsetMinutes;
+  final Value<int> dhuhrOffsetMinutes;
+  final Value<int> asrOffsetMinutes;
+  final Value<int> maghribOffsetMinutes;
+  final Value<int> ishaOffsetMinutes;
   final Value<String> aiMode;
+  final Value<bool> voiceInputEnabled;
+  final Value<bool> voiceReplyEnabled;
+  final Value<bool> autoSpeakAiReply;
+  final Value<double> voiceRate;
+  final Value<double> voicePitch;
   final Value<bool> activeMentorEnabled;
   final Value<String> activeMentorMode;
   final Value<int> maxFollowUpsPerItem;
@@ -3301,7 +3805,19 @@ class SettingsRecordsCompanion extends UpdateCompanion<SettingsRecord> {
     this.soundEnabled = const Value.absent(),
     this.vibrationEnabled = const Value.absent(),
     this.adhanEnabled = const Value.absent(),
+    this.manualPrayerOffsetsEnabled = const Value.absent(),
+    this.fajrOffsetMinutes = const Value.absent(),
+    this.sunriseOffsetMinutes = const Value.absent(),
+    this.dhuhrOffsetMinutes = const Value.absent(),
+    this.asrOffsetMinutes = const Value.absent(),
+    this.maghribOffsetMinutes = const Value.absent(),
+    this.ishaOffsetMinutes = const Value.absent(),
     this.aiMode = const Value.absent(),
+    this.voiceInputEnabled = const Value.absent(),
+    this.voiceReplyEnabled = const Value.absent(),
+    this.autoSpeakAiReply = const Value.absent(),
+    this.voiceRate = const Value.absent(),
+    this.voicePitch = const Value.absent(),
     this.activeMentorEnabled = const Value.absent(),
     this.activeMentorMode = const Value.absent(),
     this.maxFollowUpsPerItem = const Value.absent(),
@@ -3324,7 +3840,19 @@ class SettingsRecordsCompanion extends UpdateCompanion<SettingsRecord> {
     required bool soundEnabled,
     required bool vibrationEnabled,
     required bool adhanEnabled,
+    this.manualPrayerOffsetsEnabled = const Value.absent(),
+    this.fajrOffsetMinutes = const Value.absent(),
+    this.sunriseOffsetMinutes = const Value.absent(),
+    this.dhuhrOffsetMinutes = const Value.absent(),
+    this.asrOffsetMinutes = const Value.absent(),
+    this.maghribOffsetMinutes = const Value.absent(),
+    this.ishaOffsetMinutes = const Value.absent(),
     required String aiMode,
+    this.voiceInputEnabled = const Value.absent(),
+    this.voiceReplyEnabled = const Value.absent(),
+    this.autoSpeakAiReply = const Value.absent(),
+    this.voiceRate = const Value.absent(),
+    this.voicePitch = const Value.absent(),
     required bool activeMentorEnabled,
     required String activeMentorMode,
     required int maxFollowUpsPerItem,
@@ -3366,7 +3894,19 @@ class SettingsRecordsCompanion extends UpdateCompanion<SettingsRecord> {
     Expression<bool>? soundEnabled,
     Expression<bool>? vibrationEnabled,
     Expression<bool>? adhanEnabled,
+    Expression<bool>? manualPrayerOffsetsEnabled,
+    Expression<int>? fajrOffsetMinutes,
+    Expression<int>? sunriseOffsetMinutes,
+    Expression<int>? dhuhrOffsetMinutes,
+    Expression<int>? asrOffsetMinutes,
+    Expression<int>? maghribOffsetMinutes,
+    Expression<int>? ishaOffsetMinutes,
     Expression<String>? aiMode,
+    Expression<bool>? voiceInputEnabled,
+    Expression<bool>? voiceReplyEnabled,
+    Expression<bool>? autoSpeakAiReply,
+    Expression<double>? voiceRate,
+    Expression<double>? voicePitch,
     Expression<bool>? activeMentorEnabled,
     Expression<String>? activeMentorMode,
     Expression<int>? maxFollowUpsPerItem,
@@ -3390,7 +3930,23 @@ class SettingsRecordsCompanion extends UpdateCompanion<SettingsRecord> {
       if (soundEnabled != null) 'sound_enabled': soundEnabled,
       if (vibrationEnabled != null) 'vibration_enabled': vibrationEnabled,
       if (adhanEnabled != null) 'adhan_enabled': adhanEnabled,
+      if (manualPrayerOffsetsEnabled != null)
+        'manual_prayer_offsets_enabled': manualPrayerOffsetsEnabled,
+      if (fajrOffsetMinutes != null) 'fajr_offset_minutes': fajrOffsetMinutes,
+      if (sunriseOffsetMinutes != null)
+        'sunrise_offset_minutes': sunriseOffsetMinutes,
+      if (dhuhrOffsetMinutes != null)
+        'dhuhr_offset_minutes': dhuhrOffsetMinutes,
+      if (asrOffsetMinutes != null) 'asr_offset_minutes': asrOffsetMinutes,
+      if (maghribOffsetMinutes != null)
+        'maghrib_offset_minutes': maghribOffsetMinutes,
+      if (ishaOffsetMinutes != null) 'isha_offset_minutes': ishaOffsetMinutes,
       if (aiMode != null) 'ai_mode': aiMode,
+      if (voiceInputEnabled != null) 'voice_input_enabled': voiceInputEnabled,
+      if (voiceReplyEnabled != null) 'voice_reply_enabled': voiceReplyEnabled,
+      if (autoSpeakAiReply != null) 'auto_speak_ai_reply': autoSpeakAiReply,
+      if (voiceRate != null) 'voice_rate': voiceRate,
+      if (voicePitch != null) 'voice_pitch': voicePitch,
       if (activeMentorEnabled != null)
         'active_mentor_enabled': activeMentorEnabled,
       if (activeMentorMode != null) 'active_mentor_mode': activeMentorMode,
@@ -3421,7 +3977,19 @@ class SettingsRecordsCompanion extends UpdateCompanion<SettingsRecord> {
     Value<bool>? soundEnabled,
     Value<bool>? vibrationEnabled,
     Value<bool>? adhanEnabled,
+    Value<bool>? manualPrayerOffsetsEnabled,
+    Value<int>? fajrOffsetMinutes,
+    Value<int>? sunriseOffsetMinutes,
+    Value<int>? dhuhrOffsetMinutes,
+    Value<int>? asrOffsetMinutes,
+    Value<int>? maghribOffsetMinutes,
+    Value<int>? ishaOffsetMinutes,
     Value<String>? aiMode,
+    Value<bool>? voiceInputEnabled,
+    Value<bool>? voiceReplyEnabled,
+    Value<bool>? autoSpeakAiReply,
+    Value<double>? voiceRate,
+    Value<double>? voicePitch,
     Value<bool>? activeMentorEnabled,
     Value<String>? activeMentorMode,
     Value<int>? maxFollowUpsPerItem,
@@ -3445,7 +4013,20 @@ class SettingsRecordsCompanion extends UpdateCompanion<SettingsRecord> {
       soundEnabled: soundEnabled ?? this.soundEnabled,
       vibrationEnabled: vibrationEnabled ?? this.vibrationEnabled,
       adhanEnabled: adhanEnabled ?? this.adhanEnabled,
+      manualPrayerOffsetsEnabled:
+          manualPrayerOffsetsEnabled ?? this.manualPrayerOffsetsEnabled,
+      fajrOffsetMinutes: fajrOffsetMinutes ?? this.fajrOffsetMinutes,
+      sunriseOffsetMinutes: sunriseOffsetMinutes ?? this.sunriseOffsetMinutes,
+      dhuhrOffsetMinutes: dhuhrOffsetMinutes ?? this.dhuhrOffsetMinutes,
+      asrOffsetMinutes: asrOffsetMinutes ?? this.asrOffsetMinutes,
+      maghribOffsetMinutes: maghribOffsetMinutes ?? this.maghribOffsetMinutes,
+      ishaOffsetMinutes: ishaOffsetMinutes ?? this.ishaOffsetMinutes,
       aiMode: aiMode ?? this.aiMode,
+      voiceInputEnabled: voiceInputEnabled ?? this.voiceInputEnabled,
+      voiceReplyEnabled: voiceReplyEnabled ?? this.voiceReplyEnabled,
+      autoSpeakAiReply: autoSpeakAiReply ?? this.autoSpeakAiReply,
+      voiceRate: voiceRate ?? this.voiceRate,
+      voicePitch: voicePitch ?? this.voicePitch,
       activeMentorEnabled: activeMentorEnabled ?? this.activeMentorEnabled,
       activeMentorMode: activeMentorMode ?? this.activeMentorMode,
       maxFollowUpsPerItem: maxFollowUpsPerItem ?? this.maxFollowUpsPerItem,
@@ -3499,8 +4080,46 @@ class SettingsRecordsCompanion extends UpdateCompanion<SettingsRecord> {
     if (adhanEnabled.present) {
       map['adhan_enabled'] = Variable<bool>(adhanEnabled.value);
     }
+    if (manualPrayerOffsetsEnabled.present) {
+      map['manual_prayer_offsets_enabled'] = Variable<bool>(
+        manualPrayerOffsetsEnabled.value,
+      );
+    }
+    if (fajrOffsetMinutes.present) {
+      map['fajr_offset_minutes'] = Variable<int>(fajrOffsetMinutes.value);
+    }
+    if (sunriseOffsetMinutes.present) {
+      map['sunrise_offset_minutes'] = Variable<int>(sunriseOffsetMinutes.value);
+    }
+    if (dhuhrOffsetMinutes.present) {
+      map['dhuhr_offset_minutes'] = Variable<int>(dhuhrOffsetMinutes.value);
+    }
+    if (asrOffsetMinutes.present) {
+      map['asr_offset_minutes'] = Variable<int>(asrOffsetMinutes.value);
+    }
+    if (maghribOffsetMinutes.present) {
+      map['maghrib_offset_minutes'] = Variable<int>(maghribOffsetMinutes.value);
+    }
+    if (ishaOffsetMinutes.present) {
+      map['isha_offset_minutes'] = Variable<int>(ishaOffsetMinutes.value);
+    }
     if (aiMode.present) {
       map['ai_mode'] = Variable<String>(aiMode.value);
+    }
+    if (voiceInputEnabled.present) {
+      map['voice_input_enabled'] = Variable<bool>(voiceInputEnabled.value);
+    }
+    if (voiceReplyEnabled.present) {
+      map['voice_reply_enabled'] = Variable<bool>(voiceReplyEnabled.value);
+    }
+    if (autoSpeakAiReply.present) {
+      map['auto_speak_ai_reply'] = Variable<bool>(autoSpeakAiReply.value);
+    }
+    if (voiceRate.present) {
+      map['voice_rate'] = Variable<double>(voiceRate.value);
+    }
+    if (voicePitch.present) {
+      map['voice_pitch'] = Variable<double>(voicePitch.value);
     }
     if (activeMentorEnabled.present) {
       map['active_mentor_enabled'] = Variable<bool>(activeMentorEnabled.value);
@@ -3550,7 +4169,19 @@ class SettingsRecordsCompanion extends UpdateCompanion<SettingsRecord> {
           ..write('soundEnabled: $soundEnabled, ')
           ..write('vibrationEnabled: $vibrationEnabled, ')
           ..write('adhanEnabled: $adhanEnabled, ')
+          ..write('manualPrayerOffsetsEnabled: $manualPrayerOffsetsEnabled, ')
+          ..write('fajrOffsetMinutes: $fajrOffsetMinutes, ')
+          ..write('sunriseOffsetMinutes: $sunriseOffsetMinutes, ')
+          ..write('dhuhrOffsetMinutes: $dhuhrOffsetMinutes, ')
+          ..write('asrOffsetMinutes: $asrOffsetMinutes, ')
+          ..write('maghribOffsetMinutes: $maghribOffsetMinutes, ')
+          ..write('ishaOffsetMinutes: $ishaOffsetMinutes, ')
           ..write('aiMode: $aiMode, ')
+          ..write('voiceInputEnabled: $voiceInputEnabled, ')
+          ..write('voiceReplyEnabled: $voiceReplyEnabled, ')
+          ..write('autoSpeakAiReply: $autoSpeakAiReply, ')
+          ..write('voiceRate: $voiceRate, ')
+          ..write('voicePitch: $voicePitch, ')
           ..write('activeMentorEnabled: $activeMentorEnabled, ')
           ..write('activeMentorMode: $activeMentorMode, ')
           ..write('maxFollowUpsPerItem: $maxFollowUpsPerItem, ')
@@ -5485,7 +6116,19 @@ typedef $$SettingsRecordsTableCreateCompanionBuilder =
       required bool soundEnabled,
       required bool vibrationEnabled,
       required bool adhanEnabled,
+      Value<bool> manualPrayerOffsetsEnabled,
+      Value<int> fajrOffsetMinutes,
+      Value<int> sunriseOffsetMinutes,
+      Value<int> dhuhrOffsetMinutes,
+      Value<int> asrOffsetMinutes,
+      Value<int> maghribOffsetMinutes,
+      Value<int> ishaOffsetMinutes,
       required String aiMode,
+      Value<bool> voiceInputEnabled,
+      Value<bool> voiceReplyEnabled,
+      Value<bool> autoSpeakAiReply,
+      Value<double> voiceRate,
+      Value<double> voicePitch,
       required bool activeMentorEnabled,
       required String activeMentorMode,
       required int maxFollowUpsPerItem,
@@ -5509,7 +6152,19 @@ typedef $$SettingsRecordsTableUpdateCompanionBuilder =
       Value<bool> soundEnabled,
       Value<bool> vibrationEnabled,
       Value<bool> adhanEnabled,
+      Value<bool> manualPrayerOffsetsEnabled,
+      Value<int> fajrOffsetMinutes,
+      Value<int> sunriseOffsetMinutes,
+      Value<int> dhuhrOffsetMinutes,
+      Value<int> asrOffsetMinutes,
+      Value<int> maghribOffsetMinutes,
+      Value<int> ishaOffsetMinutes,
       Value<String> aiMode,
+      Value<bool> voiceInputEnabled,
+      Value<bool> voiceReplyEnabled,
+      Value<bool> autoSpeakAiReply,
+      Value<double> voiceRate,
+      Value<double> voicePitch,
       Value<bool> activeMentorEnabled,
       Value<String> activeMentorMode,
       Value<int> maxFollowUpsPerItem,
@@ -5589,8 +6244,68 @@ class $$SettingsRecordsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<bool> get manualPrayerOffsetsEnabled => $composableBuilder(
+    column: $table.manualPrayerOffsetsEnabled,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get fajrOffsetMinutes => $composableBuilder(
+    column: $table.fajrOffsetMinutes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get sunriseOffsetMinutes => $composableBuilder(
+    column: $table.sunriseOffsetMinutes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get dhuhrOffsetMinutes => $composableBuilder(
+    column: $table.dhuhrOffsetMinutes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get asrOffsetMinutes => $composableBuilder(
+    column: $table.asrOffsetMinutes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get maghribOffsetMinutes => $composableBuilder(
+    column: $table.maghribOffsetMinutes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get ishaOffsetMinutes => $composableBuilder(
+    column: $table.ishaOffsetMinutes,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<String> get aiMode => $composableBuilder(
     column: $table.aiMode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get voiceInputEnabled => $composableBuilder(
+    column: $table.voiceInputEnabled,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get voiceReplyEnabled => $composableBuilder(
+    column: $table.voiceReplyEnabled,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get autoSpeakAiReply => $composableBuilder(
+    column: $table.autoSpeakAiReply,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get voiceRate => $composableBuilder(
+    column: $table.voiceRate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get voicePitch => $composableBuilder(
+    column: $table.voicePitch,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -5704,8 +6419,68 @@ class $$SettingsRecordsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get manualPrayerOffsetsEnabled => $composableBuilder(
+    column: $table.manualPrayerOffsetsEnabled,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get fajrOffsetMinutes => $composableBuilder(
+    column: $table.fajrOffsetMinutes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get sunriseOffsetMinutes => $composableBuilder(
+    column: $table.sunriseOffsetMinutes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get dhuhrOffsetMinutes => $composableBuilder(
+    column: $table.dhuhrOffsetMinutes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get asrOffsetMinutes => $composableBuilder(
+    column: $table.asrOffsetMinutes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get maghribOffsetMinutes => $composableBuilder(
+    column: $table.maghribOffsetMinutes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get ishaOffsetMinutes => $composableBuilder(
+    column: $table.ishaOffsetMinutes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get aiMode => $composableBuilder(
     column: $table.aiMode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get voiceInputEnabled => $composableBuilder(
+    column: $table.voiceInputEnabled,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get voiceReplyEnabled => $composableBuilder(
+    column: $table.voiceReplyEnabled,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get autoSpeakAiReply => $composableBuilder(
+    column: $table.autoSpeakAiReply,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get voiceRate => $composableBuilder(
+    column: $table.voiceRate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get voicePitch => $composableBuilder(
+    column: $table.voicePitch,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -5807,8 +6582,66 @@ class $$SettingsRecordsTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<bool> get manualPrayerOffsetsEnabled => $composableBuilder(
+    column: $table.manualPrayerOffsetsEnabled,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get fajrOffsetMinutes => $composableBuilder(
+    column: $table.fajrOffsetMinutes,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get sunriseOffsetMinutes => $composableBuilder(
+    column: $table.sunriseOffsetMinutes,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get dhuhrOffsetMinutes => $composableBuilder(
+    column: $table.dhuhrOffsetMinutes,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get asrOffsetMinutes => $composableBuilder(
+    column: $table.asrOffsetMinutes,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get maghribOffsetMinutes => $composableBuilder(
+    column: $table.maghribOffsetMinutes,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get ishaOffsetMinutes => $composableBuilder(
+    column: $table.ishaOffsetMinutes,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<String> get aiMode =>
       $composableBuilder(column: $table.aiMode, builder: (column) => column);
+
+  GeneratedColumn<bool> get voiceInputEnabled => $composableBuilder(
+    column: $table.voiceInputEnabled,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get voiceReplyEnabled => $composableBuilder(
+    column: $table.voiceReplyEnabled,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get autoSpeakAiReply => $composableBuilder(
+    column: $table.autoSpeakAiReply,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get voiceRate =>
+      $composableBuilder(column: $table.voiceRate, builder: (column) => column);
+
+  GeneratedColumn<double> get voicePitch => $composableBuilder(
+    column: $table.voicePitch,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<bool> get activeMentorEnabled => $composableBuilder(
     column: $table.activeMentorEnabled,
@@ -5898,7 +6731,19 @@ class $$SettingsRecordsTableTableManager
                 Value<bool> soundEnabled = const Value.absent(),
                 Value<bool> vibrationEnabled = const Value.absent(),
                 Value<bool> adhanEnabled = const Value.absent(),
+                Value<bool> manualPrayerOffsetsEnabled = const Value.absent(),
+                Value<int> fajrOffsetMinutes = const Value.absent(),
+                Value<int> sunriseOffsetMinutes = const Value.absent(),
+                Value<int> dhuhrOffsetMinutes = const Value.absent(),
+                Value<int> asrOffsetMinutes = const Value.absent(),
+                Value<int> maghribOffsetMinutes = const Value.absent(),
+                Value<int> ishaOffsetMinutes = const Value.absent(),
                 Value<String> aiMode = const Value.absent(),
+                Value<bool> voiceInputEnabled = const Value.absent(),
+                Value<bool> voiceReplyEnabled = const Value.absent(),
+                Value<bool> autoSpeakAiReply = const Value.absent(),
+                Value<double> voiceRate = const Value.absent(),
+                Value<double> voicePitch = const Value.absent(),
                 Value<bool> activeMentorEnabled = const Value.absent(),
                 Value<String> activeMentorMode = const Value.absent(),
                 Value<int> maxFollowUpsPerItem = const Value.absent(),
@@ -5920,7 +6765,19 @@ class $$SettingsRecordsTableTableManager
                 soundEnabled: soundEnabled,
                 vibrationEnabled: vibrationEnabled,
                 adhanEnabled: adhanEnabled,
+                manualPrayerOffsetsEnabled: manualPrayerOffsetsEnabled,
+                fajrOffsetMinutes: fajrOffsetMinutes,
+                sunriseOffsetMinutes: sunriseOffsetMinutes,
+                dhuhrOffsetMinutes: dhuhrOffsetMinutes,
+                asrOffsetMinutes: asrOffsetMinutes,
+                maghribOffsetMinutes: maghribOffsetMinutes,
+                ishaOffsetMinutes: ishaOffsetMinutes,
                 aiMode: aiMode,
+                voiceInputEnabled: voiceInputEnabled,
+                voiceReplyEnabled: voiceReplyEnabled,
+                autoSpeakAiReply: autoSpeakAiReply,
+                voiceRate: voiceRate,
+                voicePitch: voicePitch,
                 activeMentorEnabled: activeMentorEnabled,
                 activeMentorMode: activeMentorMode,
                 maxFollowUpsPerItem: maxFollowUpsPerItem,
@@ -5944,7 +6801,19 @@ class $$SettingsRecordsTableTableManager
                 required bool soundEnabled,
                 required bool vibrationEnabled,
                 required bool adhanEnabled,
+                Value<bool> manualPrayerOffsetsEnabled = const Value.absent(),
+                Value<int> fajrOffsetMinutes = const Value.absent(),
+                Value<int> sunriseOffsetMinutes = const Value.absent(),
+                Value<int> dhuhrOffsetMinutes = const Value.absent(),
+                Value<int> asrOffsetMinutes = const Value.absent(),
+                Value<int> maghribOffsetMinutes = const Value.absent(),
+                Value<int> ishaOffsetMinutes = const Value.absent(),
                 required String aiMode,
+                Value<bool> voiceInputEnabled = const Value.absent(),
+                Value<bool> voiceReplyEnabled = const Value.absent(),
+                Value<bool> autoSpeakAiReply = const Value.absent(),
+                Value<double> voiceRate = const Value.absent(),
+                Value<double> voicePitch = const Value.absent(),
                 required bool activeMentorEnabled,
                 required String activeMentorMode,
                 required int maxFollowUpsPerItem,
@@ -5966,7 +6835,19 @@ class $$SettingsRecordsTableTableManager
                 soundEnabled: soundEnabled,
                 vibrationEnabled: vibrationEnabled,
                 adhanEnabled: adhanEnabled,
+                manualPrayerOffsetsEnabled: manualPrayerOffsetsEnabled,
+                fajrOffsetMinutes: fajrOffsetMinutes,
+                sunriseOffsetMinutes: sunriseOffsetMinutes,
+                dhuhrOffsetMinutes: dhuhrOffsetMinutes,
+                asrOffsetMinutes: asrOffsetMinutes,
+                maghribOffsetMinutes: maghribOffsetMinutes,
+                ishaOffsetMinutes: ishaOffsetMinutes,
                 aiMode: aiMode,
+                voiceInputEnabled: voiceInputEnabled,
+                voiceReplyEnabled: voiceReplyEnabled,
+                autoSpeakAiReply: autoSpeakAiReply,
+                voiceRate: voiceRate,
+                voicePitch: voicePitch,
                 activeMentorEnabled: activeMentorEnabled,
                 activeMentorMode: activeMentorMode,
                 maxFollowUpsPerItem: maxFollowUpsPerItem,

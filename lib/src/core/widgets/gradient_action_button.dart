@@ -41,9 +41,9 @@ class _GradientActionButtonState extends State<GradientActionButton> {
             borderRadius: radius,
             boxShadow: [
               BoxShadow(
-                color: scheme.primary.withValues(alpha: 0.30),
-                blurRadius: 28,
-                offset: const Offset(0, 14),
+                color: scheme.primary.withValues(alpha: 0.22),
+                blurRadius: 18,
+                offset: const Offset(0, 8),
               ),
             ],
           ),
